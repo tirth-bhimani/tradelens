@@ -1,0 +1,17 @@
+{
+  "name": "tradelens-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --prefix apps/web",
+    "dev:all": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/web",
+    "test": "npm run test --prefix apps/web",
+    "test:all": "npm run test --prefix apps/web",
+    "lint": "npm run lint --prefix apps/web"
+  },
+  "devDependencies": {}
+}
