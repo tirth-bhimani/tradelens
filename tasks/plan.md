@@ -18,8 +18,8 @@ Tasks are tracked in `tasks/todo.md`.
 ### Phase 1: Foundation, Infrastructure & Database Setup
 - [x] Task 1: Monorepo workspace initialization & service skeletons
 - [x] Task 2: Supabase database schema & Row-Level Security (RLS) policies
-- [ ] Task 3: Authentication and user profile onboarding flow
-- [ ] Checkpoint 1: Foundation & Auth verified
+- [x] Task 3: Authentication and user profile onboarding flow
+- [x] Checkpoint 1: Foundation & Auth verified
 
 ### Phase 2: Trade Import & Ingestion Pipeline
 - [ ] Task 4: Secure CSV upload API & storage handler

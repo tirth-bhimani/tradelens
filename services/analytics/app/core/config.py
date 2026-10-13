@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Union
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,10 +19,19 @@ class Settings(BaseSettings):
 
     # API Configuration
     api_prefix: str = "/api/v1"
-    allowed_origins: List[str] = [
+    allowed_origins: Union[str, List[str]] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
+
+    @property
+    def cors_origins(self) -> List[str]:
+        if isinstance(self.allowed_origins, str):
+            import json
+            if self.allowed_origins.startswith("["):
+                return json.loads(self.allowed_origins)
+            return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
+        return self.allowed_origins
 
     # Database
     database_url: str = "postgresql://postgres:postgres@localhost:5432/tradelens"

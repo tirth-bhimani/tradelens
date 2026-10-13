@@ -64,15 +64,15 @@
 **Description:** Implement user authentication in Next.js using Supabase Auth (Email + Password and Google OAuth), email verification redirection, and an onboarding profile screen to capture timezone (default IST), trading segments, and starting capital.
 
 **Acceptance criteria:**
-- [ ] Email/password signup, login, password reset, and Google OAuth callbacks work cleanly
-- [ ] New user signup triggers creation of corresponding `profiles` row
-- [ ] Onboarding wizard collects user display name, timezone (defaulting to Asia/Kolkata), active segments (Equity, F&O), and starting capital
-- [ ] Protected route middleware redirects unauthenticated users to `/login` and un-onboarded users to `/onboarding`
+- [x] Email/password signup, login, password reset, and Google OAuth callbacks work cleanly
+- [x] New user signup triggers creation of corresponding `profiles` row
+- [x] Onboarding wizard collects user display name, timezone (defaulting to Asia/Kolkata), active segments (Equity, F&O), and starting capital
+- [x] Protected route middleware redirects unauthenticated users to `/login` and un-onboarded users to `/onboarding`
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/auth.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Register a test account, check user redirect to onboarding, and verify `profiles` row saved with `timezone = 'Asia/Kolkata'`
+- [x] Tests pass: `npm run test -- apps/web/tests/auth.test.ts`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Register a test account, check user redirect to onboarding, and verify `profiles` row saved with `timezone = 'Asia/Kolkata'`
 
 **Dependencies:** Task 2
 
@@ -88,10 +88,10 @@
 ---
 
 ## Checkpoint: Foundation & Auth
-- [ ] All database migrations apply cleanly with RLS active
-- [ ] Frontend builds without TypeScript or styling errors
-- [ ] User can sign up, log in, complete onboarding, and load an empty dashboard
-- [ ] Review with team before proceeding
+- [x] All database migrations apply cleanly with RLS active
+- [x] Frontend builds without TypeScript or styling errors
+- [x] User can sign up, log in, complete onboarding, and load an empty dashboard
+- [x] Review with team before proceeding
 
 ---
 

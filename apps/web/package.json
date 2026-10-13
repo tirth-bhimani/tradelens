@@ -10,7 +10,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.48.1",
+    "caniuse-lite": "^1.0.30001816",
     "clsx": "^2.1.1",
+    "framer-motion": "^14.2.0",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "react": "^18.3.1",
