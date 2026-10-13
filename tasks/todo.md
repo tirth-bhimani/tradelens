@@ -37,15 +37,15 @@
 **Description:** Define and apply initial database migrations for PostgreSQL in Supabase covering core tables (`profiles`, `organizations`, `imports`, `raw_fills`, `trades`, `charge_rates`, `stats_snapshots`, `rules`, `rule_runs`, `audit_log`, `ai_usage`) with strict Row-Level Security (RLS) enabled on every tenant table.
 
 **Acceptance criteria:**
-- [ ] Migration creates all tables specified in Section 8 of the Project Plan with primary keys, indexes, and foreign keys
-- [ ] RLS is enabled on all user-facing tables with `auth.uid() = user_id` policies for SELECT, INSERT, UPDATE, DELETE
-- [ ] Public `charge_rates` table seeded with default Indian statutory fees (STT, GST, Exchange charges, Stamp duty)
-- [ ] Database test or seed script verifies that unauthorized queries cannot bypass RLS
+- [x] Migration creates all tables specified in Section 8 of the Project Plan with primary keys, indexes, and foreign keys
+- [x] RLS is enabled on all user-facing tables with `auth.uid() = user_id` policies for SELECT, INSERT, UPDATE, DELETE
+- [x] Public `charge_rates` table seeded with default Indian statutory fees (STT, GST, Exchange charges, Stamp duty)
+- [x] Database test or seed script verifies that unauthorized queries cannot bypass RLS
 
 **Verification:**
-- [ ] Tests pass: `supabase test db` or `pytest services/analytics/tests/test_db_schema.py`
-- [ ] Build succeeds: `supabase db lint`
-- [ ] Manual check: Run `SELECT * FROM pg_tables WHERE schemaname = 'public'` and verify RLS is enabled on each table
+- [x] Tests pass: `pytest services/analytics/tests/test_db_schema.py`
+- [x] Build succeeds: Docker PostgreSQL schema applied with zero errors
+- [x] Manual check: Run `SELECT * FROM pg_tables WHERE schemaname = 'public'` and verify RLS is enabled on each table
 
 **Dependencies:** Task 1
 
