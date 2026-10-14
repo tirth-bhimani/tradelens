@@ -102,15 +102,15 @@
 **Description:** Build the frontend file drag-and-drop component and backend upload handler that streams CSV files into a private Supabase Storage bucket, applies file size/type constraints, and sanitizes against CSV formula injection (`=`, `+`, `-`, `@`).
 
 **Acceptance criteria:**
-- [ ] File dropzone accepts `.csv` files up to 25MB with upload progress indicator
-- [ ] Uploaded file is saved in private bucket with path `<user_id>/<import_id>.csv` accessible only via signed URLs
-- [ ] CSV injection protection sanitizes or flags cells beginning with `=`, `+`, `-`, or `@`
-- [ ] New record created in `imports` table with status `uploaded`
+- [x] File dropzone accepts `.csv` files up to 25MB with upload progress indicator
+- [x] Uploaded file is saved in private bucket with path `<user_id>/<import_id>.csv` accessible only via signed URLs
+- [x] CSV injection protection sanitizes or flags cells beginning with `=`, `+`, `-`, or `@`
+- [x] New record created in `imports` table with status `uploaded`
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_upload.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Upload a sample CSV file and verify storage entry and `imports` database row created
+- [x] Tests pass: `pytest services/analytics/tests/test_upload.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Upload a sample CSV file and verify storage entry and `imports` database row created
 
 **Dependencies:** Task 3
 
