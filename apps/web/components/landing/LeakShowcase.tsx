@@ -105,7 +105,7 @@ export function LeakShowcase() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            The 4 Deadly Leaks <span className="text-rose-600">Draining Indian Traders</span>
+            The 4 Deadly Leaks <span className="text-[#387ed1]">Draining Indian Traders</span>
           </h2>
 
           <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
