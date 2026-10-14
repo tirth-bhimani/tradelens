@@ -4,9 +4,25 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
-import { Lock, Mail, ArrowRight } from "lucide-react";
+import { Lock, Mail, ArrowRight, Clock } from "lucide-react";
 import { loginWithEmail, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+
+function TimeoutBanner() {
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
+  if (reason !== "timeout") return null;
+
+  return (
+    <div className="p-3.5 rounded-[6px] bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-start space-x-2.5 text-xs text-amber-800 dark:text-amber-300">
+      <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+      <div>
+        <span className="font-semibold block text-slate-900 dark:text-white">Session Expired</span>
+        You were automatically logged out due to inactivity to secure your trading account. Please sign in again.
+      </div>
+    </div>
+  );
+}
 
 function OAuthErrorBanner() {
   const searchParams = useSearchParams();
@@ -109,6 +125,11 @@ export default function LoginPage() {
             </span>
             <div className="border-t border-slate-200 dark:border-slate-700 w-full"></div>
           </div>
+
+          {/* Inactivity Timeout Banner */}
+          <Suspense fallback={null}>
+            <TimeoutBanner />
+          </Suspense>
 
           {/* OAuth Redirect Error Banner */}
           <Suspense fallback={null}>
