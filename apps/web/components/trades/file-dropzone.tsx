@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useRef, DragEvent, ChangeEvent } from "react";
-import { UploadCloud, CheckCircle2, AlertCircle, FileText, X, RefreshCw, ShieldAlert, ArrowRight } from "lucide-react";
+import { UploadCloud, CheckCircle2, AlertCircle, RefreshCw, ShieldAlert, FileText, ArrowRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCsvFileMeta } from "@/lib/trades/csv-sanitizer";
+import { processImportBatch } from "@/lib/trades/actions";
+import { ImportSummaryModal } from "./import-summary-modal";
+import type { IngestionSummary, ImportRecord } from "@/lib/trades/types";
 
 interface UploadResult {
   importId: string;
@@ -15,16 +18,20 @@ interface UploadResult {
 
 interface FileDropzoneProps {
   onUploadSuccess?: (result: UploadResult) => void;
+  onImportProcessed?: (record: ImportRecord, summary: IngestionSummary) => void;
   className?: string;
 }
 
-export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzoneProps) {
+export function FileDropzone({ onUploadSuccess, onImportProcessed, className = "" }: FileDropzoneProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatusText, setUploadStatusText] = useState("Uploading & Sanitizing Tradebook...");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successData, setSuccessData] = useState<UploadResult | null>(null);
+  const [summaryData, setSummaryData] = useState<IngestionSummary | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -65,6 +72,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
   const handleFileSelection = (file: File) => {
     setErrorMsg(null);
     setSuccessData(null);
+    setSummaryData(null);
 
     const validation = validateCsvFileMeta({
       name: file.name,
@@ -84,15 +92,16 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
   const startUpload = async (file: File) => {
     setIsUploading(true);
     setUploadProgress(15);
+    setUploadStatusText("Uploading & Sanitizing Tradebook...");
     setErrorMsg(null);
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      // Smooth progress animation increment
+      // Step 1: Upload to storage
       const progressTimer = setInterval(() => {
-        setUploadProgress((prev) => (prev >= 85 ? 85 : prev + 15));
+        setUploadProgress((prev) => (prev >= 80 ? 80 : prev + 15));
       }, 120);
 
       const response = await fetch("/api/trades/upload", {
@@ -108,8 +117,40 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
         throw new Error(json.error || `Upload failed with HTTP ${response.status}`);
       }
 
-      setUploadProgress(100);
+      setUploadProgress(90);
+      setUploadStatusText("Validating and deduplicating trades...");
       setSuccessData(json);
+
+      // Step 2: Trigger Task 6 Ingestion & Deduplication
+      const { summary, importRecord, error: batchError } = await processImportBatch(json.importId);
+
+      if (batchError) {
+        console.warn("Batch ingestion warning:", batchError);
+      }
+
+      setUploadProgress(100);
+
+      if (summary) {
+        setSummaryData(summary);
+        setIsModalOpen(true); // Auto-open summary modal
+      }
+
+      if (onImportProcessed && (importRecord || summary)) {
+        const finalRecord: ImportRecord = importRecord || {
+          id: json.importId,
+          user_id: summary?.user_id || "",
+          broker: summary?.broker || "GENERAL",
+          file_name: summary?.file_name || file.name,
+          status: summary?.status || "completed",
+          total_rows: summary?.total_rows || 0,
+          imported_rows: summary?.imported_rows || 0,
+          skipped_rows: summary?.skipped_rows || 0,
+          error_report: summary?.error_report || [],
+          created_at: new Date().toISOString(),
+        };
+        onImportProcessed(finalRecord, summary!);
+      }
+
       if (onUploadSuccess) {
         onUploadSuccess(json);
       }
@@ -126,6 +167,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
     setSelectedFile(null);
     setErrorMsg(null);
     setSuccessData(null);
+    setSummaryData(null);
     setUploadProgress(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -166,7 +208,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                    Tradebook Uploaded Successfully
+                    Tradebook Ingested Successfully
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
                     {successData.fileName} • {formatFileSize(successData.fileSizeBytes || 0)}
@@ -174,14 +216,27 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleReset}
-                className="btn-zerodha-secondary text-xs py-1.5 px-3 flex items-center space-x-1"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Upload Another</span>
-              </button>
+              <div className="flex items-center space-x-2">
+                {summaryData && (
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="btn-zerodha-primary text-xs py-1.5 px-3 flex items-center space-x-1"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>View Summary</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="btn-zerodha-secondary text-xs py-1.5 px-3 flex items-center space-x-1"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Upload Another</span>
+                </button>
+              </div>
             </div>
 
             {/* Formula Warning Note if any threats were sanitized */}
@@ -200,7 +255,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                 Import ID: {successData.importId.slice(0, 8)}...
               </span>
               <span className="tag-zerodha bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 font-semibold">
-                Status: Uploaded
+                Status: {summaryData ? summaryData.status : "Processed"}
               </span>
             </div>
           </motion.div>
@@ -257,7 +312,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                    Uploading &amp; Sanitizing Tradebook...
+                    {uploadStatusText}
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                     {selectedFile?.name} ({formatFileSize(selectedFile?.size || 0)})
@@ -273,7 +328,7 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                   />
                 </div>
                 <div className="flex justify-between text-[11px] font-semibold text-slate-400">
-                  <span>Validating CSV structure</span>
+                  <span>Deduplicating &amp; Ingesting fills</span>
                   <span>{uploadProgress}%</span>
                 </div>
               </div>
@@ -310,6 +365,13 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Import Summary Modal */}
+      <ImportSummaryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        summary={summaryData}
+      />
     </div>
   );
 }

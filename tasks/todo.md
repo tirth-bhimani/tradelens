@@ -161,15 +161,15 @@
 **Description:** Build the ingestion validation service and UI report that records fills into `raw_fills`, computes unique fill hashes/trade IDs to prevent duplicate imports, records invalid or skipped rows with explicit error reasons, and displays a summary modal to the user.
 
 **Acceptance criteria:**
-- [ ] Fill deduplication detects existing trade IDs or duplicate fill fingerprints and skips double-counting
-- [ ] Skipped or malformed rows are stored with row number and reason in the `imports` error report JSON
-- [ ] UI displays an Import Summary modal: total rows, imported count, skipped count, and expandable error details
-- [ ] User has the ability to delete an individual import run, which removes its associated fills
+- [x] Fill deduplication detects existing trade IDs or duplicate fill fingerprints and skips double-counting
+- [x] Skipped or malformed rows are stored with row number and reason in the `imports` error report JSON
+- [x] UI displays an Import Summary modal: total rows, imported count, skipped count, and expandable error details
+- [x] User has the ability to delete an individual import run, which removes its associated fills
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_ingestion_validator.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Re-upload the exact same CSV and verify that duplicate rows are skipped and reported
+- [x] Tests pass: `pytest services/analytics/tests/test_ingestion_validator.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Re-upload the exact same CSV and verify that duplicate rows are skipped and reported
 
 **Dependencies:** Task 5
 
@@ -198,15 +198,15 @@
 **Description:** Build the instrument parser and classifier to normalize Indian market symbols into structured metadata: instrument type (Equity, Futures, Options CE/PE), underlying symbol, expiry date, strike price, and standard exchange lot sizes.
 
 **Acceptance criteria:**
-- [ ] Parses standard Indian ticker patterns (e.g., `NIFTY24OCT25000CE`, `BANKNIFTY24NOVFUT`, `RELIANCE`)
-- [ ] Extracts option type (`CE` / `PE`), strike price, and expiry timestamp accurately
-- [ ] Applies correct lot sizes for F&O contracts according to effective date schedule
-- [ ] Gracefully flags unrecognized instrument formats for user review without crashing
+- [x] Parses standard Indian ticker patterns (e.g., `NIFTY24OCT25000CE`, `BANKNIFTY24NOVFUT`, `RELIANCE`)
+- [x] Extracts option type (`CE` / `PE`), strike price, and expiry timestamp accurately
+- [x] Applies correct lot sizes for F&O contracts according to effective date schedule
+- [x] Gracefully flags unrecognized instrument formats for user review without crashing
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_instruments.py`
-- [ ] Build succeeds: `mypy services/analytics/app/engine/instruments.py`
-- [ ] Manual check: Test with 20 real F&O and equity symbols and assert 100% correct classification
+- [x] Tests pass: `pytest services/analytics/tests/test_instruments.py`
+- [x] Build succeeds: `mypy services/analytics/app/engine/instruments.py`
+- [x] Manual check: Test with 20 real F&O and equity symbols and assert 100% correct classification
 
 **Dependencies:** Task 6
 
@@ -274,7 +274,7 @@
 ---
 
 ## Checkpoint: Pairing & Charges
-- [ ] Instrument normalization handles Equity and F&O symbols accurately
+- [x] Instrument normalization handles Equity and F&O symbols accurately
 - [ ] FIFO pairing accurately pairs complex multi-fill orders and short sales
 - [ ] Indian statutory charges match broker calculators within 1 rupee tolerance
 - [ ] Review with team before proceeding

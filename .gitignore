@@ -68,3 +68,7 @@ Thumbs.db
 .claude/
 .aider-desk/
 skills-lock.json
+
+# TypeScript Build Info
+*.tsbuildinfo
+
