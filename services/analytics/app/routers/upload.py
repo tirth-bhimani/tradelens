@@ -7,6 +7,8 @@ from typing import Any, Optional
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
 
+from app.models.fills import ParseCsvRequest, ParseResult
+from app.parsers import detect_broker, parse_tradebook_csv
 from app.security.sanitizer import MAX_FILE_SIZE_BYTES, sanitize_csv_stream
 
 router = APIRouter(prefix="/api/v1/trades", tags=["trades"])
@@ -50,14 +52,11 @@ async def validate_csv(payload: CsvValidationRequest) -> CsvValidationResponse:
     sanitized, flagged = sanitize_csv_stream(payload.content)
     lines = sanitized.splitlines()
 
-    # Simple broker header signature detection for Task 5 prep
+    # Broker header signature detection
     detected_broker = "UNKNOWN"
     if lines:
-        header_lower = lines[0].lower()
-        if "trade_date" in header_lower and "trade_id" in header_lower:
-            detected_broker = "ZERODHA"
-        elif "symbol" in header_lower and "quantity" in header_lower:
-            detected_broker = "GENERIC_CSV"
+        headers = [h.strip() for h in lines[0].split(",")]
+        detected_broker = detect_broker(headers)
 
     preview = "\n".join(lines[:5]) if lines else ""
 
@@ -118,4 +117,28 @@ async def upload_csv_stream(file: UploadFile = File(...)) -> CsvValidationRespon
         sanitized_preview="\n".join(lines[:5]) if lines else "",
         detected_broker="UNKNOWN",
         details={"file_size_bytes": len(content_bytes)},
+    )
+
+
+@router.post(
+    "/parse-csv",
+    response_model=ParseResult,
+    summary="Parse sanitized CSV tradebook into standardized fills",
+)
+async def parse_csv(payload: ParseCsvRequest) -> ParseResult:
+    """Parse CSV tradebook into typed RawFillCreate models using universal auto-detection or custom mapping."""
+    if not payload.file_name.lower().endswith(".csv"):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Only .csv files can be parsed.",
+        )
+
+    # Sanitize formulas before parsing (defense-in-depth)
+    sanitized_text, _ = sanitize_csv_stream(payload.content)
+
+    return parse_tradebook_csv(
+        csv_content=sanitized_text,
+        custom_mapping=payload.custom_mapping,
+        import_id=payload.import_id,
+        user_id=payload.user_id,
     )

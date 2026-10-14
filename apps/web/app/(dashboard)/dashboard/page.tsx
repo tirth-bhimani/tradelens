@@ -33,41 +33,41 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Starting Capital */}
         <div className="p-5 card-zerodha-glass space-y-1.5">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Configured Capital</span>
-            <div className="p-1.5 rounded-[4px] bg-emerald-50 text-emerald-600">
+            <div className="p-1.5 rounded-[4px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-bold text-slate-900 dark:text-white">
             {capital > 0 ? formatIndianDenomination(capital) : "Not Set"}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             Baseline for return on capital and drawdown limits.
           </p>
         </div>
 
         {/* Timezone & Market */}
         <div className="p-5 card-zerodha-glass space-y-1.5">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Market Session</span>
-            <div className="p-1.5 rounded-[4px] bg-blue-50 text-[#387ed1]">
+            <div className="p-1.5 rounded-[4px] bg-blue-50 dark:bg-blue-950/60 text-[#387ed1] dark:text-sky-400">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-bold text-slate-900 dark:text-white">
             NSE / BSE
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             Timezone: {timezone} (09:15 - 15:30 IST)
           </p>
         </div>
 
         {/* Segments */}
         <div className="p-5 card-zerodha-glass space-y-1.5">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Active Segments</span>
-            <div className="p-1.5 rounded-[4px] bg-sky-50 text-sky-600">
+            <div className="p-1.5 rounded-[4px] bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
               <Layers className="w-4 h-4" />
             </div>
           </div>
@@ -75,27 +75,27 @@ export default async function DashboardPage() {
             {segments.map((seg: string) => (
               <span
                 key={seg}
-                className="px-2 py-0.5 rounded-[3px] text-xs font-bold bg-slate-100 text-slate-700"
+                className="px-2 py-0.5 rounded-[3px] text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
               >
                 {seg}
               </span>
             ))}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             STT and exchange tax rates mapped automatically.
           </p>
         </div>
       </div>
 
       {/* Empty State / Upload Callout */}
-      <div className="p-8 md:p-12 rounded-[8px] bg-white border border-dashed border-blue-200 text-center space-y-4">
-        <div className="w-14 h-14 rounded-[8px] bg-blue-50 text-[#387ed1] mx-auto flex items-center justify-center">
+      <div className="p-8 md:p-12 rounded-[8px] bg-white dark:bg-[#0f172a]/70 border border-dashed border-blue-200 dark:border-blue-900/60 text-center space-y-4 shadow-xs backdrop-blur-xs">
+        <div className="w-14 h-14 rounded-[8px] bg-blue-50 dark:bg-blue-950/60 text-[#387ed1] dark:text-sky-400 border border-blue-100 dark:border-blue-900/50 mx-auto flex items-center justify-center">
           <UploadCloud className="w-7 h-7" />
         </div>
 
         <div className="max-w-md mx-auto space-y-1.5">
-          <h2 className="text-lg font-bold text-slate-900">Your Tradebook is Empty</h2>
-          <p className="text-xs text-slate-500 leading-relaxed">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Your Tradebook is Empty</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             Upload your tradebook CSV to compute FIFO round-trip trades, identify behavioral leak patterns, and start backtesting rules.
           </p>
         </div>

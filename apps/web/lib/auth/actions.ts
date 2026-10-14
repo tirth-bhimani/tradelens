@@ -64,8 +64,8 @@ export async function signupWithEmail(
     return { error: "Email and password are required." };
   }
 
-  if (password.length < 6) {
-    return { error: "Password must be at least 6 characters long." };
+  if (password.length < 8) {
+    return { error: "Password must be at least 8 characters long." };
   }
 
   if (confirmPassword && password !== confirmPassword) {
@@ -96,14 +96,29 @@ export async function signupWithEmail(
 }
 
 /**
- * Initiate Google OAuth authentication flow with dynamic origin detection.
+ * Initiate Google OAuth authentication flow with hardened redirect URL detection.
  */
 export async function signInWithGoogle(): Promise<void> {
   const supabase = createClient();
-  const headerList = headers();
-  const host = headerList.get("x-forwarded-host") || headerList.get("host") || "localhost:3000";
-  const proto = headerList.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  const rawAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  let appUrl: string;
+  if (rawAppUrl) {
+    appUrl = rawAppUrl.replace(/\/+$/, "");
+  } else if (process.env.NODE_ENV === "production") {
+    throw new Error("NEXT_PUBLIC_APP_URL environment variable must be configured in production.");
+  } else {
+    // Safe development fallback strictly pinned to localhost
+    const headerList = headers();
+    const host = headerList.get("host") || "localhost:3000";
+    const isLocalhost =
+      host.startsWith("localhost:") ||
+      host.startsWith("127.0.0.1:") ||
+      host === "localhost" ||
+      host === "127.0.0.1";
+    const safeHost = isLocalhost ? host : "localhost:3000";
+    appUrl = `http://${safeHost}`;
+  }
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",

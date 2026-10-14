@@ -16,7 +16,7 @@ export default async function ImportsPage() {
       <div className="space-y-1.5">
         <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[#387ed1] dark:text-sky-400 text-xs font-bold uppercase tracking-wider">
           <UploadCloud className="w-3.5 h-3.5" />
-          <span>Ingestion Pipeline • Task 4</span>
+          <span>Ingestion Pipeline</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Tradebook Imports
@@ -82,12 +82,12 @@ export default async function ImportsPage() {
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Supported Formats</h3>
             <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
               <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <div className="font-semibold text-slate-900 dark:text-slate-100">Zerodha Tradebook CSV</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">Equity Intraday/Delivery &amp; F&amp;O Index Options</div>
+                <div className="font-semibold text-slate-900 dark:text-slate-100">Universal Broker CSVs</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Auto-detected exports from Zerodha, Groww, Upstox, Angel One, Dhan, ICICI, and more</div>
               </div>
               <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <div className="font-semibold text-slate-900 dark:text-slate-100">Custom Column CSV</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">Standard columns: Trade Date, Symbol, Type, Qty, Price</div>
+                <div className="font-semibold text-slate-900 dark:text-slate-100">Custom &amp; Journal CSVs</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Any trading spreadsheet: Date, Symbol, Buy/Sell, Qty, Price</div>
               </div>
             </div>
           </div>

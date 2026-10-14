@@ -296,10 +296,10 @@ export function FileDropzone({ onUploadSuccess, className = "" }: FileDropzonePr
                 {/* Badges for Supported Formats */}
                 <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
                   <span className="px-2.5 py-1 rounded-[3px] text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    Zerodha Tradebook (.csv)
+                    All Broker Formats (.csv)
                   </span>
                   <span className="px-2.5 py-1 rounded-[3px] text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    Custom Column CSV
+                    Auto-Detected Headers
                   </span>
                   <span className="px-2.5 py-1 rounded-[3px] text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] dark:text-sky-400 border border-blue-200 dark:border-blue-800">
                     Max 25 MB

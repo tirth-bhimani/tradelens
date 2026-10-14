@@ -91,8 +91,9 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (dbError) {
+      console.error("Database import insertion failed:", dbError);
       return NextResponse.json(
-        { error: `Database import tracking failed: ${dbError.message}` },
+        { error: "Failed to record trade import. Please try again later." },
         { status: 500 }
       );
     }
@@ -107,7 +108,10 @@ export async function POST(req: NextRequest) {
       uploadedAt: importRecord?.created_at || new Date().toISOString(),
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown upload error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Upload handler caught unexpected exception:", err);
+    return NextResponse.json(
+      { error: "An error occurred while processing the upload. Please try again." },
+      { status: 500 }
+    );
   }
 }

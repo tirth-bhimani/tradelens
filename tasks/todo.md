@@ -125,28 +125,31 @@
 
 ---
 
-## Task 5: Broker CSV parser (Zerodha tradebook & custom column mapper)
+## Task 5: General-purpose trade CSV parser (Universal column inference & multi-broker support)
 
-**Description:** Implement the ingestion parser in Python that auto-detects broker headers (starting with Zerodha tradebook CSV), parses dates, timestamps, symbols, transaction types (BUY/SELL), quantities, and trade prices into a standardized fill schema, and provides a fallback column-mapping parser for custom CSV headers.
+**Description:** Implement a broker-agnostic, general-purpose tradebook CSV parsing engine in Python that automatically detects and maps column headers across any broker export (Groww, Upstox, Angel One, ICICI Direct, Kotak, Zerodha, Dhan, Fyers, Finvasia, Interactive Brokers) or custom trading spreadsheet, normalizes dates, times, symbols, transaction types (BUY/SELL), quantities, and trade prices into a standardized fill schema with IST timezone awareness, and supports custom column mappings.
 
 **Acceptance criteria:**
-- [ ] Zerodha tradebook format is automatically recognized by header signature
-- [ ] Standard column mapper parses arbitrary CSVs given column mappings (`trade_date`, `symbol`, `type`, `quantity`, `price`, `timestamp`)
-- [ ] Fills are extracted into typed Pydantic models with normalized timestamps in IST
-- [ ] Unit tests pass for valid Zerodha CSVs and sample custom CSVs
+- [x] Universal column inference automatically maps standard trade columns (date, time, symbol, trade type, quantity, price, trade ID, order ID) across any broker or custom CSV
+- [x] Known broker formats (Zerodha, Groww, Upstox, Angel One, Dhan, etc.) recognized seamlessly
+- [x] Custom column mapper parses arbitrary spreadsheets given explicit column mappings
+- [x] Fills are extracted into typed Pydantic models (`RawFillCreate`) with normalized timestamps in IST (`Asia/Kolkata` / `+05:30`) and deterministic fallback trade IDs
+- [x] Comprehensive unit tests pass across multiple broker formats, custom mappings, and corrupt row isolation
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_parsers.py`
-- [ ] Build succeeds: `mypy services/analytics/app/parsers`
-- [ ] Manual check: Run parser against sample Zerodha tradebook file and inspect parsed fill records
+- [x] Tests pass: `pytest services/analytics/tests/test_parsers.py`
+- [x] Build succeeds: `mypy services/analytics/app/parsers`
+- [x] Manual check: Run parser against sample tradebook files and inspect parsed fill records
 
 **Dependencies:** Task 4
 
 **Files likely touched:**
 - `services/analytics/app/parsers/base.py`
-- `services/analytics/app/parsers/zerodha.py`
+- `services/analytics/app/parsers/universal.py`
 - `services/analytics/app/parsers/custom_mapper.py`
-- `services/analytics/app/models/raw_fill.py`
+- `services/analytics/app/parsers/zerodha.py`
+- `services/analytics/app/parsers/normalizer.py`
+- `services/analytics/app/models/fills.py`
 - `services/analytics/tests/test_parsers.py`
 
 **Estimated scope:** Medium (3-5 files)
@@ -181,8 +184,8 @@
 ---
 
 ## Checkpoint: Ingestion Pipeline
-- [ ] CSV uploads store securely in private bucket
-- [ ] Zerodha and custom mapped CSVs parse into normalized fills
+- [x] CSV uploads store securely in private bucket
+- [x] Universal broker and custom CSVs parse into normalized fills
 - [ ] Duplicate uploads are cleanly detected and reported
 - [ ] Review with team before proceeding
 

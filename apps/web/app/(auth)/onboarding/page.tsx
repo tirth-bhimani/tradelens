@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Clock, ArrowRight, User, Sparkles } from "lucide-react";
 import { completeOnboarding, type AuthState } from "@/lib/auth/actions";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -26,19 +27,8 @@ export default function OnboardingPage() {
     <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-white via-slate-50/50 to-white text-slate-900">
       <div className="w-full max-w-lg space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2.5 group">
-            <div className="w-9 h-9 rounded-[6px] bg-[#387ed1] text-white flex items-center justify-center shadow-sm group-hover:bg-[#2b6ebf] transition-colors">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 17l6-6 4 4 8-8" />
-                <path d="M14 7h7v7" />
-              </svg>
-            </div>
-            <div className="flex items-baseline">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">Trade</span>
-              <span className="text-2xl font-bold tracking-tight text-[#387ed1]">Lens</span>
-            </div>
-          </Link>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <BrandLogo variant="horizontal" size="lg" href="/" />
           <div className="pt-1">
             <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-[3px] bg-blue-50 border border-blue-200 text-[#387ed1] text-[11px] font-bold uppercase tracking-wider">
               <Sparkles className="w-3 h-3 text-[#387ed1]" />

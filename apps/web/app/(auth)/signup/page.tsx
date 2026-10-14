@@ -7,6 +7,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import { signupWithEmail, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 function OAuthErrorBanner() {
   const searchParams = useSearchParams();
@@ -46,23 +47,14 @@ export default function SignupPage() {
 
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2.5 group">
-            <div className="w-9 h-9 rounded-[6px] bg-[#387ed1] text-white flex items-center justify-center shadow-sm group-hover:bg-[#2b6ebf] transition-colors">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 17l6-6 4 4 8-8" />
-                <path d="M14 7h7v7" />
-              </svg>
-            </div>
-            <div className="flex items-baseline">
-              <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Trade</span>
-              <span className="text-2xl font-bold tracking-tight text-[#387ed1]">Lens</span>
-            </div>
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-1">Open Free Account</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Uncover behavioral leaks and test trading rules with deterministic replay
-          </p>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <BrandLogo variant="horizontal" size="lg" href="/" />
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-1">Open Free Account</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Uncover behavioral leaks and test trading rules with deterministic replay
+            </p>
+          </div>
         </div>
 
         {/* Auth Card */}
@@ -153,7 +145,8 @@ export default function SignupPage() {
                   name="password"
                   type="password"
                   required
-                  placeholder="At least 6 characters"
+                  placeholder="At least 8 characters"
+                  minLength={8}
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#387ed1] focus:ring-1 focus:ring-[#387ed1] transition"
                 />
               </div>

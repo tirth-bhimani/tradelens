@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 export function Footer() {
   return (
@@ -9,14 +10,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-100 dark:border-slate-800">
           {/* Brand Info */}
           <div className="md:col-span-1 space-y-3">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-[4px] bg-[#387ed1] text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                TL
-              </div>
-              <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-                Trade<span className="text-[#387ed1]">Lens</span>
-              </span>
-            </Link>
+            <BrandLogo variant="horizontal" size="md" href="/" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               India&apos;s behavioral trade journal &amp; deterministic rule backtester. Built for retail traders trading NSE Equity &amp; F&amp;O.
             </p>

@@ -7,6 +7,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Lock, Mail, ArrowRight, Clock } from "lucide-react";
 import { loginWithEmail, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 function TimeoutBanner() {
   const searchParams = useSearchParams();
@@ -68,23 +69,14 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2.5 group">
-            <div className="w-9 h-9 rounded-[6px] bg-[#387ed1] text-white flex items-center justify-center shadow-sm group-hover:bg-[#2b6ebf] transition-colors">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 17l6-6 4 4 8-8" />
-                <path d="M14 7h7v7" />
-              </svg>
-            </div>
-            <div className="flex items-baseline">
-              <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Trade</span>
-              <span className="text-2xl font-bold tracking-tight text-[#387ed1]">Lens</span>
-            </div>
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-1">Welcome Back</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Sign in to your trading journal and backtesting workspace
-          </p>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <BrandLogo variant="horizontal" size="lg" href="/" />
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-1">Welcome Back</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Sign in to your trading journal and backtesting workspace
+            </p>
+          </div>
         </div>
 
         {/* Auth Card: TradeLens Precision Glass Card */}

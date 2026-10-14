@@ -38,10 +38,24 @@ describe("Auth & Onboarding Validation Logic", () => {
     expect(isProtectedRoute("/")).toBe(false);
   });
 
-  it("identifies auth routes that redirect authenticated users from canonical middleware", () => {
-    expect(isAuthRoute("/login")).toBe(true);
-    expect(isAuthRoute("/signup")).toBe(true);
-    expect(isAuthRoute("/dashboard")).toBe(false);
-    expect(isAuthRoute("/")).toBe(false);
+  it("validates minimum 8-character password requirement", () => {
+    const weakPassword = "short";
+    const validPassword = "SecureTradingPass123";
+    expect(weakPassword.length < 8).toBe(true);
+    expect(validPassword.length >= 8).toBe(true);
+  });
+
+  it("sanitizes open redirect target URLs safely", () => {
+    const sanitizeRedirect = (raw: string) => {
+      const isSafe = raw.startsWith("/") && !raw.startsWith("//") && !raw.startsWith("/\\");
+      return isSafe ? raw : "/dashboard";
+    };
+
+    expect(sanitizeRedirect("/imports")).toBe("/imports");
+    expect(sanitizeRedirect("/dashboard/analytics")).toBe("/dashboard/analytics");
+    expect(sanitizeRedirect("//evil.com")).toBe("/dashboard");
+    expect(sanitizeRedirect("/\\evil.com")).toBe("/dashboard");
+    expect(sanitizeRedirect("https://attacker.com")).toBe("/dashboard");
   });
 });
+

@@ -5,6 +5,14 @@ import { ThemeProvider } from "@/components/theme/ThemeProvider";
 export const metadata: Metadata = {
   title: "TradeLens | Behavioral Trade Journal & Rule Backtester",
   description: "Identify trading behavior leaks and replay rules on your past trades.",
+  icons: {
+    icon: [
+      { url: "/brand/icon-square-light.png", media: "(prefers-color-scheme: light)" },
+      { url: "/brand/icon-square-dark.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
