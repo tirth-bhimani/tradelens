@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { Lock, Mail, ArrowRight } from "lucide-react";
 import { loginWithEmail, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 function OAuthErrorBanner() {
   const searchParams = useSearchParams();
@@ -13,7 +14,7 @@ function OAuthErrorBanner() {
   if (!errorMsg) return null;
 
   return (
-    <div className="p-3 rounded-[6px] bg-amber-50 border border-amber-200 text-xs font-medium text-amber-800 leading-relaxed">
+    <div className="p-3 rounded-[6px] bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-xs font-medium text-amber-800 dark:text-amber-300 leading-relaxed">
       {errorMsg}
     </div>
   );
@@ -43,7 +44,12 @@ export default function LoginPage() {
   const [state, formAction] = useFormState<AuthState, FormData>(loginWithEmail, {});
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-white via-slate-50/50 to-white text-slate-900">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-white via-slate-50/50 to-white dark:from-[#0b0f19] dark:via-[#0e1424] dark:to-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-200 relative">
+      {/* Top Floating Controls */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
@@ -55,12 +61,12 @@ export default function LoginPage() {
               </svg>
             </div>
             <div className="flex items-baseline">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">Trade</span>
+              <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Trade</span>
               <span className="text-2xl font-bold tracking-tight text-[#387ed1]">Lens</span>
             </div>
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight pt-1">Welcome Back</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight pt-1">Welcome Back</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Sign in to your trading journal and backtesting workspace
           </p>
         </div>
@@ -97,11 +103,11 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="relative flex items-center justify-center">
-            <div className="border-t border-slate-200 w-full"></div>
-            <span className="bg-white/80 px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="border-t border-slate-200 dark:border-slate-700 w-full"></div>
+            <span className="bg-white/90 dark:bg-slate-800/90 px-3 text-[11px] font-semibold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
               Or with email
             </span>
-            <div className="border-t border-slate-200 w-full"></div>
+            <div className="border-t border-slate-200 dark:border-slate-700 w-full"></div>
           </div>
 
           {/* OAuth Redirect Error Banner */}
@@ -111,7 +117,7 @@ export default function LoginPage() {
 
           {/* Form Error Banner */}
           {state?.error && (
-            <div className="p-3 rounded-[6px] bg-rose-50 border border-rose-200 text-xs font-medium text-rose-700">
+            <div className="p-3 rounded-[6px] bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs font-medium text-rose-700 dark:text-rose-400">
               {state.error}
             </div>
           )}
@@ -123,7 +129,7 @@ export default function LoginPage() {
             </Suspense>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700" htmlFor="email">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300" htmlFor="email">
                 Email Address
               </label>
               <div className="relative">
@@ -134,13 +140,13 @@ export default function LoginPage() {
                   type="email"
                   required
                   placeholder="trader@example.com"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] bg-white border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#387ed1] focus:ring-1 focus:ring-[#387ed1] transition"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#387ed1] focus:ring-1 focus:ring-[#387ed1] transition"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700" htmlFor="password">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300" htmlFor="password">
                 Password
               </label>
               <div className="relative">
@@ -151,7 +157,7 @@ export default function LoginPage() {
                   type="password"
                   required
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] bg-white border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#387ed1] focus:ring-1 focus:ring-[#387ed1] transition"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#387ed1] focus:ring-1 focus:ring-[#387ed1] transition"
                 />
               </div>
             </div>
@@ -161,9 +167,9 @@ export default function LoginPage() {
         </div>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-slate-500 dark:text-slate-400">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-[#387ed1] hover:underline font-semibold">
+          <Link href="/signup" className="text-[#387ed1] dark:text-sky-400 hover:underline font-semibold">
             Create free account
           </Link>
         </p>

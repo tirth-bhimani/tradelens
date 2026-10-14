@@ -10,6 +10,11 @@
   --groww-green: #00d09c;
 }
 
+.dark {
+  --background: #0b0f19;
+  --foreground: #f1f5f9;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -208,6 +213,34 @@ body {
       0 12px 30px -6px rgba(56, 126, 209, 0.15),
       0 3px 8px 0 rgba(0, 0, 0, 0.04),
       inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
+  }
+
+  /* Dark Mode Card & Secondary Button Overrides */
+  .dark .card-zerodha-glass {
+    background: rgba(15, 23, 42, 0.75);
+    border-color: rgba(51, 65, 85, 0.7);
+    box-shadow: 
+      0 4px 18px -2px rgba(0, 0, 0, 0.4),
+      0 1px 3px 0 rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .dark .card-zerodha-glass:hover {
+    border-color: rgba(56, 126, 209, 0.5);
+    box-shadow: 
+      0 12px 30px -6px rgba(56, 126, 209, 0.25),
+      0 3px 8px 0 rgba(0, 0, 0, 0.5),
+      inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .dark .btn-zerodha-secondary {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+  }
+  .dark .btn-zerodha-secondary:hover {
+    background-color: #334155;
+    border-color: #475569;
+    color: #ffffff;
   }
 
   /* Tag 3px */

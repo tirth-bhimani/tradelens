@@ -9,7 +9,7 @@ const LEAKS = [
     id: "revenge-trading",
     name: "Revenge Trading",
     badge: "Most Destructive",
-    badgeColor: "bg-rose-50 text-rose-700 border-rose-200/80",
+    badgeColor: "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border-rose-200/80 dark:border-rose-800/80",
     description: "Taking an immediate high-emotion trade within 5 minutes of a stop-loss hit to 'win back' money.",
     stat: "42% of monthly losses",
     impactVal: 38500,
@@ -23,7 +23,7 @@ const LEAKS = [
     id: "overtrading",
     name: "Overtrading & Chop Addiction",
     badge: "Fee Drainer",
-    badgeColor: "bg-amber-50 text-amber-700 border-amber-200/80",
+    badgeColor: "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800/80",
     description: "Exceeding your planned trade count and forcing entries into low-probability afternoon consolidation.",
     stat: "12+ trades / session",
     impactVal: 14200,
@@ -38,7 +38,7 @@ const LEAKS = [
     id: "size-creep",
     name: "Position Size Creep",
     badge: "Risk Violation",
-    badgeColor: "bg-purple-50 text-purple-700 border-purple-200/80",
+    badgeColor: "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400 border-purple-200/80 dark:border-purple-800/80",
     description: "Arbitrarily doubling or tripling lot sizes to recover faster, turning small drawdowns into blown capital.",
     stat: "3x normal lot exposure",
     impactVal: 24600,
@@ -53,7 +53,7 @@ const LEAKS = [
     id: "holding-losers",
     name: "Asymmetric Holding Time",
     badge: "Psychological Trap",
-    badgeColor: "bg-blue-50 text-[#387ed1] border-blue-200/80",
+    badgeColor: "bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] dark:text-sky-400 border-blue-200/80 dark:border-blue-800/80",
     description: "Cutting profitable scalps in 3 minutes while holding losing positions for 2 hours hoping for breakeven.",
     stat: "1:4 Risk-Reward distortion",
     impactVal: 19800,
@@ -90,7 +90,7 @@ const cardVariants: Variants = {
 
 export function LeakShowcase() {
   return (
-    <section id="leaks" className="py-16 md:py-24 bg-slate-50/60 border-t border-slate-200/80">
+    <section id="leaks" className="py-16 md:py-24 bg-slate-50/60 dark:bg-[#090d16] border-t border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -99,16 +99,16 @@ export function LeakShowcase() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto space-y-3"
         >
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold uppercase tracking-wider">
-            <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-400 text-xs font-bold uppercase tracking-wider">
+            <AlertOctagon className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
             <span>Behavioral Diagnostics</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             The 4 Deadly Leaks <span className="text-[#387ed1]">Draining Indian Traders</span>
           </h2>
 
-          <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
             Most traders don&apos;t fail because of technical analysis. They fail because of predictable psychological leaks that quietly wipe out hard-earned profits.
           </p>
         </motion.div>
@@ -150,7 +150,7 @@ export function LeakShowcase() {
                   <span className={`tag-zerodha border ${leak.badgeColor}`}>
                     {leak.badge}
                   </span>
-                  <div className="flex items-center space-x-1 text-xs font-bold text-rose-600">
+                  <div className="flex items-center space-x-1 text-xs font-bold text-rose-600 dark:text-rose-400">
                     <TrendingDown className="w-3.5 h-3.5 inline" />
                     <span>
                       <AnimatedCounter
@@ -162,28 +162,28 @@ export function LeakShowcase() {
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#387ed1] transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#387ed1] transition-colors">
                   {leak.name}
                 </h3>
 
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   {leak.description}
                 </p>
 
-                <div className="flex items-center space-x-2 text-xs text-slate-500 pt-1">
-                  <span className="font-semibold text-slate-700">Metric Indicator:</span>
-                  <span className="text-slate-600">{leak.stat}</span>
+                <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 pt-1">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Metric Indicator:</span>
+                  <span className="text-slate-600 dark:text-slate-400">{leak.stat}</span>
                 </div>
               </div>
 
               {/* Guardrail Fix Callout */}
-              <div className="pt-3 border-t border-slate-100 bg-slate-50/70 -mx-6 -mb-6 p-4 rounded-b-[7px] flex items-center justify-between relative z-10">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 -mx-6 -mb-6 p-4 rounded-b-[7px] flex items-center justify-between relative z-10">
                 <div>
-                  <div className="text-[11px] font-semibold text-[#387ed1]">Rule Lab Guardrail:</div>
-                  <div className="text-xs text-slate-800 font-medium mt-0.5">{leak.ruleFix}</div>
+                  <div className="text-[11px] font-semibold text-[#387ed1] dark:text-sky-400">Rule Lab Guardrail:</div>
+                  <div className="text-xs text-slate-800 dark:text-slate-200 font-medium mt-0.5">{leak.ruleFix}</div>
                 </div>
                 <div className="text-right pl-3 shrink-0">
-                  <div className="text-xs font-bold text-emerald-600">{leak.ruleImpact}</div>
+                  <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{leak.ruleImpact}</div>
                 </div>
               </div>
             </motion.div>

@@ -58,7 +58,7 @@ export function RuleLabShowcase() {
   const selectedRule = CATALOG_RULES.find((r) => r.id === selectedRuleId) || CATALOG_RULES[0];
 
   return (
-    <section id="rule-lab" className="py-16 md:py-24 bg-white border-t border-slate-200/80">
+    <section id="rule-lab" className="py-16 md:py-24 bg-white dark:bg-[#0b0f19] border-t border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Explanation */}
@@ -69,39 +69,39 @@ export function RuleLabShowcase() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 space-y-6"
           >
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-blue-50 border border-blue-200 text-[#387ed1] text-xs font-bold uppercase tracking-wider">
-              <Sliders className="w-3.5 h-3.5 text-[#387ed1]" />
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[#387ed1] dark:text-sky-400 text-xs font-bold uppercase tracking-wider">
+              <Sliders className="w-3.5 h-3.5 text-[#387ed1] dark:text-sky-400" />
               <span>Backtest Your Own History</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               Rule Lab Replay: See What <span className="text-[#387ed1]">Discipline Would Have Made You</span>
             </h2>
 
-            <p className="text-slate-600 text-base leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
               Don&apos;t guess what rules would do. TradeLens deterministically replays your past trade executions through fixed behavioral filters.
             </p>
 
             <div className="space-y-3 pt-1">
               <div className="flex items-start space-x-3">
-                <div className="p-1 rounded-[3px] bg-emerald-50 text-emerald-600 mt-0.5 shrink-0">
+                <div className="p-1 rounded-[3px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0">
                   <Check className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">70/30 Train &amp; Test Split</h4>
-                  <p className="text-xs text-slate-600">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">70/30 Train &amp; Test Split</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
                     Rules calibrated on the first 70% of trades are rigorously tested against the remaining 30% out-of-sample data.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="p-1 rounded-[3px] bg-blue-50 text-[#387ed1] mt-0.5 shrink-0">
+                <div className="p-1 rounded-[3px] bg-blue-50 dark:bg-blue-950/40 text-[#387ed1] dark:text-sky-400 mt-0.5 shrink-0">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">Zero Overfitting Guarantee</h4>
-                  <p className="text-xs text-slate-600">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Zero Overfitting Guarantee</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
                     Curated rule templates prevent curve-fitting illusions and preserve true real-world edge.
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export function RuleLabShowcase() {
             className="lg:col-span-7 space-y-4"
           >
             {/* Interactive Tab Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 bg-slate-100/80 rounded-[6px] border border-slate-200">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 bg-slate-100/80 dark:bg-slate-900 rounded-[6px] border border-slate-200 dark:border-slate-800">
               {CATALOG_RULES.map((rule) => {
                 const isSelected = rule.id === selectedRuleId;
                 return (
@@ -141,11 +141,11 @@ export function RuleLabShowcase() {
                     {isSelected && (
                       <motion.div
                         layoutId="activeRuleTab"
-                        className="absolute inset-0 bg-white rounded-[4px] shadow-sm border border-slate-200/80"
+                        className="absolute inset-0 bg-white dark:bg-slate-800 rounded-[4px] shadow-sm border border-slate-200/80 dark:border-slate-700"
                         transition={{ type: "spring", stiffness: 450, damping: 30 }}
                       />
                     )}
-                    <span className={`relative z-10 ${isSelected ? "text-[#387ed1] font-bold" : "text-slate-600 hover:text-slate-900"}`}>
+                    <span className={`relative z-10 ${isSelected ? "text-[#387ed1] dark:text-sky-400 font-bold" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"}`}>
                       {rule.title}
                     </span>
                   </button>
@@ -155,36 +155,36 @@ export function RuleLabShowcase() {
 
             {/* Active Simulation Card with Animated Curve and Metrics */}
             <div className="card-zerodha-glass p-6 space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="tag-zerodha bg-blue-50 border border-blue-200 text-[#387ed1]">
+                    <span className="tag-zerodha bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-[#387ed1] dark:text-sky-400">
                       {selectedRule.tag}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium">Replay Simulation</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Replay Simulation</span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedRule.title}</h3>
-                  <p className="text-xs text-slate-600 mt-0.5">{selectedRule.params}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">{selectedRule.title}</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">{selectedRule.params}</p>
                 </div>
 
                 <div className="sm:text-right">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                     Capital Protected
                   </div>
-                  <div className="text-xl font-bold text-emerald-600">
+                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
                     +<AnimatedCounter value={selectedRule.saved} prefix="₹" />
                   </div>
                 </div>
               </div>
 
               {/* Dynamic SVG Equity Curve Replay with Animated Path */}
-              <div className="relative bg-slate-50/80 rounded-[6px] p-4 border border-slate-200/80">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
-                  <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-                    <Activity className="w-3.5 h-3.5 text-[#387ed1]" />
+              <div className="relative bg-slate-50/80 dark:bg-slate-900/80 rounded-[6px] p-4 border border-slate-200/80 dark:border-slate-800">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+                  <span className="flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-300">
+                    <Activity className="w-3.5 h-3.5 text-[#387ed1] dark:text-sky-400" />
                     Equity Curve with Rule (Out-of-sample Test 30%)
                   </span>
-                  <span className="tag-zerodha bg-emerald-50 text-emerald-700 font-bold">
+                  <span className="tag-zerodha bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200/60 dark:border-emerald-800/60">
                     +18.4% Alpha
                   </span>
                 </div>
@@ -200,15 +200,15 @@ export function RuleLabShowcase() {
                       exit={{ opacity: 0 }}
                     >
                       {/* Grid lines */}
-                      <line x1="0" y1="20" x2="250" y2="20" stroke="#e2e8f0" strokeDasharray="3 3" />
-                      <line x1="0" y1="45" x2="250" y2="45" stroke="#e2e8f0" strokeDasharray="3 3" />
-                      <line x1="0" y1="70" x2="250" y2="70" stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <line x1="0" y1="20" x2="250" y2="20" stroke="currentColor" className="text-slate-200 dark:text-slate-700/60" strokeDasharray="3 3" />
+                      <line x1="0" y1="45" x2="250" y2="45" stroke="currentColor" className="text-slate-200 dark:text-slate-700/60" strokeDasharray="3 3" />
+                      <line x1="0" y1="70" x2="250" y2="70" stroke="currentColor" className="text-slate-200 dark:text-slate-700/60" strokeDasharray="3 3" />
 
                       {/* Ghost line (Without Rule) */}
                       <path
                         d="M0,70 L30,68 L60,78 L90,82 L120,72 L150,78 L180,82 L210,88 L250,90"
                         fill="none"
-                        stroke="#cbd5e1"
+                        stroke="#94a3b8"
                         strokeWidth="2"
                         strokeDasharray="4 4"
                       />
@@ -229,13 +229,13 @@ export function RuleLabShowcase() {
                   </AnimatePresence>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-200/60">
+                <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 pt-2 border-t border-slate-200/60 dark:border-slate-800">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
                       <span className="w-2.5 h-0.5 bg-[#387ed1] inline-block" /> With TradeLens Guardrail
                     </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2.5 h-0.5 bg-slate-300 border-dashed border-t inline-block" /> Unfiltered Baseline
+                    <span className="flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                      <span className="w-2.5 h-0.5 bg-slate-400 border-dashed border-t inline-block" /> Unfiltered Baseline
                     </span>
                   </div>
                   <span>142 Replay Fills</span>
@@ -244,13 +244,13 @@ export function RuleLabShowcase() {
 
               {/* Before vs After Callout */}
               <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="p-3 rounded-[4px] bg-rose-50/70 border border-rose-200/70">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-rose-600">Without Guardrail</div>
-                  <div className="text-xs font-semibold text-slate-800 mt-0.5">{selectedRule.beforeMetric}</div>
+                <div className="p-3 rounded-[4px] bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/70 dark:border-rose-900/40">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">Without Guardrail</div>
+                  <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">{selectedRule.beforeMetric}</div>
                 </div>
-                <div className="p-3 rounded-[4px] bg-emerald-50/70 border border-emerald-200/70">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">With TradeLens Replay</div>
-                  <div className="text-xs font-semibold text-emerald-800 mt-0.5">{selectedRule.afterMetric}</div>
+                <div className="p-3 rounded-[4px] bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">With TradeLens Replay</div>
+                  <div className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5">{selectedRule.afterMetric}</div>
                 </div>
               </div>
             </div>
