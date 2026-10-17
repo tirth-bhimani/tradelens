@@ -224,16 +224,16 @@
 **Description:** Build the core trade pairing engine in Python using First-In-First-Out (FIFO) matching to pair individual buy and sell fills into closed round-trip `trades`, handling partial fills, scaling in/out, short-selling (open sell, close buy), and intraday vs positional categorization.
 
 **Acceptance criteria:**
-- [ ] Matches buys and sells in strict chronological order using FIFO lot accounting
-- [ ] Supports partial fills (e.g. buy 100, sell 40, sell 60) and multiple scale-ins
-- [ ] Correctly identifies short trades opened by sell and closed by buy
-- [ ] Categorizes trades into intraday (opened and closed on same calendar day) vs positional
-- [ ] Flags unmatched open positions and edge cases (bonus, split, expiry settlement) for review
+- [x] Matches buys and sells in strict chronological order using FIFO lot accounting
+- [x] Supports partial fills (e.g. buy 100, sell 40, sell 60) and multiple scale-ins
+- [x] Correctly identifies short trades opened by sell and closed by buy
+- [x] Categorizes trades into intraday (opened and closed on same calendar day) vs positional
+- [x] Flags unmatched open positions and edge cases (bonus, split, expiry settlement) for review
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_pairing.py`
-- [ ] Build succeeds: `mypy services/analytics/app/engine/pairing.py`
-- [ ] Manual check: Run against synthetic multi-fill trade scenarios and verify matched quantity and entry/exit timestamps
+- [x] Tests pass: `pytest services/analytics/tests/test_pairing.py`
+- [x] Build succeeds: `mypy services/analytics/app/engine/pairing.py`
+- [x] Manual check: Run against synthetic multi-fill trade scenarios and verify matched quantity and entry/exit timestamps
 
 **Dependencies:** Task 7
 
@@ -251,16 +251,16 @@
 **Description:** Build the statutory charges calculation engine for Indian financial markets, computing Brokerage, Securities Transaction Tax (STT), Exchange Turnover Fees, SEBI turnover fees, GST (18% on brokerage + exchange fees + SEBI), and Stamp Duty using configurable rate tables per segment (Equity Delivery, Equity Intraday, Futures, Options).
 
 **Acceptance criteria:**
-- [ ] Computes exact charges breakdown for each paired trade according to segment rules
-- [ ] Correctly applies STT (e.g. on sell side for delivery/intraday/futures, on sell side of premium for options)
-- [ ] Computes GST (18%) and Stamp Duty according to Indian state / exchange tariffs
-- [ ] Calculates Gross P&L, Total Charges, and Net P&L per trade
-- [ ] Allows overriding charge rates via an editable `charge_rates` configuration
+- [x] Computes exact charges breakdown for each paired trade according to segment rules
+- [x] Correctly applies STT (e.g. on sell side for delivery/intraday/futures, on sell side of premium for options)
+- [x] Computes GST (18%) and Stamp Duty according to Indian state / exchange tariffs
+- [x] Calculates Gross P&L, Total Charges, and Net P&L per trade
+- [x] Allows overriding charge rates via an editable `charge_rates` configuration
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_charges.py`
-- [ ] Build succeeds: `mypy services/analytics/app/engine/charges.py`
-- [ ] Manual check: Compare TradeLens charges calculation with official Zerodha brokerage calculator figures for 5 test trades
+- [x] Tests pass: `pytest services/analytics/tests/test_charges.py`
+- [x] Build succeeds: `mypy services/analytics/app/engine/charges.py`
+- [x] Manual check: Compare TradeLens charges calculation with official Zerodha brokerage calculator figures for 5 test trades
 
 **Dependencies:** Task 8
 
@@ -275,9 +275,9 @@
 
 ## Checkpoint: Pairing & Charges
 - [x] Instrument normalization handles Equity and F&O symbols accurately
-- [ ] FIFO pairing accurately pairs complex multi-fill orders and short sales
-- [ ] Indian statutory charges match broker calculators within 1 rupee tolerance
-- [ ] Review with team before proceeding
+- [x] FIFO pairing accurately pairs complex multi-fill orders and short sales
+- [x] Indian statutory charges match broker calculators within 1 rupee tolerance
+- [x] Review with team before proceeding
 
 ---
 

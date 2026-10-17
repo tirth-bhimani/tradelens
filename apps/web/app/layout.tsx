@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { IdleSessionTimeout } from "@/components/auth/idle-session-timeout";
 
 export const metadata: Metadata = {
   title: "TradeLens | Behavioral Trade Journal & Rule Backtester",
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
+      <body
+        className="min-h-screen antialiased bg-white text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200"
+        suppressHydrationWarning
+      >
         {/* Anti-FOUC inline script to immediately apply theme before paint */}
         <script
           dangerouslySetInnerHTML={{
@@ -39,9 +43,11 @@ export default function RootLayout({
             })()`,
           }}
         />
-      </head>
-      <body className="min-h-screen antialiased bg-white text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          {/* Automatic inactivity timeout active across the entire application */}
+          <IdleSessionTimeout />
+        </ThemeProvider>
       </body>
     </html>
   );

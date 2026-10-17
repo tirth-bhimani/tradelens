@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, ShieldAlert, LogOut, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -25,11 +25,14 @@ export function IdleSessionTimeout({
   warningSeconds = DEFAULT_WARNING_SECONDS,
 }: IdleSessionTimeoutProps) {
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
+  const [mounted, setMounted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [showWarning, setShowWarning] = useState(false);
   const [secondsRemaining, setSecondsRemaining] = useState(warningSeconds);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
 
   const timeoutMs = timeoutMinutes * 60 * 1000;
   const warningMs = warningSeconds * 1000;
@@ -37,11 +40,56 @@ export function IdleSessionTimeout({
   const lastThrottleRef = useRef<number>(0);
   const isLoggingOutRef = useRef<boolean>(false);
 
+  // Monitor auth state: only monitor inactivity if user has an active session
+  useEffect(() => {
+    let isMounted = true;
+    setMounted(true);
+
+    async function checkAuth() {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (isMounted) {
+          setIsAuthenticated(!!session?.user);
+        }
+      } catch {
+        if (isMounted) {
+          setIsAuthenticated(false);
+        }
+      }
+    }
+
+    checkAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (isMounted) {
+        const authed = !!session?.user;
+        setIsAuthenticated(authed);
+        if (typeof window !== "undefined") {
+          if (event === "SIGNED_IN") {
+            localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
+          } else if (event === "SIGNED_OUT" || !authed) {
+            localStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
+          }
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+
   /**
    * Records user activity into localStorage (throttled to avoid performance overhead).
    */
   const recordActivity = useCallback(() => {
-    if (typeof window === "undefined" || isLoggingOutRef.current) return;
+    if (typeof window === "undefined" || isLoggingOutRef.current || !isAuthenticated) return;
 
     const now = Date.now();
     // Throttle writes to once every 2 seconds
@@ -54,7 +102,7 @@ export function IdleSessionTimeout({
       }
       setShowWarning(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   /**
    * Executes sign out and redirects to login with reason=timeout.
@@ -68,11 +116,14 @@ export function IdleSessionTimeout({
       if (typeof window !== "undefined") {
         localStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
       }
+      // 1. Wipe server-side session cookies to prevent middleware from bouncing back to /dashboard
+      await fetch("/api/auth/signout", { method: "POST" }).catch(() => {});
+      // 2. Clear browser-side Supabase token
       await supabase.auth.signOut();
     } catch (err) {
       console.warn("Failed to sign out cleanly on idle timeout:", err);
     } finally {
-      // Hard redirect to clear all cookies and in-memory caches
+      // 3. Redirect to login with reason parameter
       if (typeof window !== "undefined") {
         window.location.href = "/login?reason=timeout";
       } else {
@@ -99,12 +150,15 @@ export function IdleSessionTimeout({
   }, [warningSeconds]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isAuthenticated) return;
 
-    // Initialize current timestamp if none exists
+    // Initialize or refresh current timestamp on active session mount
     const existing = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
-    if (!existing) {
-      localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
+    const lastActivity = existing ? parseInt(existing, 10) : 0;
+    const now = Date.now();
+    if (!lastActivity || isNaN(lastActivity) || (now - lastActivity >= timeoutMs)) {
+      // If no valid timestamp or stale from past sessions, refresh to now
+      localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
     }
 
     // Interactive events that reset the inactivity timer
@@ -138,13 +192,13 @@ export function IdleSessionTimeout({
       if (isLoggingOutRef.current) return;
 
       const stored = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
-      const lastActivity = stored ? parseInt(stored, 10) : Date.now();
-      const remainingMs = calculateRemainingIdleTime(lastActivity, timeoutMs);
+      const activityTime = stored ? parseInt(stored, 10) : Date.now();
+      const remainingMs = calculateRemainingIdleTime(activityTime, timeoutMs);
 
       if (remainingMs <= 0) {
         clearInterval(intervalId);
         handleLogout();
-      } else if (shouldShowIdleWarning(lastActivity, timeoutMs, warningMs)) {
+      } else if (shouldShowIdleWarning(activityTime, timeoutMs, warningMs)) {
         setShowWarning(true);
         setSecondsRemaining(Math.max(1, Math.ceil(remainingMs / 1000)));
       } else {
@@ -159,11 +213,12 @@ export function IdleSessionTimeout({
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(intervalId);
     };
-  }, [recordActivity, handleLogout, timeoutMs, warningMs]);
+  }, [isAuthenticated, recordActivity, handleLogout, timeoutMs, warningMs]);
 
-  if (!showWarning) {
+  if (!mounted || !isAuthenticated || !showWarning) {
     return null;
   }
+
 
   return (
     <div
@@ -209,7 +264,7 @@ export function IdleSessionTimeout({
             type="button"
             onClick={handleStayLoggedIn}
             disabled={isLoggingOut}
-            className="flex-1 py-2.5 px-4 rounded-[4px] bg-[#387ed1] hover:bg-[#2b6ebf] text-white text-xs font-semibold shadow-sm transition flex items-center justify-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-[#387ed1]/50"
+            className="flex-1 py-2.5 px-4 rounded-[4px] bg-[#387ed1] hover:bg-[#2b6ebf] text-white text-xs font-semibold shadow-sm transition flex items-center justify-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-[#387ed1]/50 cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Stay Logged In</span>
@@ -219,7 +274,7 @@ export function IdleSessionTimeout({
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="py-2.5 px-3.5 rounded-[4px] border border-slate-300 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-semibold transition flex items-center justify-center space-x-1.5 focus:outline-none"
+            className="py-2.5 px-3.5 rounded-[4px] border border-slate-300 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-semibold transition flex items-center justify-center space-x-1.5 focus:outline-none cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>{isLoggingOut ? "Signing out..." : "Log Out"}</span>

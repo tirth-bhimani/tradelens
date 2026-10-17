@@ -13,6 +13,18 @@ from app.models.instruments import (
     NormalizedInstrument,
     OptionType,
 )
+from app.models.charges import (
+    ChargeRateConfig,
+    ChargesBreakdown,
+)
+from app.models.trade import (
+    OpenPosition,
+    PairedTrade,
+    PairingResult,
+    PositionSide,
+    TradeInstrumentType,
+    TradeSegment,
+)
 
 __all__ = [
     "TradeType",
@@ -25,4 +37,13 @@ __all__ = [
     "InstrumentType",
     "OptionType",
     "NormalizedInstrument",
+    "TradeSegment",
+    "TradeInstrumentType",
+    "PositionSide",
+    "PairedTrade",
+    "OpenPosition",
+    "PairingResult",
+    "ChargeRateConfig",
+    "ChargesBreakdown",
 ]
+

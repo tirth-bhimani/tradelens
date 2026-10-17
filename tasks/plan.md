@@ -28,10 +28,11 @@ Tasks are tracked in `tasks/todo.md`.
 - [ ] Checkpoint 2: Ingestion pipeline verified
 
 ### Phase 3: Deterministic Trade Pairing & P&L Engine
-- [ ] Task 7: Instrument normalization (Equity, Futures, Options CE/PE, strike, lot size)
-- [ ] Task 8: FIFO trade fill pairing engine (partial fills, scaling, short sales)
-- [ ] Task 9: Indian statutory charges & tax computation engine
-- [ ] Checkpoint 3: Pairing & charges verified
+- [x] Task 7: Instrument normalization (Equity, Futures, Options CE/PE, strike, lot size)
+- [x] Task 8: FIFO trade fill pairing engine (partial fills, scaling, short sales)
+- [x] Task 9: Indian statutory charges & tax computation engine
+- [x] Checkpoint 3: Pairing & charges verified
+
 
 ### Phase 4: Accuracy Reconciliation & Core Metrics
 - [ ] Task 10: Broker statement reconciliation & discrepancy reporting

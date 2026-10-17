@@ -1,12 +1,11 @@
-"""Automated Database Schema and Row-Level Security (RLS) Verification Tests."""
-
+import os
 import uuid
 from typing import Generator
 import psycopg
 from psycopg.rows import dict_row
 import pytest
 
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/tradelens"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/tradelens")
 
 EXPECTED_TABLES = [
     "profiles",
@@ -29,9 +28,15 @@ EXPECTED_TABLES = [
 
 @pytest.fixture
 def db_conn() -> Generator[psycopg.Connection, None, None]:
-    """Database connection fixture."""
-    with psycopg.connect(DATABASE_URL, row_factory=dict_row) as conn:
+    """Database connection fixture. Skips tests if database is unreachable."""
+    try:
+        conn = psycopg.connect(DATABASE_URL, row_factory=dict_row, connect_timeout=2)
+    except Exception as exc:
+        pytest.skip(f"Database at {DATABASE_URL} is unreachable ({exc}). Skipping DB integration tests.")
+    try:
         yield conn
+    finally:
+        conn.close()
 
 
 def test_all_expected_tables_exist(db_conn: psycopg.Connection) -> None:

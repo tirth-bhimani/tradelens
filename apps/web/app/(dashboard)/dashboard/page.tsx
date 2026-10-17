@@ -13,19 +13,37 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="p-7 md:p-8 rounded-[8px] bg-gradient-to-tr from-[#387ed1] to-sky-600 text-white shadow-md relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl space-y-2.5">
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-white/20 border border-white/25 text-white text-[11px] font-bold">
-            <Sparkles className="w-3 h-3 text-sky-200" />
-            <span>Profile Verified • Ready for Import</span>
+      {/* Welcome Banner: Theme-adaptive Zerodha card aesthetic */}
+      <div className="card-zerodha-glass p-6 sm:p-8 relative overflow-hidden border border-slate-200/80 dark:border-slate-800 transition-colors">
+        {/* Subtle ambient light glow */}
+        <div
+          aria-hidden="true"
+          className="absolute -top-16 -right-16 w-64 h-64 bg-gradient-to-br from-slate-200/40 dark:from-slate-800/40 via-transparent to-transparent rounded-full blur-3xl pointer-events-none"
+        />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div className="max-w-2xl space-y-2.5">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-[3px] bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-semibold">
+              <Sparkles className="w-3 h-3 text-[#387ed1] dark:text-sky-400" />
+              <span>Profile Verified • Ready for Import</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              Welcome back, {displayName}
+            </h1>
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+              Upload your tradebook to uncover behavioral leaks (overtrading, revenge entries, holding losers) and test rule guardrails on your historical trades.
+            </p>
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            Welcome back, {displayName}
-          </h1>
-          <p className="text-xs md:text-sm text-blue-100 leading-relaxed max-w-xl">
-            Upload your tradebook to uncover behavioral leaks (overtrading, revenge entries, holding losers) and test rule guardrails on your historical trades.
-          </p>
+
+          <div className="shrink-0 flex items-center space-x-3">
+            <Link
+              href="/imports"
+              className="btn-zerodha-primary btn-groww-shimmer text-xs py-2 px-4 inline-flex items-center space-x-1.5"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Import Tradebook</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -51,7 +69,7 @@ export default async function DashboardPage() {
         <div className="p-5 card-zerodha-glass space-y-1.5">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Market Session</span>
-            <div className="p-1.5 rounded-[4px] bg-blue-50 dark:bg-blue-950/60 text-[#387ed1] dark:text-sky-400">
+            <div className="p-1.5 rounded-[4px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
               <Clock className="w-4 h-4" />
             </div>
           </div>
@@ -67,7 +85,7 @@ export default async function DashboardPage() {
         <div className="p-5 card-zerodha-glass space-y-1.5">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Active Segments</span>
-            <div className="p-1.5 rounded-[4px] bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
+            <div className="p-1.5 rounded-[4px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
               <Layers className="w-4 h-4" />
             </div>
           </div>
@@ -87,10 +105,10 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Empty State / Upload Callout */}
-      <div className="p-8 md:p-12 rounded-[8px] bg-white dark:bg-[#0f172a]/70 border border-dashed border-blue-200 dark:border-blue-900/60 text-center space-y-4 shadow-xs backdrop-blur-xs">
-        <div className="w-14 h-14 rounded-[8px] bg-blue-50 dark:bg-blue-950/60 text-[#387ed1] dark:text-sky-400 border border-blue-100 dark:border-blue-900/50 mx-auto flex items-center justify-center">
-          <UploadCloud className="w-7 h-7" />
+      {/* Empty State / Upload Callout (Theme-adaptive styling) */}
+      <div className="p-8 md:p-12 card-zerodha-glass border border-dashed border-slate-300 dark:border-slate-700/80 hover:border-slate-400 dark:hover:border-slate-600 text-center space-y-4 transition-colors">
+        <div className="w-14 h-14 rounded-[8px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 mx-auto flex items-center justify-center">
+          <UploadCloud className="w-7 h-7 text-[#387ed1] dark:text-sky-400" />
         </div>
 
         <div className="max-w-md mx-auto space-y-1.5">
@@ -111,5 +129,6 @@ export default async function DashboardPage() {
         </div>
       </div>
     </div>
+
   );
 }

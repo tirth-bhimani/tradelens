@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
@@ -10,7 +10,15 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 
 function TimeoutBanner() {
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const reason = searchParams.get("reason");
   if (reason !== "timeout") return null;
 
@@ -26,7 +34,15 @@ function TimeoutBanner() {
 }
 
 function OAuthErrorBanner() {
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const errorMsg = searchParams.get("error");
   if (!errorMsg) return null;
 
@@ -38,10 +54,19 @@ function OAuthErrorBanner() {
 }
 
 function RedirectToInput() {
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const redirectTo = searchParams.get("redirectTo") || "";
   return <input type="hidden" name="redirectTo" value={redirectTo} />;
 }
+
 
 function SubmitButton() {
   const { pending } = useFormStatus();

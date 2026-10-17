@@ -72,3 +72,7 @@ skills-lock.json
 # TypeScript Build Info
 *.tsbuildinfo
 
+# Supabase Local Temp
+supabase/.temp/
+
+

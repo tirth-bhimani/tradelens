@@ -2,7 +2,6 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { getCurrentProfile, signOut } from "@/lib/auth/actions";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { IdleSessionTimeout } from "@/components/auth/idle-session-timeout";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 
@@ -50,9 +49,6 @@ export default async function DashboardLayout({
           </form>
         </div>
       </header>
-
-      {/* Auto-logout after inactivity */}
-      <IdleSessionTimeout />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8">
