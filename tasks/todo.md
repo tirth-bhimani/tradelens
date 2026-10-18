@@ -496,15 +496,15 @@
 **Description:** Build a verification layer that cross-checks every number cited in the AI's explanation text against the real computed statistics to prevent hallucination, and implements an insights cache to avoid redundant API calls and control costs.
 
 **Acceptance criteria:**
-- [ ] Numeric grounding validator extracts figures from AI text and verifies they match computed metrics within 2% margin
-- [ ] Discrepant AI responses are flagged, rejected, or regenerated
-- [ ] Insights are cached in `insights` table keyed by `user_id` and trade dataset hash
-- [ ] Tracks user token consumption in `ai_usage` table to enforce daily rate caps
+- [x] Numeric grounding validator extracts figures from AI text and verifies they match computed metrics within 2% margin
+- [x] Discrepant AI responses are flagged, rejected, or regenerated
+- [x] Insights are cached in `insights` table keyed by `user_id` and trade dataset hash
+- [x] Tracks user token consumption in `ai_usage` table to enforce daily rate caps
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_grounding.py`
-- [ ] Build succeeds: `mypy services/analytics/app/ai/grounding.py`
-- [ ] Manual check: Inject hallucinated figure in mock AI output and assert grounding validator raises rejection error
+- [x] Tests pass: `pytest services/analytics/tests/test_grounding.py` (11/11 passing)
+- [x] Build succeeds: `mypy services/analytics/app/ai` (0 errors in 7 source files)
+- [x] Manual check: Inject hallucinated figure in mock AI output and assert grounding validator raises rejection error
 
 **Dependencies:** Task 16
 

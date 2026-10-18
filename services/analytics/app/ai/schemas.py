@@ -1,7 +1,7 @@
 """TradeLens AI Behavioral Insights Schemas.
 
 Pydantic v2 schemas for requesting and validating structured AI behavioral insights,
-leak explanations, and rule guardrail suggestions.
+leak explanations, rule guardrail suggestions, and anti-hallucination grounding checks.
 """
 
 from __future__ import annotations
@@ -34,6 +34,24 @@ class SuggestedRuleRecommendation(BaseModel):
     )
 
 
+class GroundingResult(BaseModel):
+    """Result of cross-checking AI output text against actual computed statistics."""
+
+    is_valid: bool = Field(..., description="True if all cited metrics are mathematically grounded within tolerance")
+    extracted_numbers: list[float] = Field(
+        default_factory=list, description="All numerical claims extracted from AI text"
+    )
+    matched_numbers: list[float] = Field(
+        default_factory=list, description="Extracted numbers that match ground truth stats"
+    )
+    discrepancies: list[str] = Field(
+        default_factory=list, description="List of ungrounded or hallucinated claims flagged"
+    )
+    rejection_reason: str | None = Field(
+        default=None, description="Detailed explanation if report was rejected due to grounding failure"
+    )
+
+
 class InsightReport(BaseModel):
     """Complete structured behavioral audit report produced by the AI pipeline."""
 
@@ -59,11 +77,27 @@ class InsightReport(BaseModel):
         default="FREE_DETERMINISTIC",
         description="LLM provider or engine that generated this report (e.g. GEMINI_FLASH, GROQ_LLAMA, FREE_DETERMINISTIC)",
     )
+    cached: bool = Field(
+        default=False,
+        description="True if this report was served directly from the insight cache",
+    )
+    stats_hash: str | None = Field(
+        default=None,
+        description="Deterministic SHA-256 fingerprint of the input dataset metrics",
+    )
+    grounding_verified: bool = Field(
+        default=True,
+        description="Whether all cited metrics passed anti-hallucination numeric grounding checks",
+    )
 
 
 class InsightRequest(BaseModel):
     """Payload containing pre-computed summary statistics for AI behavioral diagnosis."""
 
+    user_id: str = Field(
+        default="anonymous_trader",
+        description="User identifier for cache indexing and daily quota enforcement",
+    )
     total_trades: int = Field(..., ge=0, description="Total closed round-trip trades count")
     win_rate: float = Field(..., ge=0.0, le=100.0, description="Percentage of winning trades")
     total_net_pnl: float = Field(..., description="Aggregate realized net P&L in INR")
