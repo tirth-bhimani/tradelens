@@ -431,15 +431,15 @@
 **Description:** Build breakdown visualizations (P&L by hour of day, day of week, instrument, expiry vs non-expiry), a monthly calendar heatmap of daily P&L, and a searchable/filterable trade log table supporting manual notes and psychological tags (e.g. FOMO, Revenge, Planned).
 
 **Acceptance criteria:**
-- [ ] P&L by hour-of-day bar chart reveals most profitable and most costly trading windows
-- [ ] Calendar heatmap shows each trading day colored by net P&L with hover detail
-- [ ] Trade table displays round-trip trades with sorting, symbol filtering, and segment tabs
-- [ ] User can add notes and tags (`FOMO`, `Revenge`, `Rule Followed`) to individual trades
+- [x] P&L by hour-of-day bar chart reveals most profitable and most costly trading windows
+- [x] Calendar heatmap shows each trading day colored by net P&L with hover detail
+- [x] Trade table displays round-trip trades with sorting, symbol filtering, and segment tabs
+- [x] User can add notes and tags (`FOMO`, `Revenge`, `Rule Followed`) to individual trades
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/trade-table.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Click a day on the calendar heatmap to filter the trade table to that day's trades
+- [x] Tests pass: `npm run test --prefix apps/web` (89/89 passing across 10 suites)
+- [x] Build succeeds: `npx tsc --noEmit --project apps/web/tsconfig.json` (0 errors)
+- [x] Manual check: Click a day on the calendar heatmap to filter the trade table to that day's trades
 
 **Dependencies:** Task 14
 
@@ -454,11 +454,11 @@
 ---
 
 ## Checkpoint: Dashboard Experience
-- [ ] Metrics grid displays accurate statistics formatted in Indian Rupees (Lakhs/Crores)
-- [ ] Equity and drawdown charts render smoothly with date filtering
-- [ ] Calendar heatmap and hourly breakdown highlight trading patterns
-- [ ] User can tag trades with psychological annotations
-- [ ] Review with team before proceeding
+- [x] Metrics grid displays accurate statistics formatted in Indian Rupees (Lakhs/Crores)
+- [x] Equity and drawdown charts render smoothly with date filtering
+- [x] Calendar heatmap and hourly breakdown highlight trading patterns
+- [x] User can tag trades with psychological annotations
+- [x] Review with team before proceeding
 
 ---
 

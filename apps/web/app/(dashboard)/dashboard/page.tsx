@@ -5,6 +5,8 @@ import { formatIndianDenomination } from "@/lib/utils/format";
 import { PerformanceMetricsGrid } from "@/components/dashboard/performance-metrics-grid";
 import { ChartContainer } from "@/components/dashboard/chart-container";
 import { BehavioralLeaksCard } from "@/components/dashboard/behavioral-leaks-card";
+import { CalendarHeatmap } from "@/components/dashboard/calendar-heatmap";
+import { TimeBreakdownChart } from "@/components/dashboard/time-breakdown-chart";
 
 export default async function DashboardPage() {
   const { user, profile } = await getCurrentProfile();
@@ -108,6 +110,12 @@ export default async function DashboardPage() {
 
       {/* Behavioral Leaks & Execution Discipline (Task 12) */}
       <BehavioralLeaksCard />
+
+      {/* Monthly P&L Calendar & Execution Timing Diagnostics (Task 15) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <CalendarHeatmap />
+        <TimeBreakdownChart />
+      </div>
 
       {/* Empty State / Upload Callout (Theme-adaptive styling) */}
       <div className="p-8 md:p-10 card-zerodha-glass border border-dashed border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-center space-y-4 transition-colors">

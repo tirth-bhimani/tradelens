@@ -11,6 +11,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Overview", exact: true },
+  { href: "/trades", label: "Trade Log" },
   { href: "/imports", label: "Trade Imports" },
   { href: "/reconciliation", label: "Reconciliation" },
   { href: "/rule-lab", label: "Rule Lab" },
