@@ -341,16 +341,16 @@
 **Description:** Implement deterministic detection and calculation of four major behavioral leaks: (1) Re-entry after loss (trades taken within N minutes of a loss), (2) Overtrading days (days with trade volume > 1.5x user median), (3) Position size creep (quantity increases after losing trades), and (4) Holding losers longer than winners.
 
 **Acceptance criteria:**
-- [ ] Re-entry metric computes % of trades opened within 5/15/30 mins of a loss and their specific win rate and P&L
-- [ ] Overtrading metric flags days exceeding average trade frequency and computes P&L on those specific days
-- [ ] Size creep metric detects lot/quantity spikes occurring immediately following losing trades
-- [ ] Holding time metric computes average duration of winning vs losing trades
-- [ ] Outputs structured behavioral stats dictionary ready for dashboard visualization and AI explanation
+- [x] Re-entry metric computes % of trades opened within 5/15/30 mins of a loss and their specific win rate and P&L
+- [x] Overtrading metric flags days exceeding average trade frequency and computes P&L on those specific days
+- [x] Size creep metric detects lot/quantity spikes occurring immediately following losing trades
+- [x] Holding time metric computes average duration of winning vs losing trades
+- [x] Outputs structured behavioral stats dictionary ready for dashboard visualization and AI explanation
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_behavior_metrics.py`
-- [ ] Build succeeds: `mypy services/analytics/app/analytics/behavior_metrics.py`
-- [ ] Manual check: Verify behavioral metrics correctly isolate revenge trading on sample dataset
+- [x] Tests pass: `pytest services/analytics/tests/test_behavior_metrics.py`
+- [x] Build succeeds: `mypy services/analytics/app/engine/behavior_metrics.py`
+- [x] Manual check: Verify behavioral metrics correctly isolate revenge trading on sample dataset
 
 **Dependencies:** Task 11
 

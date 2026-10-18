@@ -3,6 +3,7 @@ import { UploadCloud, TrendingUp, Clock, Layers, ArrowRight } from "lucide-react
 import { getCurrentProfile } from "@/lib/auth/actions";
 import { formatIndianDenomination } from "@/lib/utils/format";
 import { PerformanceMetricsGrid } from "@/components/dashboard/performance-metrics-grid";
+import { BehavioralLeaksCard } from "@/components/dashboard/behavioral-leaks-card";
 
 export default async function DashboardPage() {
   const { user, profile } = await getCurrentProfile();
@@ -100,6 +101,9 @@ export default async function DashboardPage() {
 
       {/* Core Performance Metrics (Task 11) */}
       <PerformanceMetricsGrid />
+
+      {/* Behavioral Leaks & Execution Discipline (Task 12) */}
+      <BehavioralLeaksCard />
 
       {/* Empty State / Upload Callout (Theme-adaptive styling) */}
       <div className="p-8 md:p-10 card-zerodha-glass border border-dashed border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-center space-y-4 transition-colors">
