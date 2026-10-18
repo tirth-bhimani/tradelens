@@ -288,15 +288,15 @@
 **Description:** Build the reconciliation engine and UI that compares TradeLens computed Net P&L and charges against broker tax P&L summaries from uploaded sample statements, surfacing an itemized discrepancy report with explanations for any delta.
 
 **Acceptance criteria:**
-- [ ] Backend ingestion accepts broker P&L statement summary numbers (Gross P&L, charges, Net P&L)
-- [ ] Reconciliation engine matches total Net P&L and per-symbol P&L against computed trades
-- [ ] Differences exceeding ₹1.00 are highlighted with probable causes (unmatched lots, corporate actions, stamp duty variance)
-- [ ] UI provides a Reconciliation View comparing App P&L vs Broker P&L side-by-side
+- [x] Backend ingestion accepts broker P&L statement summary numbers (Gross P&L, charges, Net P&L)
+- [x] Reconciliation engine matches total Net P&L and per-symbol P&L against computed trades
+- [x] Differences exceeding ₹1.00 are highlighted with probable causes (unmatched lots, corporate actions, stamp duty variance)
+- [x] UI provides a Reconciliation View comparing App P&L vs Broker P&L side-by-side
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_reconciliation.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Run reconciliation on a test sample and verify matched green checkmarks or clear discrepancy flags
+- [x] Tests pass: `pytest services/analytics/tests/test_reconciliation.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Run reconciliation on a test sample and verify matched green checkmarks or clear discrepancy flags
 
 **Dependencies:** Task 9
 
@@ -315,15 +315,15 @@
 **Description:** Implement deterministic computation of portfolio and trade analytics: total net P&L, win rate, average win, average loss, profit factor, expectancy, maximum drawdown (peak-to-trough in ₹ and %), longest winning streak, longest losing streak, and time-based equity curves.
 
 **Acceptance criteria:**
-- [ ] Computes win rate, profit factor, win/loss ratio, and expectancy correctly across any date filter
-- [ ] Computes running equity curve and peak-to-trough drawdown series
-- [ ] Calculates consecutive win and loss streaks
-- [ ] Caches aggregated results in `stats_snapshots` for rapid dashboard retrieval
+- [x] Computes win rate, profit factor, win/loss ratio, and expectancy correctly across any date filter
+- [x] Computes running equity curve and peak-to-trough drawdown series
+- [x] Calculates consecutive win and loss streaks
+- [x] Caches aggregated results in `stats_snapshots` for rapid dashboard retrieval
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_core_metrics.py`
-- [ ] Build succeeds: `mypy services/analytics/app/analytics/core_metrics.py`
-- [ ] Manual check: Run against sample trade set with known win rate and drawdown; verify exact mathematical match
+- [x] Tests pass: `pytest services/analytics/tests/test_core_metrics.py`
+- [x] Build succeeds: `mypy services/analytics/app/engine/core_metrics.py`
+- [x] Manual check: Run against sample trade set with known win rate and drawdown; verify exact mathematical match
 
 **Dependencies:** Task 9
 

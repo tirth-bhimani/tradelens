@@ -89,7 +89,7 @@ export function Navbar() {
               <div className="flex items-center space-x-3">
                 <Link
                   href="/dashboard"
-                  className="btn-zerodha-primary btn-groww-shimmer text-xs py-2 px-3.5 flex items-center space-x-1.5"
+                  className="btn-zerodha-primary text-xs py-2 px-3.5 flex items-center space-x-1.5"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5" />
                   <span>Dashboard</span>
@@ -114,7 +114,7 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="btn-zerodha-primary btn-groww-shimmer"
+                  className="btn-zerodha-primary"
                 >
                   Sign up for free
                 </Link>
@@ -167,7 +167,7 @@ export function Navbar() {
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="btn-zerodha-primary btn-groww-shimmer w-full text-center flex items-center justify-center space-x-1.5"
+                    className="btn-zerodha-primary w-full text-center flex items-center justify-center space-x-1.5"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     <span>Go to Dashboard</span>
@@ -190,7 +190,7 @@ export function Navbar() {
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="btn-zerodha-secondary w-full text-center">
                     Sign In
                   </Link>
-                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn-zerodha-primary btn-groww-shimmer w-full text-center">
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn-zerodha-primary w-full text-center">
                     Sign up for free
                   </Link>
                 </>

@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { IdleSessionTimeout } from "@/components/auth/idle-session-timeout";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "TradeLens | Behavioral Trade Journal & Rule Backtester",
@@ -22,12 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body
-        className="min-h-screen antialiased bg-white text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200"
-        suppressHydrationWarning
-      >
-        {/* Anti-FOUC inline script to immediately apply theme before paint */}
+    <html lang="en" className={`${inter.variable} scroll-smooth`} suppressHydrationWarning>
+      <head>
+        {/* Anti-FOUC inline script in <head> to immediately apply theme before DOM paint without mutating <body> */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function() {
@@ -43,6 +47,11 @@ export default function RootLayout({
             })()`,
           }}
         />
+      </head>
+      <body
+        className="min-h-screen antialiased bg-white text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200 font-sans"
+        suppressHydrationWarning
+      >
         <ThemeProvider>
           {children}
           {/* Automatic inactivity timeout active across the entire application */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { Clock, ArrowRight, User, Sparkles } from "lucide-react";
+import { Clock, ArrowRight, User } from "lucide-react";
 import { completeOnboarding, type AuthState } from "@/lib/auth/actions";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
@@ -12,7 +12,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="btn-zerodha-primary btn-groww-shimmer w-full py-3"
+      className="btn-zerodha-primary w-full py-3"
     >
       <span>{pending ? "Saving profile..." : "Complete Setup & Launch Journal"}</span>
       <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -30,9 +30,8 @@ export default function OnboardingPage() {
         <div className="text-center space-y-3 flex flex-col items-center">
           <BrandLogo variant="horizontal" size="lg" href="/" />
           <div className="pt-1">
-            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-[3px] bg-blue-50 border border-blue-200 text-[#387ed1] text-[11px] font-bold uppercase tracking-wider">
-              <Sparkles className="w-3 h-3 text-[#387ed1]" />
-              <span>Step 1 of 1: Trader Profile</span>
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium">
+              <span>Profile Setup • Step 1 of 1</span>
             </span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight pt-1">

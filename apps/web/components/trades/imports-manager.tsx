@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Clock, FileSpreadsheet } from "lucide-react";
+import { Clock, FileSpreadsheet, ShieldCheck, Check } from "lucide-react";
 import { FileDropzone } from "./file-dropzone";
 import { ImportHistoryTable } from "./import-history-table";
 import type { ImportRecord, IngestionSummary } from "@/lib/trades/types";
@@ -43,29 +43,29 @@ export function ImportsManager({ initialImports, importsError }: ImportsManagerP
   return (
     <div className="space-y-8">
       {/* Main Upload Dropzone & Instructions Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Dropzone */}
         <div className="lg:col-span-8 space-y-4">
           <div className="p-6 card-zerodha-glass space-y-4">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <FileSpreadsheet className="w-5 h-5 text-[#387ed1]" />
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <FileSpreadsheet className="w-4 h-4 text-[#387ed1]" />
               <span>Upload Tradebook CSV</span>
             </h2>
 
             <FileDropzone onImportProcessed={handleImportProcessed} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
               <div className="flex items-start space-x-2">
-                <span className="w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] font-bold text-[11px] flex items-center justify-center shrink-0">1</span>
+                <span className="tabular-nums text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0">01.</span>
                 <span>Export Tradebook (.csv) from your broker console</span>
               </div>
               <div className="flex items-start space-x-2">
-                <span className="w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] font-bold text-[11px] flex items-center justify-center shrink-0">2</span>
-                <span>Drop the file here. Formulas are automatically sanitized</span>
+                <span className="tabular-nums text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0">02.</span>
+                <span>Drop file here; formula attacks are automatically neutralized</span>
               </div>
               <div className="flex items-start space-x-2">
-                <span className="w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] font-bold text-[11px] flex items-center justify-center shrink-0">3</span>
-                <span>Fills are parsed and paired into round-trip trades</span>
+                <span className="tabular-nums text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0">03.</span>
+                <span>Fills are parsed and paired into FIFO round-trip trades</span>
               </div>
             </div>
           </div>
@@ -74,36 +74,36 @@ export function ImportsManager({ initialImports, importsError }: ImportsManagerP
         {/* Right Column: Security Guarantees & Help */}
         <div className="lg:col-span-4 space-y-4">
           <div className="p-5 card-zerodha-glass space-y-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <h3 className="text-xs font-semibold tracking-wider uppercase text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Multi-Tenant Security</span>
             </h3>
-            <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+            <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
               <li className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                 <span><strong>Row-Level Security:</strong> Your files are partitioned under your personal user ID and inaccessible to any other user.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                 <span><strong>Zero Injection Risk:</strong> Spreadsheet formula attacks (=, +, -, @) are automatically neutralized before write.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                <span><strong>No Password Needed:</strong> TradeLens never asks for your trading or Demat account password.</span>
+                <Check className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                <span><strong>No Password Needed:</strong> TradeLens never asks for your trading or Demat account credentials.</span>
               </li>
             </ul>
           </div>
 
           <div className="p-5 card-zerodha-glass space-y-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Supported Formats</h3>
-            <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-              <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <h3 className="text-xs font-semibold tracking-wider uppercase text-slate-700 dark:text-slate-300">Supported Formats</h3>
+            <div className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+              <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
                 <div className="font-semibold text-slate-900 dark:text-slate-100">Universal Broker CSVs</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">Auto-detected exports from Zerodha, Groww, Upstox, Angel One, Dhan, ICICI, and more</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Zerodha, Groww, Upstox, Angel One, Dhan, ICICI Direct</div>
               </div>
-              <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+              <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
                 <div className="font-semibold text-slate-900 dark:text-slate-100">Custom &amp; Journal CSVs</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">Any trading spreadsheet: Date, Symbol, Buy/Sell, Qty, Price</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Standard columns: Date, Symbol, Buy/Sell, Qty, Price</div>
               </div>
             </div>
           </div>

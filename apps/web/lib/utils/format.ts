@@ -31,3 +31,6 @@ export function formatIndianDenomination(amount: number): string {
   }
   return formatCurrencyINR(amount);
 }
+
+export const formatIndianCurrency = formatCurrencyINR;
+

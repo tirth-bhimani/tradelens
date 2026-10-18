@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Receipt, HelpCircle, ArrowUpRight } from "lucide-react";
+import { Receipt, HelpCircle, ArrowUpRight, Percent, Gauge } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnimatedCounter } from "./AnimatedCounter";
 
@@ -139,41 +139,41 @@ export function ChargesEngine() {
             </div>
           </div>
 
-          {/* Animated Metrics Dashboard */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-4 rounded-[6px] bg-slate-50 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800">
-              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Daily Statutory Taxes</div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          {/* Animated Metrics Dashboard: Unified 3-Column Terminal Ribbon */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#090e18] rounded-[6px] overflow-hidden">
+            <div className="p-4 space-y-1">
+              <div className="text-xs text-slate-500">Daily Statutory Drag</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
                 <AnimatedCounter value={totalCharges} prefix="₹" />
               </div>
-              <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Brokerage + STT + GST</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">Brokerage + STT + GST</div>
             </div>
 
-            <div className="p-4 rounded-[6px] bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/40">
-              <div className="text-xs text-rose-600 dark:text-rose-400 font-medium">Monthly Regulatory Leak (22 Days)</div>
-              <div className="text-2xl font-bold text-rose-700 dark:text-rose-400 mt-1">
+            <div className="p-4 space-y-1">
+              <div className="text-xs text-rose-600 dark:text-rose-400 font-medium">Monthly Friction (22 Days)</div>
+              <div className="text-2xl font-bold text-rose-600 dark:text-rose-400 tabular-nums">
                 <AnimatedCounter value={monthlyCharges} prefix="₹" />
               </div>
-              <div className="text-[11px] text-rose-500/80 dark:text-rose-400/70 mt-1">Siphoned directly from capital</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">Siphoned directly from capital</div>
             </div>
 
-            <div className="p-4 rounded-[6px] bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/40">
-              <div className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">Overtrading Safeguard Savings</div>
-              <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 mt-1">
+            <div className="p-4 space-y-1">
+              <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Capital Retained With Rule</div>
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 <AnimatedCounter value={Math.round(monthlyCharges * 0.45)} prefix="₹" />
               </div>
-              <div className="text-[11px] text-emerald-600/80 dark:text-emerald-400/70 mt-1">If capped at 4 trades/day</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">With 4 trades/session cap</div>
             </div>
           </div>
 
-          {/* Breakdown progress bar with animation */}
+          {/* Breakdown progress bar */}
           <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 font-medium">
-              <span>Breakdown Composition</span>
-              <span className="text-[11px] text-slate-400 dark:text-slate-500">SEBI Circular 2026 Ready</span>
+              <span className="text-xs text-slate-400">Statutory Tax Composition</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400">NSE / SEBI Circular Compliant</span>
             </div>
 
-            <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-[3px] overflow-hidden flex">
+            <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-800 rounded-[2px] overflow-hidden flex">
               <motion.div
                 className="bg-[#387ed1] h-full"
                 animate={{ width: `${Math.round((brokerage / totalCharges) * 100)}%` }}
@@ -200,78 +200,69 @@ export function ChargesEngine() {
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-600 dark:text-slate-300 pt-1 font-medium">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-300 pt-1">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-[2px] bg-[#387ed1]" /> Brokerage (₹{brokerage})
+                <span className="w-2 h-2 rounded-full bg-[#387ed1]" /> Brokerage (₹{brokerage})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-[2px] bg-amber-500" /> STT (₹{stt})
+                <span className="w-2 h-2 rounded-full bg-amber-500" /> STT (₹{stt})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-500" /> GST 18% (₹{gst})
+                <span className="w-2 h-2 rounded-full bg-emerald-500" /> GST 18% (₹{gst})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-[2px] bg-slate-400 dark:bg-slate-500" /> Exchange + SEBI (₹{etc + sebiStamp})
+                <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500" /> Exchange + SEBI (₹{etc + sebiStamp})
               </span>
             </div>
           </div>
         </motion.div>
 
-        {/* 3 Static Cards with TradeLens Precision Glass Cards and Spring Hover Lift */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* 3 Institutional Feature Cards: Unified Ribbon */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:border-slate-800 border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c111c] rounded-[6px] overflow-hidden">
           {/* Card 1: Securities Transaction Tax (STT) */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: "spring", stiffness: 350, damping: 20 }}
-            className="p-6 card-zerodha-glass space-y-3.5"
-          >
-            <div className="w-10 h-10 rounded-[6px] bg-blue-50 dark:bg-blue-950/50 text-[#387ed1] dark:text-sky-400 flex items-center justify-center font-bold text-base">
-              ₹
+          <div className="p-5 space-y-2.5">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-medium">Statutory Tax 01</span>
+              <Receipt className="w-4 h-4 text-[#387ed1]" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">Securities Transaction Tax (STT)</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Securities Transaction Tax (STT)</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Calculated accurately per segment: 0.1% on delivery (both sides), 0.025% on intraday sell, 0.02% on futures sell turnover, and 0.1% on options premium.
             </p>
-            <div className="pt-2 text-xs font-semibold text-[#387ed1] dark:text-sky-400 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-[2px] bg-[#387ed1] dark:bg-sky-400" /> Auto-computed per fill
+            <div className="pt-1 text-xs font-medium text-[#387ed1] dark:text-sky-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#387ed1]" /> Auto-computed per fill
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 2: GST 18% on Statutory Fees */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: "spring", stiffness: 350, damping: 20 }}
-            className="p-6 card-zerodha-glass space-y-3.5"
-          >
-            <div className="w-10 h-10 rounded-[6px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-base">
-              %
+          <div className="p-5 space-y-2.5">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-medium">Statutory Tax 02</span>
+              <Percent className="w-4 h-4 text-emerald-500" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">GST 18% &amp; Exchange Turnover</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">GST 18% &amp; Exchange Turnover</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Standard Indian 18% Goods &amp; Services Tax is automatically applied across brokerage, NSE turnover fees, and clearing charges without manual reconciliation.
             </p>
-            <div className="pt-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-[2px] bg-emerald-600 dark:bg-emerald-400" /> SEBI Circular Compliant
+            <div className="pt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> SEBI Circular Compliant
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 3: Overtrading Tax Multiplier */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: "spring", stiffness: 350, damping: 20 }}
-            className="p-6 card-zerodha-glass space-y-3.5"
-          >
-            <div className="w-10 h-10 rounded-[6px] bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-base">
-              ⚡
+          <div className="p-5 space-y-2.5">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-medium">Behavioral Audit</span>
+              <Gauge className="w-4 h-4 text-amber-500" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">Overtrading Tax Audit</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Overtrading Friction Audit</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               See the direct financial penalty of churning contracts. TradeLens highlights sessions where gross trading was positive but fees pushed you into net red.
             </p>
-            <div className="pt-2 text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-[2px] bg-amber-600 dark:bg-amber-400" /> Identifies Churn Traps
+            <div className="pt-1 text-xs font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Identifies Churn Traps
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

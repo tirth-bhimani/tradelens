@@ -18,72 +18,20 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+  letter-spacing: -0.011em;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ==========================================================================
-   Groww.in Fluid Animation Keyframes
+   TradeLens Institutional Terminal & Market Ticker Styles
    ========================================================================== */
 
-/* 1. Gentle Ambient Floating (Out-of-phase Sine Wave) */
-@keyframes growwFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes growwFloatDelayed {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes growwFloatReverse {
-  0%, 100% {
-    transform: translateY(-3px);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-}
-
-/* 2. Groww Shimmer Light Sweep on Primary CTAs */
-@keyframes growwShimmerSweep {
-  0% {
-    transform: translateX(-160%) rotate(25deg);
-  }
-  20%, 100% {
-    transform: translateX(260%) rotate(25deg);
-  }
-}
-
-/* 3. Live Radar / Ping for Market Connectivity */
-@keyframes growwRadarPing {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.9;
-  }
-  50% {
-    transform: scale(1.6);
-    opacity: 0.15;
-  }
-  100% {
-    transform: scale(0.9);
-    opacity: 0.9;
-  }
-}
-
-/* 4. Infinite Smooth Continuous Market Ticker */
+/* Infinite Smooth Continuous Market Ticker */
 @keyframes tickerMarquee {
   0% {
     transform: translate3d(0, 0, 0);
@@ -109,67 +57,24 @@ body {
     animation-play-state: paused;
   }
 
-  /* Ambient Floating Utilities */
-  .animate-float-ambient,
-  .animate-groww-float {
-    animation: growwFloat 4.2s ease-in-out infinite;
-  }
-
-  .animate-float-delayed,
-  .animate-groww-delayed {
-    animation: growwFloatDelayed 5.4s ease-in-out 1.2s infinite;
-  }
-
-  .animate-float-reverse,
-  .animate-groww-reverse {
-    animation: growwFloatReverse 4.8s ease-in-out 0.6s infinite;
-  }
-
-  /* Groww Button Shimmer Effect */
-  .btn-groww-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-groww-shimmer::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.38) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    transform: rotate(25deg);
-    animation: growwShimmerSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    pointer-events: none;
-  }
-
-  /* Zerodha 4px Primary CTA */
+  /* Zerodha 4px Primary CTA: Solid, Grounded, Professional */
   .btn-zerodha-primary {
     border-radius: 4px;
     background-color: var(--zerodha-blue);
     color: #ffffff;
     font-weight: 600;
-    font-size: 0.875rem;
-    padding: 0.625rem 1.5rem;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1.25rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 1px 3px 0 rgba(56, 126, 209, 0.2);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
   }
   .btn-zerodha-primary:hover {
     background-color: var(--zerodha-blue-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px -2px rgba(56, 126, 209, 0.35);
   }
   .btn-zerodha-primary:active {
-    transform: translateY(0);
+    opacity: 0.92;
   }
 
   /* Zerodha 4px Secondary Button */
@@ -179,57 +84,54 @@ body {
     border: 1px solid #cbd5e1;
     color: #334155;
     font-weight: 600;
-    font-size: 0.875rem;
-    padding: 0.625rem 1.5rem;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1.25rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .btn-zerodha-secondary:hover {
     border-color: #94a3b8;
     background-color: #f8fafc;
     color: #0f172a;
-    transform: translateY(-1px);
   }
 
-  /* Edgy 8px Frosted Glass Card with Groww Hover Lift */
+  /* TradeLens Institutional Card Aesthetic */
+  /* Replaces noisy AI glassmorphism & bouncy hovers with clean, grounded financial surfaces */
   .card-zerodha-glass {
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(18px) saturate(190%);
-    -webkit-backdrop-filter: blur(18px) saturate(190%);
-    border: 1px solid rgba(226, 232, 240, 0.95);
-    box-shadow: 
-      0 4px 18px -2px rgba(14, 165, 233, 0.06),
-      0 1px 3px 0 rgba(0, 0, 0, 0.02),
-      inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 6px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .card-zerodha-glass:hover {
-    border-color: #93c5fd;
-    transform: translateY(-3px);
-    box-shadow: 
-      0 12px 30px -6px rgba(56, 126, 209, 0.15),
-      0 3px 8px 0 rgba(0, 0, 0, 0.04),
-      inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px -1px rgba(15, 23, 42, 0.06);
   }
 
-  /* Dark Mode Card & Secondary Button Overrides */
+  /* Dark Mode: Clean institutional slate/charcoal with crisp hairline borders */
   .dark .card-zerodha-glass {
-    background: rgba(15, 23, 42, 0.75);
-    border-color: rgba(51, 65, 85, 0.7);
-    box-shadow: 
-      0 4px 18px -2px rgba(0, 0, 0, 0.4),
-      0 1px 3px 0 rgba(0, 0, 0, 0.3),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+    background-color: #0d131f;
+    border-color: #1e293b;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   }
   .dark .card-zerodha-glass:hover {
-    border-color: rgba(56, 126, 209, 0.5);
-    box-shadow: 
-      0 12px 30px -6px rgba(56, 126, 209, 0.25),
-      0 3px 8px 0 rgba(0, 0, 0, 0.5),
-      inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.12);
+    border-color: #334155;
+    box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Interactive card variant for explicitly clickable cards */
+  .card-interactive {
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .card-interactive:hover {
+    border-color: #387ed1;
+  }
+  .dark .card-interactive:hover {
+    border-color: #387ed1;
   }
 
   .dark .btn-zerodha-secondary {

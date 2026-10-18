@@ -111,7 +111,7 @@ export function RuleLabShowcase() {
             <div className="pt-2">
               <Link
                 href="/signup"
-                className="btn-zerodha-primary btn-groww-shimmer"
+                className="btn-zerodha-primary"
               >
                 <span>Replay your trades</span>
                 <ArrowRight className="w-4 h-4 ml-2" />

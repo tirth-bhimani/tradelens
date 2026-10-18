@@ -1,7 +1,7 @@
 "use server";
 
 import { cache } from "react";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -217,6 +217,16 @@ export async function completeOnboarding(
  * Deduplicated user profile resolution cached per Next.js render cycle.
  */
 export const getCurrentProfile = cache(async () => {
+  const cookieStore = cookies();
+  const allCookies = cookieStore.getAll();
+  const hasAuthToken = allCookies.some(
+    (c) => c.name.includes("-auth-token") || c.name.startsWith("sb-")
+  );
+
+  if (!hasAuthToken) {
+    return { user: null, profile: null };
+  }
+
   const supabase = createClient();
   const {
     data: { user },

@@ -2,6 +2,9 @@ from app.engine.charges import (
     DEFAULT_TARIFF_SCHEDULE,
     StatutoryChargesEngine,
 )
+from app.engine.reconciliation import (
+    ReconciliationEngine,
+)
 from app.engine.instruments import (
     InstrumentNormalizer,
     get_last_weekday_of_month,
@@ -28,5 +31,7 @@ __all__ = [
     "derive_trade_segment",
     "StatutoryChargesEngine",
     "DEFAULT_TARIFF_SCHEDULE",
+    "ReconciliationEngine",
 ]
+
 

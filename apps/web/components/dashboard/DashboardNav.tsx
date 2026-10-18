@@ -12,6 +12,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Overview", exact: true },
   { href: "/imports", label: "Trade Imports" },
+  { href: "/reconciliation", label: "Reconciliation" },
   { href: "/rule-lab", label: "Rule Lab" },
 ];
 
@@ -19,7 +20,7 @@ export function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
+    <nav aria-label="Dashboard Navigation" className="flex items-center space-x-1 text-xs md:text-sm font-medium overflow-x-auto py-1">
       {NAV_ITEMS.map((item) => {
         const isActive = item.exact
           ? pathname === item.href
@@ -29,10 +30,11 @@ export function DashboardNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`px-3 py-1.5 rounded-[4px] transition-all duration-150 ${
+            prefetch={true}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-[4px] whitespace-nowrap transition-colors duration-150 ${
               isActive
-                ? "bg-blue-50 dark:bg-blue-950/70 text-[#387ed1] dark:text-[#38bdf8] font-semibold shadow-xs"
-                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
+                ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
             }`}
           >
             {item.label}

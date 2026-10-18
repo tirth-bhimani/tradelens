@@ -6,6 +6,7 @@ export const PROTECTED_ROUTES = [
   "/onboarding",
   "/trades",
   "/imports",
+  "/reconciliation",
   "/rule-lab",
 ];
 
@@ -20,6 +21,35 @@ export function isAuthRoute(pathname: string): boolean {
 }
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const isProtected = isProtectedRoute(pathname);
+  const isAuth = isAuthRoute(pathname);
+
+  // 1. Fast path: If the route is neither protected nor auth-restricted (e.g. landing, public APIs),
+  // return immediately without blocking on an outbound Supabase HTTPS network round-trip.
+  if (!isProtected && !isAuth) {
+    return NextResponse.next({ request });
+  }
+
+  // 2. Fast path: Inspect cookie store for Supabase session tokens.
+  const allCookies = request.cookies.getAll();
+  const hasAuthCookie = allCookies.some(
+    (c) => c.name.includes("-auth-token") || c.name.startsWith("sb-")
+  );
+
+  // If visiting a protected route with no auth cookies, redirect to login immediately (0ms latency).
+  if (isProtected && !hasAuthCookie) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // If visiting login/signup with no auth cookies, allow immediately without verifying anything.
+  if (isAuth && !hasAuthCookie) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -47,23 +77,21 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // IMPORTANT: Avoid calling getSession() which may be insecure. Use getUser() instead.
+  // Verify token with Supabase only when cookies are present and route requires validation
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
-
-  // 1. If unauthenticated user tries to access protected route -> redirect to /login
-  if (!user && isProtectedRoute(pathname)) {
+  // 3. If token invalid/expired on protected route -> redirect to /login
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(url);
   }
 
-  // 2. If authenticated user tries to access /login or /signup -> redirect to /dashboard
-  if (user && isAuthRoute(pathname)) {
+  // 4. If active session on /login or /signup -> redirect to /dashboard
+  if (user && isAuth) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

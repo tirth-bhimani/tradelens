@@ -182,10 +182,18 @@ export function IdleSessionTimeout({
     // Listen for storage changes from other browser tabs (cross-tab sync)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY_LAST_ACTIVITY && e.newValue) {
-        setShowWarning(false);
+        setShowWarning((prev) => (prev ? false : prev));
       }
     };
     window.addEventListener("storage", handleStorageChange);
+
+    // Keep session active when user returns to this browser tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        recordActivity();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Heartbeat check every 1 second
     const intervalId = setInterval(() => {
@@ -202,7 +210,7 @@ export function IdleSessionTimeout({
         setShowWarning(true);
         setSecondsRemaining(Math.max(1, Math.ceil(remainingMs / 1000)));
       } else {
-        setShowWarning(false);
+        setShowWarning((prev) => (prev ? false : prev));
       }
     }, 1000);
 
@@ -211,6 +219,7 @@ export function IdleSessionTimeout({
         window.removeEventListener(event, handleUserInteraction);
       });
       window.removeEventListener("storage", handleStorageChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearInterval(intervalId);
     };
   }, [isAuthenticated, recordActivity, handleLogout, timeoutMs, warningMs]);

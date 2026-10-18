@@ -35,7 +35,7 @@ Tasks are tracked in `tasks/todo.md`.
 
 
 ### Phase 4: Accuracy Reconciliation & Core Metrics
-- [ ] Task 10: Broker statement reconciliation & discrepancy reporting
+- [x] Task 10: Broker statement reconciliation & discrepancy reporting
 - [ ] Task 11: Core trading performance metrics computation engine
 - [ ] Task 12: Behavioral leak metrics computation (revenge trading, overtrading, size creep)
 - [ ] Checkpoint 4: Analytics & behavioral engine verified

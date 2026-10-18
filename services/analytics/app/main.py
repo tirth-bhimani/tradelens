@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import health, upload
+from app.routers import health, metrics, reconciliation, upload
 
 
 def create_app() -> FastAPI:
@@ -27,6 +27,8 @@ def create_app() -> FastAPI:
     # Register routers
     app.include_router(health.router)
     app.include_router(upload.router)
+    app.include_router(reconciliation.router)
+    app.include_router(metrics.router)
 
     return app
 
