@@ -27,7 +27,7 @@ export default async function DashboardLayout({
         <div className="flex items-center space-x-3">
           <ThemeToggle />
 
-          <div className="hidden sm:flex items-center space-x-2.5 px-3 py-1 rounded-[4px] bg-slate-100 dark:bg-slate-850 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
+          <div className="hidden sm:flex items-center space-x-2.5 px-3 py-1 rounded-[4px] bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
             <div className="w-6 h-6 rounded-[3px] bg-[#387ed1] text-white flex items-center justify-center text-xs font-bold">
               {displayName.charAt(0).toUpperCase()}
             </div>

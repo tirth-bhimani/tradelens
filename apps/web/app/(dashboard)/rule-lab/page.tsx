@@ -1,5 +1,7 @@
+import React, { Suspense } from "react";
 import Link from "next/link";
-import { Beaker, ArrowRight, ShieldCheck, Play, Sparkles } from "lucide-react";
+import { Beaker, ArrowRight, ShieldCheck, Play } from "lucide-react";
+import { RuleLabPrefillBanner } from "@/components/insights/rule-lab-prefill-banner";
 
 export default function RuleLabPage() {
   return (
@@ -31,6 +33,11 @@ export default function RuleLabPage() {
           </div>
         </div>
       </div>
+
+      {/* Pre-filled Rule Configuration Banner (from AI Insights deep link) */}
+      <Suspense fallback={null}>
+        <RuleLabPrefillBanner />
+      </Suspense>
 
       {/* Rules Catalog: Unified Institutional Ribbon */}
       <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d131f] rounded-[6px] overflow-hidden">

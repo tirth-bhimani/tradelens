@@ -522,15 +522,15 @@
 **Description:** Create frontend UI components to present AI insights clearly: Top Leaks banner, evidence breakdown cards with trade count badges, confidence indicators, and a one-click 'Test this rule' button that pre-fills the Rule Lab.
 
 **Acceptance criteria:**
-- [ ] Top 3 leaks displayed as high-visibility cards on the dashboard
-- [ ] Each card shows the numeric evidence, trade count analyzed, and suggested rule
-- [ ] Small sample warnings shown when leak is based on fewer than 30 trades
-- [ ] Clicking 'Test this rule' deep links into the Rule Lab with pre-populated rule configuration
+- [x] Top 3 leaks displayed as high-visibility cards on the dashboard
+- [x] Each card shows the numeric evidence, trade count analyzed, and suggested rule
+- [x] Small sample warnings shown when leak is based on fewer than 30 trades
+- [x] Clicking 'Test this rule' deep links into the Rule Lab with pre-populated rule configuration
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/insights.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Verify insight card renders on dashboard and clicking 'Test this rule' transitions to Rule Lab
+- [x] Tests pass: `npm run test -- apps/web/tests/insights.test.tsx` (9/9 passing, 98/98 overall)
+- [x] Build succeeds: `npm run build --prefix apps/web` (all static & dynamic pages compiled)
+- [x] Manual check: Verify insight card renders on dashboard and clicking 'Test this rule' transitions to Rule Lab
 
 **Dependencies:** Task 17
 
@@ -544,11 +544,11 @@
 ---
 
 ## Checkpoint: AI Insights
-- [ ] Claude API client outputs validated structured JSON with zero hallucinated stats
-- [ ] System prompt strictly adheres to educational non-advisory guardrails
-- [ ] Numeric grounding asserts all stated figures match computed numbers
-- [ ] One-click 'Test this rule' CTA links directly into Rule Lab
-- [ ] Review with team before proceeding
+- [x] Claude API client outputs validated structured JSON with zero hallucinated stats
+- [x] System prompt strictly adheres to educational non-advisory guardrails
+- [x] Numeric grounding asserts all stated figures match computed numbers
+- [x] One-click 'Test this rule' CTA links directly into Rule Lab
+- [x] Review with team before proceeding
 
 ---
 

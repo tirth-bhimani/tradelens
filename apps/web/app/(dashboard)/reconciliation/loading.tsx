@@ -70,7 +70,7 @@ export default function ReconciliationLoading() {
                 <th className="p-3.5"><Skeleton className="h-3 w-16 ml-auto" /></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-850">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {Array.from({ length: 4 }).map((_, idx) => (
                 <tr key={idx} className="p-3.5">
                   <td className="p-3.5"><Skeleton className="h-4 w-24" /></td>

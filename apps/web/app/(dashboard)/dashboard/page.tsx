@@ -117,6 +117,7 @@ export default async function DashboardPage() {
       <BehavioralLeaksCard />
 
 
+
       {/* Empty State / Upload Callout (Theme-adaptive styling) */}
       <div className="p-8 md:p-10 card-zerodha-glass border border-dashed border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-center space-y-4 transition-colors">
         <div className="w-10 h-10 rounded-[4px] bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 mx-auto flex items-center justify-center">
