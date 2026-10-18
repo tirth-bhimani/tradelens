@@ -378,15 +378,15 @@
 **Description:** Create responsive summary metric cards in Next.js displaying Net P&L, Win Rate, Profit Factor, Expectancy, Max Drawdown, and Streak stats, formatted using standard Indian numeric grouping (₹ Lakhs and Crores with ₹ symbol).
 
 **Acceptance criteria:**
-- [ ] Format utility correctly converts numbers into Indian format (e.g. ₹1,50,000 and ₹2.40 Cr)
-- [ ] Displays Net P&L with positive/negative color coding (green/red) and badges
-- [ ] Displays Win Rate, Average Win/Loss ratio, Expectancy, and Max Drawdown cards
-- [ ] Handles zero or empty trade states gracefully with skeleton loaders and onboarding prompts
+- [x] Format utility correctly converts numbers into Indian format (e.g. ₹1,50,000 and ₹2.40 Cr)
+- [x] Displays Net P&L with positive/negative color coding (green/red) and badges
+- [x] Displays Win Rate, Average Win/Loss ratio, Expectancy, and Max Drawdown cards
+- [x] Handles zero or empty trade states gracefully with skeleton loaders and onboarding prompts
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/formatters.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Inspect dashboard cards and verify numbers format in Lakhs/Crores accurately
+- [x] Tests pass: `npm run test --prefix apps/web` (58/58 passing)
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Inspect dashboard cards and verify numbers format in Lakhs/Crores accurately
 
 **Dependencies:** Task 11
 

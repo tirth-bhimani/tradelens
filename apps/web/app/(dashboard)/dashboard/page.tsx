@@ -99,8 +99,8 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Core Performance Metrics (Task 11) */}
-      <PerformanceMetricsGrid />
+      {/* Core Performance Metrics (Task 11 & Task 13) */}
+      <PerformanceMetricsGrid startingCapital={capital} />
 
       {/* Behavioral Leaks & Execution Discipline (Task 12) */}
       <BehavioralLeaksCard />
