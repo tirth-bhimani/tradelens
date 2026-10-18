@@ -36,5 +36,10 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://postgres:postgres@localhost:5432/tradelens"
 
+    # AI Configuration (Free Cloud Providers & Deterministic Engine)
+    gemini_api_key: str | None = None
+    groq_api_key: str | None = None
+    ai_provider: str = "auto"  # "auto", "gemini", "groq", or "deterministic"
+
 
 settings = Settings()

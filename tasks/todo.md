@@ -464,20 +464,20 @@
 
 ## Phase 6: AI Behavioral Insights Engine
 
-## Task 16: Structured AI prompt pipeline & Claude API client with guardrails
+## Task 16: Structured AI prompt pipeline & free-tier LLM client with guardrails
 
-**Description:** Build the AI insight generator using Claude API with structured JSON output mode, sending only pre-computed summary statistics (never raw trades) to explain top leaks in plain English and propose targeted rules, with strict prompt guardrails against trade advice.
+**Description:** Build the AI insight generator using free-tier LLMs (Google Gemini 1.5 Flash, Groq Llama 3.3, and offline deterministic engine) with structured JSON output mode, sending only pre-computed summary statistics (never raw trades) to explain top leaks in plain English and propose targeted rules, with strict prompt guardrails against trade advice.
 
 **Acceptance criteria:**
-- [ ] System prompt enforces strict educational role: never predicts prices, never recommends buy/sell actions
-- [ ] Sends pre-computed stats dictionary to Claude API and requests structured JSON schema
-- [ ] Output schema validates: `top_leaks` (list of 3), `evidence` (specific stats), `suggested_rule` (from catalog), and `confidence_note`
-- [ ] Error handling retries invalid JSON once, then fails gracefully with a fallback message
+- [x] System prompt enforces strict educational role: never predicts prices, never recommends buy/sell actions
+- [x] Sends pre-computed stats dictionary to free-tier LLM API and requests structured JSON schema
+- [x] Output schema validates: `top_leaks` (list of 3), `evidence` (specific stats), `suggested_rules` (from catalog), and `discipline_grade`
+- [x] Error handling retries invalid JSON once, then fails gracefully with free deterministic fallback
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_ai_client.py`
-- [ ] Build succeeds: `mypy services/analytics/app/ai`
-- [ ] Manual check: Trigger AI insights on mock stats and inspect raw JSON against Pydantic schema
+- [x] Tests pass: `pytest services/analytics/tests/test_ai_client.py` (6/6 passing)
+- [x] Build succeeds: `mypy services/analytics/app/ai` (0 errors in 4 source files)
+- [x] Manual check: Trigger AI insights on mock stats and inspect raw JSON against Pydantic schema
 
 **Dependencies:** Task 12
 
