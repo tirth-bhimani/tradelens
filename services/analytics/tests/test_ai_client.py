@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import json
+from unittest.mock import MagicMock, patch
+
 import pytest
+from fastapi.testclient import TestClient
+
 from app.ai.client import AIClient
 from app.ai.prompts import SYSTEM_PROMPT, build_insight_user_prompt
 from app.ai.schemas import InsightReport, InsightRequest
 from app.main import app
-from fastapi.testclient import TestClient
 
 
 @pytest.fixture
@@ -149,3 +153,40 @@ def test_fastapi_ai_insights_endpoint(sample_tilt_request: InsightRequest) -> No
     assert len(data["top_leaks"]) == 2
     assert data["provider_used"] == "FREE_DETERMINISTIC"
     assert "DISCLAIMER" in data["educational_disclaimer"]
+
+
+def test_anthropic_provider_resolution() -> None:
+    """Verifies that providing anthropic_api_key resolves provider to anthropic."""
+    client = AIClient(anthropic_api_key="sk-ant-test-key")
+    assert client._resolve_provider() == "anthropic"
+
+
+@pytest.mark.asyncio
+async def test_anthropic_mock_call(sample_tilt_request: InsightRequest) -> None:
+    """Verifies that _call_anthropic formats request and validates Claude JSON response."""
+    client = AIClient(anthropic_api_key="sk-ant-test-key")
+    mock_payload = {
+        "content": [
+            {
+                "text": json.dumps({
+                    "overall_summary": "Disciplined execution observed.",
+                    "discipline_grade": "B",
+                    "discipline_score": 75,
+                    "top_leaks": [],
+                    "suggested_rules": [],
+                    "educational_disclaimer": "Educational only",
+                })
+            }
+        ]
+    }
+
+    with patch("httpx.AsyncClient.post") as mock_post:
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = mock_payload
+        mock_resp.raise_for_status = MagicMock()
+        mock_post.return_value = mock_resp
+
+        report = await client._call_anthropic(sample_tilt_request)
+        assert report.provider_used == "ANTHROPIC_CLAUDE_3.5_SONNET"
+        assert report.discipline_score == 75
+        assert report.discipline_grade == "B"

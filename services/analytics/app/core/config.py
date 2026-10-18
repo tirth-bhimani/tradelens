@@ -1,5 +1,4 @@
-from typing import List, Union
-from pydantic import field_validator
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,13 +18,13 @@ class Settings(BaseSettings):
 
     # API Configuration
     api_prefix: str = "/api/v1"
-    allowed_origins: Union[str, List[str]] = [
+    allowed_origins: str | list[str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
 
     @property
-    def cors_origins(self) -> List[str]:
+    def cors_origins(self) -> list[str]:
         if isinstance(self.allowed_origins, str):
             import json
             if self.allowed_origins.startswith("["):
@@ -36,10 +35,11 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://postgres:postgres@localhost:5432/tradelens"
 
-    # AI Configuration (Free Cloud Providers & Deterministic Engine)
+    # AI Configuration (Free Cloud Providers, Anthropic Claude & Deterministic Engine)
     gemini_api_key: str | None = None
     groq_api_key: str | None = None
-    ai_provider: str = "auto"  # "auto", "gemini", "groq", or "deterministic"
+    anthropic_api_key: str | None = None
+    ai_provider: str = "auto"  # "auto", "anthropic", "gemini", "groq", or "deterministic"
 
 
 settings = Settings()

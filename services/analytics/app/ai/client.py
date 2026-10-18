@@ -25,41 +25,51 @@ logger = logging.getLogger(__name__)
 
 
 class AIClient:
-    """Unified client for generating behavioral trading insights with zero-cost free LLMs."""
+    """Unified client for generating behavioral trading insights with zero-cost free LLMs or Anthropic Claude."""
 
     def __init__(
         self,
         gemini_api_key: str | None = None,
         groq_api_key: str | None = None,
+        anthropic_api_key: str | None = None,
         provider: str = "auto",
-        timeout_seconds: float = 20.0,
+        timeout_seconds: float = 25.0,
     ) -> None:
         self.gemini_api_key = gemini_api_key or settings.gemini_api_key
         self.groq_api_key = groq_api_key or settings.groq_api_key
+        self.anthropic_api_key = anthropic_api_key or settings.anthropic_api_key
         self.provider = provider or settings.ai_provider
         self.timeout = timeout_seconds
 
     async def generate_insights(self, request: InsightRequest) -> InsightReport:
-        """Generates structured behavioral insights, attempting cloud free tiers with deterministic fallback."""
+        """Generates structured behavioral insights, attempting Anthropic or cloud free tiers with deterministic fallback."""
         active_provider = self._resolve_provider()
 
-        if active_provider == "gemini" and self.gemini_api_key:
+        if active_provider == "anthropic" and self.anthropic_api_key:
+            try:
+                return await self._call_anthropic(request)
+            except (httpx.HTTPError, json.JSONDecodeError, KeyError, ValueError) as e:
+                logger.warning("Anthropic API call failed (%s). Falling back to deterministic engine.", e)
+
+        elif active_provider == "gemini" and self.gemini_api_key:
             try:
                 return await self._call_gemini(request)
             except (httpx.HTTPError, json.JSONDecodeError, KeyError, ValueError) as e:
-                logger.warning(f"Gemini API call failed ({e}). Falling back to deterministic engine.")
+                logger.warning("Gemini API call failed (%s). Falling back to deterministic engine.", e)
 
         elif active_provider == "groq" and self.groq_api_key:
             try:
                 return await self._call_groq(request)
             except (httpx.HTTPError, json.JSONDecodeError, KeyError, ValueError) as e:
-                logger.warning(f"Groq API call failed ({e}). Falling back to deterministic engine.")
+                logger.warning("Groq API call failed (%s). Falling back to deterministic engine.", e)
 
         # Default / Fallback: Zero-cost deterministic behavioral engine
         return self._generate_deterministic(request)
 
     def _resolve_provider(self) -> str:
         """Determines which provider to attempt based on available keys and configuration."""
+        if self.provider == "anthropic" and self.anthropic_api_key:
+            return "anthropic"
         if self.provider == "gemini" and self.gemini_api_key:
             return "gemini"
         if self.provider == "groq" and self.groq_api_key:
@@ -67,12 +77,50 @@ class AIClient:
         if self.provider == "deterministic":
             return "deterministic"
 
-        # Auto detection: prefer Gemini if set, else Groq, else deterministic
+        # Auto detection: prefer Anthropic if provided, else Gemini, else Groq, else deterministic
+        if self.anthropic_api_key:
+            return "anthropic"
         if self.gemini_api_key:
             return "gemini"
         if self.groq_api_key:
             return "groq"
         return "deterministic"
+
+    async def _call_anthropic(self, request: InsightRequest) -> InsightReport:
+        """Calls Anthropic Claude 3.5 Sonnet via REST Messages API."""
+        url = "https://api.anthropic.com/v1/messages"
+        headers = {
+            "x-api-key": self.anthropic_api_key or "",
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        }
+
+        user_content = build_insight_user_prompt(request)
+        instructions = (
+            f"{user_content}\n\n"
+            "CRITICAL: Output ONLY a single raw JSON object matching the InsightReport schema. "
+            "Do not include any conversational preamble or markdown fences."
+        )
+
+        payload = {
+            "model": "claude-3-5-sonnet-20241022",
+            "max_tokens": 2048,
+            "temperature": 0.2,
+            "system": SYSTEM_PROMPT,
+            "messages": [
+                {"role": "user", "content": instructions},
+            ],
+        }
+
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            resp = await client.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+
+        text_content = data["content"][0]["text"]
+        parsed_json = self._clean_and_parse_json(text_content)
+        parsed_json["provider_used"] = "ANTHROPIC_CLAUDE_3.5_SONNET"
+        return InsightReport.model_validate(parsed_json)
 
     async def _call_gemini(self, request: InsightRequest) -> InsightReport:
         """Calls Google Gemini 1.5 Flash via REST API with native JSON schema enforcement."""
