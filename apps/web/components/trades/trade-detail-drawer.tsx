@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, Tag, FileText, Check, ShieldAlert, Award } from "lucide-react";
 import {
   type RoundTripTradeView,
@@ -27,11 +27,19 @@ export function TradeDetailDrawer({
   onClose,
   onUpdateTrade,
 }: TradeDetailDrawerProps) {
-  if (!isOpen || !trade) return null;
-
-  const [notes, setNotes] = useState(trade.notes || "");
-  const [selectedTags, setSelectedTags] = useState<PsychologicalTag[]>(trade.tags || []);
+  const [notes, setNotes] = useState("");
+  const [selectedTags, setSelectedTags] = useState<PsychologicalTag[]>([]);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    if (trade) {
+      setNotes(trade.notes || "");
+      setSelectedTags(trade.tags || []);
+      setSavedSuccess(false);
+    }
+  }, [trade]);
+
+  if (!isOpen || !trade) return null;
 
   const toggleTag = (tag: PsychologicalTag) => {
     if (selectedTags.includes(tag)) {

@@ -451,7 +451,7 @@ export function TradeTable({
                       </div>
                       {trade.notes && (
                         <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-xs pt-1">
-                          "{trade.notes}"
+                          &ldquo;{trade.notes}&rdquo;
                         </p>
                       )}
                     </td>
