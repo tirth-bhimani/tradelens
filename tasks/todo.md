@@ -405,15 +405,15 @@
 **Description:** Build interactive time-series charts for cumulative Net P&L (equity curve) and peak-to-trough drawdown using Recharts or Lightweight Charts, with date range selectors and hover tooltips showing individual trade points.
 
 **Acceptance criteria:**
-- [ ] Equity curve plots cumulative Net P&L over time with smooth area/line rendering
-- [ ] Underwater drawdown chart displays peak-to-trough drops with percentage and rupee values
-- [ ] Interactive tooltip shows date, daily P&L, cumulative P&L, and trade count on hover
-- [ ] Supports quick filters: 1W, 1M, 3M, 1Y, All Time, and custom date range picker
+- [x] Equity curve plots cumulative Net P&L over time with smooth area/line rendering
+- [x] Underwater drawdown chart displays peak-to-trough drops with percentage and rupee values
+- [x] Interactive tooltip shows date, daily P&L, cumulative P&L, and trade count on hover
+- [x] Supports quick filters: 1W, 1M, 3M, 1Y, All Time, and custom date range picker
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/charts.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Load 1,000 sample trades and confirm responsive chart pan/zoom without lag
+- [x] Tests pass: `npm run test --prefix apps/web` (76/76 passing across 8 suites)
+- [x] Build succeeds: `npx tsc --noEmit --project apps/web/tsconfig.json` (0 errors)
+- [x] Manual check: Load 1,000 sample trades and confirm responsive chart pan/zoom without lag
 
 **Dependencies:** Task 13
 

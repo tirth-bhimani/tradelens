@@ -3,6 +3,7 @@ import { UploadCloud, TrendingUp, Clock, Layers, ArrowRight } from "lucide-react
 import { getCurrentProfile } from "@/lib/auth/actions";
 import { formatIndianDenomination } from "@/lib/utils/format";
 import { PerformanceMetricsGrid } from "@/components/dashboard/performance-metrics-grid";
+import { ChartContainer } from "@/components/dashboard/chart-container";
 import { BehavioralLeaksCard } from "@/components/dashboard/behavioral-leaks-card";
 
 export default async function DashboardPage() {
@@ -101,6 +102,9 @@ export default async function DashboardPage() {
 
       {/* Core Performance Metrics (Task 11 & Task 13) */}
       <PerformanceMetricsGrid startingCapital={capital} />
+
+      {/* Interactive Equity Curve & Drawdown Visualizer (Task 14) */}
+      <ChartContainer />
 
       {/* Behavioral Leaks & Execution Discipline (Task 12) */}
       <BehavioralLeaksCard />
