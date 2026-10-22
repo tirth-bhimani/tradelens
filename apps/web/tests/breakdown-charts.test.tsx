@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CalendarHeatmap } from "../components/dashboard/calendar-heatmap";
 import { TimeBreakdownChart } from "../components/dashboard/time-breakdown-chart";
-import { TradeTable, DEFAULT_TRADE_LOG } from "../components/trades/trade-table";
+import { TradeTable } from "../components/trades/trade-table";
+import { DEFAULT_TRADE_LOG } from "../lib/trades/trade-defaults";
 import { TradeTagPill } from "../components/trades/trade-tag-pill";
 
 describe("Calendar Heatmap Component", () => {

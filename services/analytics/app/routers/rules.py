@@ -22,6 +22,12 @@ from app.rules.translator import (
 )
 from app.rules.replay import ReplayRequest, ReplayResult, execute_rule_replay
 from app.rules.validator import ValidationResult, validate_rule
+from app.rules.adherence import (
+    AdherenceReport,
+    SavedRuleDefinition,
+    evaluate_rulebook_adherence,
+)
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -94,4 +100,24 @@ async def replay_rule(request: ReplayRequest) -> ReplayResult:
         rule=request.rule,
         starting_capital=Decimal(str(request.starting_capital)),
         train_ratio=request.train_ratio,
+    )
+
+
+class AdherenceEvaluationRequest(BaseModel):
+    trades: list[dict[str, Any]]
+    rules: list[SavedRuleDefinition]
+
+
+@router.post(
+    "/adherence/evaluate",
+    response_model=AdherenceReport,
+    status_code=status.HTTP_200_OK,
+    summary="Evaluate Rulebook Adherence on Imported Trades",
+    description="Evaluates a list of trades chronologically against active rulebooks to detect violations and score discipline.",
+)
+def evaluate_adherence_endpoint(request: AdherenceEvaluationRequest) -> AdherenceReport:
+    """Evaluates imported trades against user's active saved rules."""
+    return evaluate_rulebook_adherence(
+        trades=request.trades,
+        rules=request.rules,
     )

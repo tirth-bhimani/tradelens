@@ -26,18 +26,22 @@ export default async function DashboardLayout({
         className="pointer-events-none absolute inset-0 bg-tech-grid opacity-30 dark:opacity-25"
       />
 
-      {/* Top Navigation Bar: TradersJournal Dynamic Floating Glass Aesthetic */}
+      {/* Top Navigation Bar: Single-Row Classic Dynamic Glass Aesthetic */}
       <header className="h-16 border-b border-slate-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-[#070b16]/80 backdrop-blur-xl sticky top-0 z-50 px-4 md:px-8 flex items-center justify-between transition-colors shadow-[0_1px_12px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
         {/* Brand & Nav */}
-        <div className="flex items-center space-x-6 md:space-x-8">
-          <BrandLogo variant="horizontal" size="md" href="/dashboard" />
-          <DashboardNav />
+        <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6 min-w-0 flex-1 mr-2">
+          <div className="shrink-0">
+            <BrandLogo variant="horizontal" size="md" href="/dashboard" />
+          </div>
+          <div className="min-w-0">
+            <DashboardNav />
+          </div>
         </div>
 
         {/* Right Actions: Session, Theme Toggle & Sign Out */}
-        <div className="flex items-center space-x-2.5 sm:space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-2.5 shrink-0">
           {/* Live Market Session Status Indicator */}
-          <div className="hidden xl:flex items-center space-x-2 px-2.5 py-1 rounded-[5px] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-[11px] font-mono text-slate-600 dark:text-slate-400">
+          <div className="hidden 2xl:flex items-center space-x-2 px-2.5 py-1 rounded-[5px] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-[11px] font-mono text-slate-600 dark:text-slate-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span>NSE/BSE • 09:15 - 15:30 IST</span>
           </div>

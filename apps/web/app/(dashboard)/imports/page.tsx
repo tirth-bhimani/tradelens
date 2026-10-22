@@ -2,12 +2,18 @@ import { ImportsManager } from "@/components/trades/imports-manager";
 import { getRecentImports } from "@/lib/trades/actions";
 import { getCurrentProfile } from "@/lib/auth/actions";
 import { UploadCloud } from "lucide-react";
+import { AdherenceScorecard } from "@/components/rules/adherence-scorecard";
+import { getUserRules } from "@/lib/rules/rulebook-actions";
+import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
+import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 
 export const dynamic = "force-dynamic";
 
 export default async function ImportsPage() {
   const { user } = await getCurrentProfile();
   const { imports, error: importsError } = await getRecentImports();
+  const { rules } = await getUserRules();
+  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, rules);
 
   return (
     <div className="space-y-8">
@@ -27,6 +33,11 @@ export default async function ImportsPage() {
 
       {/* Reactive Imports Manager (Upload + Live History Table) */}
       <ImportsManager initialImports={imports} importsError={importsError} />
+
+      {/* Post-Import Execution Adherence Scorecard (Task 23) */}
+      <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <AdherenceScorecard report={adherenceReport} />
+      </div>
     </div>
   );
 }

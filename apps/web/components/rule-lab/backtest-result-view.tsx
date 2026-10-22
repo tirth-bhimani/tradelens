@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ReplayResult } from "@/lib/rules/types";
+import { saveRuleAction } from "@/lib/rules/rulebook-actions";
 import { ComparisonMetrics } from "./comparison-metrics";
 import { DualEquityChart } from "./dual-equity-chart";
 import { SplitMetricsCard } from "./split-metrics-card";
@@ -26,10 +27,24 @@ export function BacktestResultView({
   onSaveRule,
 }: BacktestResultViewProps) {
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
-    setSavedSuccess(true);
-    if (onSaveRule) onSaveRule(result.rule_type);
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await saveRuleAction({
+        rule_type: result.rule_type,
+        rule_payload: { rule_type: result.rule_type },
+        natural_language_text: `Verified guardrail: ${result.rule_type} simulated in Rule Lab.`,
+        is_active: true,
+      });
+      setSavedSuccess(true);
+      if (onSaveRule) onSaveRule(result.rule_type);
+    } catch {
+      // Handled gracefully
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (

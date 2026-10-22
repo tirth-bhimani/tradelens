@@ -7,7 +7,7 @@ import {
   computeWeekdayBreakdown,
 } from "@/lib/trades/breakdown-math";
 import { type RoundTripTradeView } from "@/lib/trades/trade-filters";
-import { DEFAULT_TRADE_LOG } from "@/components/trades/trade-table";
+import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 import {
   formatCurrencyINR,
   formatSignedCurrency,

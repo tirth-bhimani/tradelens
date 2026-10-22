@@ -5,10 +5,14 @@ import Link from "next/link";
 import { UploadCloud, ArrowLeft, BookOpen } from "lucide-react";
 import { CalendarHeatmap } from "@/components/dashboard/calendar-heatmap";
 import { TimeBreakdownChart } from "@/components/dashboard/time-breakdown-chart";
-import { TradeTable, DEFAULT_TRADE_LOG } from "@/components/trades/trade-table";
+import { TradeTable } from "@/components/trades/trade-table";
+import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
+import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
+import { DEFAULT_SAMPLE_RULES } from "@/lib/rules/rulebook-defaults";
 
 export default function TradesPage() {
   const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
+  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, DEFAULT_SAMPLE_RULES);
 
   return (
     <div className="space-y-6">
@@ -58,6 +62,7 @@ export default function TradesPage() {
       {/* Main Trade Table Ledger (Filtered by Date if day was clicked) */}
       <TradeTable
         trades={DEFAULT_TRADE_LOG}
+        violations={adherenceReport.violations}
         selectedDate={selectedDate}
         onClearDateFilter={() => setSelectedDate(undefined)}
       />

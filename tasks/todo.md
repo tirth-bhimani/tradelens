@@ -648,16 +648,16 @@
 **Description:** Build the Rule Lab frontend interface in Next.js: rule selector / custom rule builder, backtest execution button, side-by-side comparison cards (Before vs After P&L, Win Rate, Max Drawdown), dual equity curve visualizer, and table of skipped trades with reasons.
 
 **Acceptance criteria:**
-- [ ] Interactive UI allows picking from catalog templates or entering plain language
-- [ ] Shows comparative metric delta badges (e.g. `+₹42,500 (+14%)`, `Drawdown: -22% -> -14%`)
-- [ ] Dual equity curve renders Actual vs Simulated curves with clear legend
-- [ ] List of skipped trades displays exact timestamp, symbol, and rule violation reason
-- [ ] Prominent disclaimer banner: "Replay is an approximation based on past behavior"
+- [x] Interactive UI allows picking from catalog templates or entering plain language
+- [x] Shows comparative metric delta badges (e.g. `+₹42,500 (+14%)`, `Drawdown: -22% -> -14%`)
+- [x] Dual equity curve renders Actual vs Simulated curves with clear legend
+- [x] List of skipped trades displays exact timestamp, symbol, and rule violation reason
+- [x] Prominent disclaimer banner: "Replay is an approximation based on past behavior"
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/rule-lab.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Run a backtest in the UI, check before/after charts and skipped trade modal
+- [x] Tests pass: `npm run test -- apps/web/tests/rule-lab.test.ts`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Run a backtest in the UI, check before/after charts and skipped trade modal
 
 **Dependencies:** Task 21
 
@@ -676,15 +676,15 @@
 **Description:** Enable saving tested rules into the user's personal Trading Rulebook (`rules` table) and implement post-import adherence analysis that flags rule violations on newly uploaded trade files.
 
 **Acceptance criteria:**
-- [ ] User can click 'Save to Rulebook' to activate rule with a custom name
-- [ ] Dedicated Rulebook page displays active and paused rules with toggle switches
-- [ ] When a new CSV is imported, the engine evaluates trades against active rules and flags violations
-- [ ] Adherence score (% of trades adhering to rules) is calculated and surfaced on dashboard
+- [x] User can click 'Save to Rulebook' to activate rule with a custom name
+- [x] Dedicated Rulebook page displays active and paused rules with toggle switches
+- [x] When a new CSV is imported, the engine evaluates trades against active rules and flags violations
+- [x] Adherence score (% of trades adhering to rules) is calculated and surfaced on dashboard
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_adherence.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Save a rule, upload a new CSV containing violating trades, and verify violations are flagged
+- [x] Tests pass: `pytest services/analytics/tests/test_adherence.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Save a rule, upload a new CSV containing violating trades, and verify violations are flagged
 
 **Dependencies:** Task 22
 
@@ -699,11 +699,11 @@
 ---
 
 ## Checkpoint: Rule Lab & Adherence
-- [ ] Rule Lab UI renders before/after equity curves and skipped trades cleanly
-- [ ] Disclaimer warnings and overfitting checks appear prominently
-- [ ] Rules can be saved to a personal rulebook
-- [ ] New imports show adherence tracking and rule violations
-- [ ] Review with team before proceeding
+- [x] Rule Lab UI renders before/after equity curves and skipped trades cleanly
+- [x] Disclaimer warnings and overfitting checks appear prominently
+- [x] Rules can be saved to a personal rulebook
+- [x] New imports show adherence tracking and rule violations
+- [x] Review with team before proceeding
 
 ---
 
@@ -714,15 +714,15 @@
 **Description:** Build the organization and coach-trader permission management module: coach invitation links, trader explicit consent screen, revocable access controls, and strict RLS policies ensuring coaches only see data for authorized traders.
 
 **Acceptance criteria:**
-- [ ] Coach can generate an invitation link for a student/trader
-- [ ] Trader sees an explicit consent screen detailing what data the coach can view
-- [ ] Trader can revoke coach access at any time from Settings
-- [ ] Database RLS policy strictly grants read-only access to coach if and only if active consent exists
+- [x] Coach can generate an invitation link for a student/trader
+- [x] Trader sees an explicit consent screen detailing what data the coach can view
+- [x] Trader can revoke coach access at any time from Settings
+- [x] Database RLS policy strictly grants read-only access to coach if and only if active consent exists
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_coach_access.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Invite trader with coach account, grant consent, then revoke; verify data access cuts off immediately
+- [x] Tests pass: `pytest services/analytics/tests/test_coach_access.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Invite trader with coach account, grant consent, then revoke; verify data access cuts off immediately
 
 **Dependencies:** Task 2
 
@@ -741,15 +741,15 @@
 **Description:** Build the Coach Dashboard interface displaying a cohort list of assigned traders with traffic-light risk flags (rule violations, severe drawdown, position size spikes), cohort aggregate stats (average win rate, top leak), and drill-down into a trader's read-only dashboard.
 
 **Acceptance criteria:**
-- [ ] Coach dashboard lists assigned traders with green/yellow/red risk indicators based on behavior metrics
-- [ ] Shows aggregate cohort metrics (cohort win rate, most common behavioral leak)
-- [ ] Coach can drill down into a specific trader's analytics in read-only mode
-- [ ] Coach can leave private feedback notes or assign a rule to a trader's rulebook
+- [x] Coach dashboard lists assigned traders with green/yellow/red risk indicators based on behavior metrics
+- [x] Shows aggregate cohort metrics (cohort win rate, most common behavioral leak)
+- [x] Coach can drill down into a specific trader's analytics in read-only mode
+- [x] Coach can leave private feedback notes or assign a rule to a trader's rulebook
 
 **Verification:**
-- [ ] Tests pass: `npm run test -- apps/web/tests/coach.test.ts`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Log in as coach, inspect cohort summary, drill down into trader, and leave a coaching note
+- [x] Tests pass: `npm run test -- apps/web/tests/coach.test.ts`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Log in as coach, inspect cohort summary, drill down into trader, and leave a coaching note
 
 **Dependencies:** Task 24
 
@@ -764,10 +764,10 @@
 ---
 
 ## Checkpoint: Coach & Collaboration
-- [ ] Consent management ensures trader always has control over coach visibility
-- [ ] Coach dashboard surfaces real-time risk flags across students
-- [ ] Read-only drilldown and rule assignment work seamlessly
-- [ ] Review with team before proceeding
+- [x] Consent management ensures trader always has control over coach visibility
+- [x] Coach dashboard surfaces real-time risk flags across students
+- [x] Read-only drilldown and rule assignment work seamlessly
+- [x] Review with team before proceeding
 
 ---
 

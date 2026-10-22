@@ -5,6 +5,10 @@ import { formatIndianDenomination } from "@/lib/utils/format";
 import { PerformanceMetricsGrid } from "@/components/dashboard/performance-metrics-grid";
 import { ChartContainer } from "@/components/dashboard/chart-container";
 import { BehavioralLeaksCard } from "@/components/dashboard/behavioral-leaks-card";
+import { AdherenceScorecard } from "@/components/rules/adherence-scorecard";
+import { getUserRules } from "@/lib/rules/rulebook-actions";
+import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
+import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 
 export default async function DashboardPage() {
   const { user, profile } = await getCurrentProfile();
@@ -13,6 +17,9 @@ export default async function DashboardPage() {
   const capital = profile?.starting_capital ? Number(profile.starting_capital) : 0;
   const timezone = profile?.timezone || "Asia/Kolkata";
   const segments = profile?.trading_segments || ["EQUITY", "FNO"];
+
+  const { rules } = await getUserRules();
+  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, rules);
 
   return (
     <div className="space-y-6">
@@ -121,6 +128,9 @@ export default async function DashboardPage() {
 
       {/* Behavioral Leaks & Execution Discipline (Task 12) */}
       <BehavioralLeaksCard />
+
+      {/* Rulebook Discipline & Adherence Scorecard (Task 23) */}
+      <AdherenceScorecard report={adherenceReport} />
 
 
 
