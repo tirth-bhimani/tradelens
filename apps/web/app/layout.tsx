@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { IdleSessionTimeout } from "@/components/auth/idle-session-timeout";
@@ -7,6 +7,13 @@ import { IdleSessionTimeout } from "@/components/auth/idle-session-timeout";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -29,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         {/* Anti-FOUC inline script in <head> to immediately apply theme before DOM paint without mutating <body> */}
         <script
@@ -49,7 +56,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-screen antialiased bg-white text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200 font-sans"
+        className="min-h-screen antialiased bg-slate-50 text-slate-900 dark:bg-[#050814] dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200 font-sans"
         suppressHydrationWarning
       >
         <ThemeProvider>

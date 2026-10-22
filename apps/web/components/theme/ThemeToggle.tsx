@@ -18,7 +18,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
       type="button"
       onClick={toggleTheme}
       aria-label={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
-      className={`relative w-9 h-9 rounded-[4px] border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 transition-colors flex items-center justify-center shadow-sm focus:outline-none focus:ring-1 focus:ring-[#387ed1] ${className}`}
+      className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-[6px] border border-slate-200/80 dark:border-white/[0.1] bg-white/80 dark:bg-white/[0.04] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:border-[#2b7fff]/50 dark:hover:border-[#2b7fff]/50 hover:shadow-[0_0_12px_rgba(43,127,255,0.25)] transition-all flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2b7fff]/30 ${className}`}
     >
       {mounted ? (
         <AnimatePresence mode="wait" initial={false}>

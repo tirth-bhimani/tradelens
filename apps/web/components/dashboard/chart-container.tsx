@@ -81,7 +81,7 @@ export function ChartContainer({
         </div>
         <Link
           href="/imports"
-          className="btn-zerodha-primary text-xs py-2 px-4 inline-flex items-center space-x-1.5"
+          className="kiro-btn-cta text-xs py-2 px-4 inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
         >
           <UploadCloud className="w-3.5 h-3.5" />
           <span>Import Trades</span>
@@ -101,26 +101,26 @@ export function ChartContainer({
   return (
     <div
       data-testid="chart-container"
-      className="p-5 rounded-[6px] border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d131f] space-y-4 transition-colors"
+      className="card-luminous p-5 sm:p-6 rounded-[8px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] space-y-4 transition-all duration-200 shadow-sm"
     >
       {/* Top Controls Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
         <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
             Performance Trajectory
           </h3>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* View Tab Selector */}
-          <div className="flex items-center rounded-[4px] p-0.5 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-xs">
+          <div className="flex items-center rounded-[5px] p-0.5 bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs">
             <button
               type="button"
               onClick={() => setActiveTab("equity")}
-              className={`px-2.5 py-1 rounded-[3px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${
                 activeTab === "equity"
-                  ? "bg-white dark:bg-[#0d131f] text-slate-900 dark:text-white shadow-sm"
+                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-white shadow-sm font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -129,9 +129,9 @@ export function ChartContainer({
             <button
               type="button"
               onClick={() => setActiveTab("drawdown")}
-              className={`px-2.5 py-1 rounded-[3px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${
                 activeTab === "drawdown"
-                  ? "bg-white dark:bg-[#0d131f] text-slate-900 dark:text-white shadow-sm"
+                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-white shadow-sm font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -140,9 +140,9 @@ export function ChartContainer({
             <button
               type="button"
               onClick={() => setActiveTab("split")}
-              className={`px-2 py-1 rounded-[3px] font-medium transition-colors ${
+              className={`px-2 py-1 rounded-[4px] font-medium transition-colors ${
                 activeTab === "split"
-                  ? "bg-white dark:bg-[#0d131f] text-slate-900 dark:text-white shadow-sm"
+                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-white shadow-sm font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
               title="Split Stacked View"
@@ -158,10 +158,10 @@ export function ChartContainer({
                 key={tf}
                 type="button"
                 onClick={() => setTimeframe(tf)}
-                className={`px-2 py-1 rounded-[4px] text-xs font-medium tabular-nums transition-colors ${
+                className={`px-2 py-1 rounded-[4px] text-xs font-medium font-mono tabular-nums transition-colors ${
                   timeframe === tf
-                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900"
-                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    ? "bg-[#2b7fff] text-white shadow-sm font-semibold"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05]"
                 }`}
               >
                 {tf}

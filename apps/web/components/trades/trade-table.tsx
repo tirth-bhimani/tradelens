@@ -239,7 +239,7 @@ export function TradeTable({
   return (
     <div
       data-testid="trade-table-container"
-      className={`rounded-[6px] border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d131f] space-y-4 transition-colors ${className}`}
+      className={`card-luminous rounded-[8px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] space-y-4 transition-colors shadow-sm ${className}`}
     >
       {/* Table Header & Controls Bar */}
       <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 space-y-3">

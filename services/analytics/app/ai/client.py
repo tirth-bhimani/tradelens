@@ -66,6 +66,77 @@ class AIClient:
         # Default / Fallback: Zero-cost deterministic behavioral engine
         return self._generate_deterministic(request)
 
+    @property
+    def provider_name(self) -> str:
+        """Returns uppercase identifier for active provider."""
+        resolved = self._resolve_provider()
+        if resolved == "anthropic":
+            return "ANTHROPIC_CLAUDE_3.5_SONNET"
+        if resolved == "gemini":
+            return "GEMINI_1.5_FLASH"
+        if resolved == "groq":
+            return "GROQ_LLAMA_3.3_70B"
+        return "FREE_DETERMINISTIC"
+
+    async def generate_text(self, prompt: str, system_instruction: str) -> str:
+        """Generates text/JSON response for an arbitrary user prompt and system instruction."""
+        active = self._resolve_provider()
+
+        if active == "anthropic" and self.anthropic_api_key:
+            url = "https://api.anthropic.com/v1/messages"
+            headers = {
+                "x-api-key": self.anthropic_api_key or "",
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            }
+            payload = {
+                "model": "claude-3-5-sonnet-20241022",
+                "max_tokens": 2048,
+                "temperature": 0.2,
+                "system": system_instruction,
+                "messages": [{"role": "user", "content": prompt}],
+            }
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                resp = await client.post(url, headers=headers, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
+            return str(data["content"][0]["text"])
+
+        if active == "gemini" and self.gemini_api_key:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.gemini_api_key}"
+            payload = {
+                "contents": [{"role": "user", "parts": [{"text": f"{system_instruction}\n\n{prompt}"}]}],
+                "generationConfig": {"temperature": 0.2, "response_mime_type": "application/json"},
+            }
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                resp = await client.post(url, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
+            return str(data["candidates"][0]["content"]["parts"][0]["text"])
+
+        if active == "groq" and self.groq_api_key:
+            url = "https://api.groq.com/openai/v1/chat/completions"
+            headers = {"Authorization": f"Bearer {self.groq_api_key}", "Content-Type": "application/json"}
+            payload = {
+                "model": "llama-3.3-70b-versatile",
+                "messages": [{"role": "system", "content": system_instruction}, {"role": "user", "content": prompt}],
+                "temperature": 0.2,
+                "response_format": {"type": "json_object"},
+            }
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                resp = await client.post(url, headers=headers, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
+            return str(data["choices"][0]["message"]["content"])
+
+        # Default fallback: return structured deterministic JSON
+        return json.dumps({
+            "is_supported": False,
+            "rule": None,
+            "explanation": "No cloud LLM API key configured. Use standard behavioral phrasing for deterministic parsing.",
+            "unsupported_reason": "Offline deterministic fallback active.",
+        })
+
     def _resolve_provider(self) -> str:
         """Determines which provider to attempt based on available keys and configuration."""
         if self.provider == "anthropic" and self.anthropic_api_key:

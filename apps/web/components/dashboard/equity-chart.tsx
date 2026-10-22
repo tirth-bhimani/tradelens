@@ -194,7 +194,7 @@ export function EquityChart({
             <text
               x={width - padding.right + 8}
               y={y + 3.5}
-              className="fill-slate-400 dark:fill-slate-500 text-[10px] font-sans tabular-nums select-none"
+              className="fill-slate-400 dark:fill-slate-500 text-[10px] font-mono tabular-nums select-none"
             >
               {formatIndianDenomination(val, { precision: 1 })}
             </text>
@@ -215,14 +215,19 @@ export function EquityChart({
         {/* Gradient area fill */}
         <path d={areaPath} fill={`url(#${gradientId})`} />
 
-        {/* Main curve line */}
+        {/* Main curve line with glowing bloom filter */}
         <path
           d={linePath}
           fill="none"
           stroke={isOverallPositive ? "#10b981" : "#f43f5e"}
-          strokeWidth="2"
+          strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          style={{
+            filter: isOverallPositive
+              ? "drop-shadow(0 0 5px rgba(16, 185, 129, 0.45))"
+              : "drop-shadow(0 0 5px rgba(244, 63, 94, 0.45))",
+          }}
         />
 
         {/* Interactive Crosshair & Dot indicator */}

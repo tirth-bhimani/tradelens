@@ -103,16 +103,16 @@ export function SummaryMetricsGrid({
             Summary Performance Metrics
           </h2>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           <button
             type="button"
             onClick={() => setCompact(!compact)}
-            className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+            className="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-100/80 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/[0.16] transition-colors"
           >
             Format: {compact ? "Compact (L/Cr)" : "Full (₹)"}
           </button>
           <span className="text-[11px] text-slate-400 dark:text-slate-500">•</span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
             {totalTrades} closed trades
           </span>
         </div>

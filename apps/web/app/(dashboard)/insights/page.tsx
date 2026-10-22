@@ -8,12 +8,17 @@ export default function InsightsPage() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="card-zerodha-glass p-6 sm:p-7 relative overflow-hidden transition-colors">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="card-luminous p-6 sm:p-7 relative overflow-hidden transition-colors border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] shadow-sm">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-20 w-80 h-80 rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-3xl"
+        />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
-              <Activity className="w-3.5 h-3.5 text-[#387ed1]" />
-              <span>Execution Diagnostics • Quantitative Audit</span>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[5px] bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 text-xs font-mono font-medium">
+              <Activity className="w-3.5 h-3.5 text-[#2b7fff]" />
+              <span>EXECUTION DIAGNOSTICS • QUANTITATIVE AUDIT</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Behavioral Execution Audit
@@ -26,14 +31,14 @@ export default function InsightsPage() {
           <div className="flex items-center space-x-2.5">
             <Link
               href="/rule-lab"
-              className="px-3 py-2 rounded-[4px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition inline-flex items-center space-x-1.5"
+              className="kiro-btn-outline !h-9 !px-4 text-xs font-semibold inline-flex items-center space-x-1.5"
             >
               <Beaker className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Rule Lab</span>
             </Link>
             <Link
               href="/trades"
-              className="btn-zerodha-primary text-xs py-2 px-4 inline-flex items-center space-x-1.5"
+              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Trade Journal</span>

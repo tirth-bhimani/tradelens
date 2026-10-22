@@ -28,9 +28,10 @@ class Settings(BaseSettings):
         if isinstance(self.allowed_origins, str):
             import json
             if self.allowed_origins.startswith("["):
-                return json.loads(self.allowed_origins)
+                loaded = json.loads(self.allowed_origins)
+                return [str(x) for x in loaded] if isinstance(loaded, list) else []
             return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
-        return self.allowed_origins
+        return list(self.allowed_origins)
 
     # Database
     database_url: str = "postgresql://postgres:postgres@localhost:5432/tradelens"

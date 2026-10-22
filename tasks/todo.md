@@ -559,15 +559,15 @@
 **Description:** Define the strict rule catalog schema and validator in Python for V1: (1) Cooldown after loss, (2) Max consecutive losses cutoff, (3) Daily loss limit, (4) Max trades per day, (5) Time of day cutoff, (6) Max position size, (7) Skip instrument type, (8) No trading on expiry day, and (9) Multi-rule combination.
 
 **Acceptance criteria:**
-- [ ] Pydantic models define exact schema and allowed parameters for each rule in the catalog
-- [ ] Strict validator rejects any rule type or parameter outside the approved catalog
-- [ ] Multi-rule composite validator ensures all sub-rules evaluate in logical conjunction (AND)
-- [ ] Unit tests cover validation of every rule type and parameter boundaries
+- [x] Pydantic models define exact schema and allowed parameters for each rule in the catalog
+- [x] Strict validator rejects any rule type or parameter outside the approved catalog
+- [x] Multi-rule composite validator ensures all sub-rules evaluate in logical conjunction (AND)
+- [x] Unit tests cover validation of every rule type and parameter boundaries
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_rules_catalog.py`
-- [ ] Build succeeds: `mypy services/analytics/app/rules/catalog.py`
-- [ ] Manual check: Attempt to validate an arbitrary or uncataloged rule and verify rejection
+- [x] Tests pass: `pytest services/analytics/tests/test_rules_catalog.py` (47/47 passing, 215/215 backend passing)
+- [x] Build succeeds: `mypy services/analytics/app/rules` (0 issues in 4 source files)
+- [x] Manual check: Attempt to validate an arbitrary or uncataloged rule and verify rejection
 
 **Dependencies:** Task 8
 
@@ -585,15 +585,15 @@
 **Description:** Implement an AI translation endpoint that takes user natural language rule descriptions (e.g. "Don't let me trade for 30 minutes after taking a loss"), queries Claude with the fixed catalog schema, and outputs validated catalog JSON.
 
 **Acceptance criteria:**
-- [ ] Converts natural language prompt into valid catalog rule JSON
-- [ ] Rejects requests that cannot be mapped to the catalog with helpful explanation of supported rules
-- [ ] Validates output JSON through `rules/validator.py` before returning to user
-- [ ] Handles multi-clause statements (e.g. "Max 5 trades per day and stop after 2 losses") into composite rules
+- [x] Converts natural language prompt into valid catalog rule JSON
+- [x] Rejects requests that cannot be mapped to the catalog with helpful explanation of supported rules
+- [x] Validates output JSON through `rules/validator.py` before returning to user
+- [x] Handles multi-clause statements (e.g. "Max 5 trades per day and stop after 2 losses") into composite rules
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_translator.py`
-- [ ] Build succeeds: `mypy services/analytics/app/rules/translator.py`
-- [ ] Manual check: Input natural language rule and confirm valid structured JSON is produced
+- [x] Tests pass: `pytest services/analytics/tests/test_translator.py` (20/20 passing, 235/235 backend passing)
+- [x] Build succeeds: `mypy services/analytics/app/rules` (0 issues in 8 source files)
+- [x] Manual check: Input natural language rule and confirm valid structured JSON is produced
 
 **Dependencies:** Task 19
 
@@ -611,16 +611,16 @@
 **Description:** Build the deterministic replay engine that iterates chronologically over the user's historical trades, filters or modifies trades violating the specified rule, computes before vs after metrics, and calculates a 70% in-sample / 30% out-of-sample split to detect overfitting.
 
 **Acceptance criteria:**
-- [ ] Replays trades sequentially, accurately updating state (running daily loss, loss streaks, timestamps)
-- [ ] Identifies every skipped trade and computes revised before/after metrics (Net P&L, Win Rate, Drawdown, Profit Factor)
-- [ ] Generates dual equity curve data series (Actual vs Simulated with Rule)
-- [ ] Executes 70/30 chronological train/test split and flags potential overfitting when performance degrades on out-of-sample data
-- [ ] Emits explicit warnings when sample size is under 30 trades
+- [x] Replays trades sequentially, accurately updating state (running daily loss, loss streaks, timestamps)
+- [x] Identifies every skipped trade and computes revised before/after metrics (Net P&L, Win Rate, Drawdown, Profit Factor)
+- [x] Generates dual equity curve data series (Actual vs Simulated with Rule)
+- [x] Executes 70/30 chronological train/test split and flags potential overfitting when performance degrades on out-of-sample data
+- [x] Emits explicit warnings when sample size is under 30 trades
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_replay.py`
-- [ ] Build succeeds: `mypy services/analytics/app/rules/replay.py`
-- [ ] Manual check: Run cooldown rule on revenge-trade sample; verify skipped trades and delta P&L
+- [x] Tests pass: `pytest services/analytics/tests/test_replay.py`
+- [x] Build succeeds: `mypy services/analytics/app/rules/replay.py`
+- [x] Manual check: Run cooldown rule on revenge-trade sample; verify skipped trades and delta P&L
 
 **Dependencies:** Task 19
 

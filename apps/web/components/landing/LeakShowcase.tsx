@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AlertOctagon, TrendingDown, ShieldCheck, ArrowRight, Activity, Zap } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 const LEAKS = [
@@ -79,7 +80,13 @@ export function LeakShowcase() {
     <section id="leaks" className="py-16 md:py-24 bg-slate-50 dark:bg-[#070b13] border-t border-slate-200 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Section Header: Crisp Institutional Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-40px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-800"
+        >
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] bg-slate-100 dark:bg-slate-850 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium">
               <AlertOctagon className="w-3.5 h-3.5 text-rose-500" />
@@ -102,10 +109,16 @@ export function LeakShowcase() {
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* Unified 4-Quadrant Behavioral Diagnostic Matrix (No Box-in-Box Soup) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c111c] rounded-[8px] overflow-hidden shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-40px" }}
+          transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c111c] rounded-[8px] overflow-hidden shadow-sm"
+        >
           {LEAKS.map((leak, idx) => (
             <div
               key={leak.id}
@@ -191,7 +204,7 @@ export function LeakShowcase() {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

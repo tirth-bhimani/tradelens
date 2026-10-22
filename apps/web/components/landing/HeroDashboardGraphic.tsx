@@ -49,7 +49,18 @@ export function HeroDashboardGraphic() {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto lg:max-w-none select-none font-sans">
-      {/* Outer Glow & Terminal Shell */}
+      {/* TradersJournal Signature Ambient Terminal Glow Bloom */}
+      <div
+        className="absolute -inset-4 sm:-inset-8 pointer-events-none -z-10 rounded-2xl opacity-75 dark:opacity-90 blur-2xl transition-all duration-500"
+        style={{
+          background:
+            activeMode === "guarded"
+              ? "radial-gradient(ellipse at 50% 50%, rgba(43, 127, 255, 0.18) 0%, rgba(16, 185, 129, 0.12) 40%, transparent 70%)"
+              : "radial-gradient(ellipse at 50% 50%, rgba(239, 68, 68, 0.18) 0%, rgba(245, 158, 11, 0.1) 40%, transparent 70%)",
+        }}
+      />
+
+      {/* Outer Terminal Shell */}
       <div className="relative rounded-[8px] bg-[#0c111c] border border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden">
         {/* Terminal Header Bar (Institutional macOS / Bloomberg style) */}
         <div className="h-10 px-4 bg-[#080d16] border-b border-slate-800/80 flex items-center justify-between text-xs">

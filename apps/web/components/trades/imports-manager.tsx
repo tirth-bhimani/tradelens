@@ -46,7 +46,7 @@ export function ImportsManager({ initialImports, importsError }: ImportsManagerP
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Dropzone */}
         <div className="lg:col-span-8 space-y-4">
-          <div className="p-6 card-zerodha-glass space-y-4">
+          <div className="p-6 card-luminous space-y-4">
             <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <FileSpreadsheet className="w-4 h-4 text-[#387ed1]" />
               <span>Upload Tradebook CSV</span>
@@ -73,7 +73,7 @@ export function ImportsManager({ initialImports, importsError }: ImportsManagerP
 
         {/* Right Column: Security Guarantees & Help */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="p-5 card-zerodha-glass space-y-3">
+          <div className="p-5 card-luminous space-y-3">
             <h3 className="text-xs font-semibold tracking-wider uppercase text-slate-700 dark:text-slate-300 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Multi-Tenant Security</span>
@@ -94,7 +94,7 @@ export function ImportsManager({ initialImports, importsError }: ImportsManagerP
             </ul>
           </div>
 
-          <div className="p-5 card-zerodha-glass space-y-3">
+          <div className="p-5 card-luminous space-y-3">
             <h3 className="text-xs font-semibold tracking-wider uppercase text-slate-700 dark:text-slate-300">Supported Formats</h3>
             <div className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
               <div className="p-2.5 rounded-[4px] bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">

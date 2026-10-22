@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import ai_insights, behavior, health, metrics, reconciliation, upload
+from app.routers import ai_insights, behavior, health, metrics, reconciliation, rules, upload
 
 
 def create_app() -> FastAPI:
@@ -31,6 +31,7 @@ def create_app() -> FastAPI:
     app.include_router(metrics.router)
     app.include_router(behavior.router)
     app.include_router(ai_insights.router)
+    app.include_router(rules.router)
 
     return app
 

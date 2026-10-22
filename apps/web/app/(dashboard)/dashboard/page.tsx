@@ -17,12 +17,18 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Welcome Banner: Clean institutional header */}
-      <div className="card-zerodha-glass p-6 sm:p-7 relative overflow-hidden transition-colors">
+      <div className="card-luminous p-6 sm:p-7 relative overflow-hidden transition-all duration-200 border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] shadow-sm">
+        {/* Subtle Ambient Bloom Glow behind Welcome Card */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-20 w-80 h-80 rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-3xl"
+        />
+
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="max-w-2xl space-y-2">
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 text-xs font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>Terminal Active • Ready for Ingestion</span>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[5px] bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 text-xs font-medium font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>TERMINAL ACTIVE • READY FOR INGESTION</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Welcome back, {displayName}
@@ -35,14 +41,14 @@ export default async function DashboardPage() {
           <div className="shrink-0 flex items-center space-x-2.5">
             <Link
               href="/trades"
-              className="px-3 py-2 rounded-[4px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition inline-flex items-center space-x-1.5"
+              className="kiro-btn-outline !h-9 !px-4 text-xs font-semibold inline-flex items-center space-x-1.5"
             >
               <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>View Trade Log</span>
             </Link>
             <Link
               href="/imports"
-              className="btn-zerodha-primary text-xs py-2 px-4 inline-flex items-center space-x-1.5"
+              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
             >
               <UploadCloud className="w-3.5 h-3.5" />
               <span>Import Tradebook</span>
@@ -52,14 +58,14 @@ export default async function DashboardPage() {
       </div>
 
       {/* Account Overview: Unified Institutional Terminal Ribbon */}
-      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d131f] rounded-[6px] overflow-hidden">
+      <div className="card-luminous grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200/80 dark:divide-white/[0.08] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] rounded-[8px] overflow-hidden shadow-sm">
         {/* Starting Capital */}
         <div className="p-5 space-y-2">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
             <span className="text-xs font-medium">Configured Capital</span>
             <TrendingUp className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           </div>
-          <div className="text-2xl font-bold tracking-tight tabular-nums text-slate-900 dark:text-white">
+          <div className="text-2xl font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
             {capital > 0 ? formatIndianDenomination(capital) : "Not Set"}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -74,9 +80,9 @@ export default async function DashboardPage() {
             <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           </div>
           <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center justify-between">
-            <span>NSE / BSE</span>
-            <span className="text-xs font-medium tabular-nums text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span className="font-mono">NSE / BSE</span>
+            <span className="text-xs font-medium font-mono tabular-nums text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               09:15 - 15:30 IST
             </span>
           </div>
@@ -95,7 +101,7 @@ export default async function DashboardPage() {
             {segments.map((seg: string) => (
               <span
                 key={seg}
-                className="px-2.5 py-0.5 rounded-[4px] text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                className="px-2.5 py-0.5 rounded-[4px] text-xs font-medium font-mono bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]"
               >
                 {seg}
               </span>
@@ -119,9 +125,9 @@ export default async function DashboardPage() {
 
 
       {/* Empty State / Upload Callout (Theme-adaptive styling) */}
-      <div className="p-8 md:p-10 card-zerodha-glass border border-dashed border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-center space-y-4 transition-colors">
-        <div className="w-10 h-10 rounded-[4px] bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 mx-auto flex items-center justify-center">
-          <UploadCloud className="w-5 h-5 text-[#387ed1]" />
+      <div className="p-8 md:p-10 card-luminous border-dashed border-slate-300 dark:border-white/[0.12] bg-slate-50/50 dark:bg-[#070b14] hover:border-[#2b7fff]/50 dark:hover:border-[#2b7fff]/50 text-center space-y-4 transition-all">
+        <div className="w-10 h-10 rounded-[6px] bg-white dark:bg-white/[0.06] text-[#2b7fff] border border-slate-200 dark:border-white/[0.1] mx-auto flex items-center justify-center shadow-sm">
+          <UploadCloud className="w-5 h-5" />
         </div>
 
         <div className="max-w-md mx-auto space-y-1">
@@ -134,7 +140,7 @@ export default async function DashboardPage() {
         <div className="pt-1">
           <Link
             href="/imports"
-            className="btn-zerodha-primary text-xs py-2 px-4"
+            className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
           >
             <span>Upload Broker Tradebook</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1.5" />

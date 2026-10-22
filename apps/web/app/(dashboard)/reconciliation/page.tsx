@@ -171,7 +171,7 @@ export default function ReconciliationPage() {
           <button
             type="button"
             onClick={handleLoadSample}
-            className="btn-zerodha-secondary text-xs py-1.5 px-3 flex items-center space-x-1.5"
+            className="kiro-btn-outline !h-8 !px-3 text-xs flex items-center space-x-1.5"
             title="Reload Zerodha contract note baseline"
           >
             <span>Reset to Sample</span>
@@ -179,13 +179,13 @@ export default function ReconciliationPage() {
           <button
             type="button"
             onClick={() => setIsFormOpen(!isFormOpen)}
-            className="btn-zerodha-secondary text-xs py-1.5 px-3 flex items-center space-x-1.5"
+            className="kiro-btn-outline !h-8 !px-3 text-xs flex items-center space-x-1.5"
           >
             <span>{isFormOpen ? "Hide Statement Settings" : "Configure Statement"}</span>
           </button>
           <Link
             href="/imports"
-            className="btn-zerodha-primary text-xs py-1.5 px-3.5 inline-flex items-center space-x-1.5"
+            className="kiro-btn-cta !h-8 !px-3.5 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_12px_rgba(43,127,255,0.4)]"
           >
             <span>Import History</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -194,7 +194,7 @@ export default function ReconciliationPage() {
       </div>
 
       {/* Top Financial KPI Ribbon (Unified Terminal Bar - No floating box soup) */}
-      <div className="rounded-[4px] border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d131f] divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 grid grid-cols-2 lg:grid-cols-4">
+      <div className="card-luminous rounded-[8px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 dark:divide-white/[0.08] grid grid-cols-2 lg:grid-cols-4 shadow-sm">
         {/* Metric 1: Match Status */}
         <div className="p-4 space-y-1">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">

@@ -111,10 +111,10 @@ export function RuleLabShowcase() {
             <div className="pt-2">
               <Link
                 href="/signup"
-                className="btn-zerodha-primary"
+                className="hero-kiro-btn-cta text-xs"
               >
                 <span>Replay your trades</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
           </motion.div>

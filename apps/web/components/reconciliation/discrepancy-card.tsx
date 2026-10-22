@@ -53,7 +53,7 @@ export function DiscrepancyCard({ item }: DiscrepancyCardProps) {
   const isMissing = item.status.startsWith("MISSING");
 
   return (
-    <div className="p-4 rounded-[4px] border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c1017] hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+    <div className="card-luminous p-4 rounded-[8px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] hover:border-slate-300 dark:hover:border-[#2b7fff]/40 transition-all">
       {/* Top Header */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="space-y-0.5">

@@ -15,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="btn-zerodha-primary w-full py-3"
+      className="hero-kiro-btn-cta w-full !py-3 text-xs font-bold shadow-[0_0_20px_rgba(43,127,255,0.4)] disabled:opacity-50"
     >
       <span>{pending ? "Creating account..." : "Sign up for free"}</span>
       <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -41,13 +41,19 @@ function SignupForm() {
         </div>
       </div>
 
-      {/* Auth Card */}
-      <div className="p-7 sm:p-8 card-zerodha-glass space-y-5">
+      {/* Auth Card: TradersJournal Luminous Glass Card */}
+      <div className="p-7 sm:p-8 card-luminous rounded-[12px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#090e1a] space-y-5 shadow-xl relative overflow-hidden">
+        {/* Subtle Ambient Bloom inside Auth Card */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-20 w-60 h-60 rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-3xl"
+        />
+
         {/* Google OAuth Button */}
         <form action={signInWithGoogle}>
           <button
             type="submit"
-            className="btn-zerodha-secondary w-full py-2.5 text-sm"
+            className="hero-kiro-btn-outline w-full !py-2.5 text-xs font-semibold"
           >
             <svg className="w-4 h-4 mr-2.5" viewBox="0 0 24 24">
               <path
@@ -179,7 +185,16 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-white via-slate-50/50 to-white dark:from-[#0b0f19] dark:via-[#0e1424] dark:to-[#0b0f19] text-slate-900 dark:text-slate-100 transition-colors duration-200 relative">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-[#f8fafc] dark:bg-[#050814] text-slate-900 dark:text-slate-100 transition-colors duration-200 relative overflow-hidden">
+      {/* Background Grid & Ambient Mesh */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-0 h-96 bg-[radial-gradient(ellipse_80%_50%_at_50%_-15%,rgba(43,127,255,0.15),transparent)] dark:block hidden"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-tech-grid opacity-35 dark:opacity-25"
+      />
       {/* Top Floating Controls */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
         <ThemeToggle />

@@ -39,6 +39,15 @@ export function TradeDetailDrawer({
     }
   }, [trade]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen || !trade) return null;
 
   const toggleTag = (tag: PsychologicalTag) => {
@@ -65,7 +74,10 @@ export function TradeDetailDrawer({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-[2px] transition-opacity"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex justify-end bg-black/60 transition-opacity"
       data-testid="trade-detail-drawer"
     >
       <div className="w-full max-w-md bg-white dark:bg-[#0c1017] border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-200">
