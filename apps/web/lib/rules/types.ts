@@ -361,38 +361,36 @@ export const SAMPLE_REPLAY_TRADES: any[] = [
 ];
 
 /**
- * Executes a counter-factual rule replay via backend FastAPI endpoint or client simulation fallback.
+ * Executes a counter-factual rule replay via Next.js API route or client-side deterministic simulation.
+ * Strictly calculates metrics against the trader's specified rule parameters (no arbitrary mock skips).
  */
 export async function runReplayApi(
   rule: any,
   trades: any[] = SAMPLE_REPLAY_TRADES,
   startingCapital: number = 100000
 ): Promise<ReplayResult> {
-  const analyticsUrl =
-    process.env.NEXT_PUBLIC_ANALYTICS_SERVICE_URL || "http://localhost:8000";
-
   try {
-    const res = await fetch(`${analyticsUrl}/api/v1/rules/replay`, {
+    // 1. Try unified Next.js API route
+    const res = await fetch("/api/rules/replay", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         rule,
         trades,
         starting_capital: startingCapital,
-        train_ratio: 0.7,
       }),
     });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || `Server returned ${res.status}`);
+    if (res.ok) {
+      return await res.json();
     }
-
-    return await res.json();
-  } catch (error: any) {
-    // If backend is unreachable (e.g. running unit tests offline), compute client mock replay
-    return generateClientMockReplay(rule, trades, startingCapital);
+  } catch {
+    // Server route unreachable or running in direct client/test environment
   }
+
+  // 2. Deterministic high-fidelity simulation engine strictly evaluating rule parameters
+  const { simulateRuleReplay } = await import("./replay-engine");
+  return simulateRuleReplay(rule, trades, startingCapital);
 }
 
 /**
@@ -423,172 +421,4 @@ export async function translateRuleApi(
   // Fallback to high-fidelity deterministic parser
   const { parseRuleDeterministic } = await import("./ai-translator");
   return parseRuleDeterministic(prompt, startingCapital);
-}
-
-/**
- * Generates an offline simulated ReplayResult when backend API is unreachable.
- */
-function generateClientMockReplay(
-  rule: any,
-  trades: any[],
-  startingCapital: number
-): ReplayResult {
-  const total = trades.length;
-  const skippedCount = Math.max(1, Math.floor(total * 0.15));
-  const skippedTrades: SkippedTradeDetail[] = trades.slice(0, skippedCount).map((t) => ({
-    trade_id: t.id,
-    symbol: t.symbol,
-    entry_time: t.entry_time,
-    exit_time: t.exit_time,
-    net_pnl: t.net_pnl,
-    rule_type: rule.rule_type || "COOL_OFF_AFTER_LOSS",
-    reason: `Violated ${rule.rule_type || "COOL_OFF_AFTER_LOSS"}: non-compliant entry`,
-  }));
-
-  const lossAvoided = skippedTrades
-    .filter((t) => Number(t.net_pnl) < 0)
-    .reduce((acc, t) => acc + Math.abs(Number(t.net_pnl)), 0);
-
-  const profitSacrificed = skippedTrades
-    .filter((t) => Number(t.net_pnl) > 0)
-    .reduce((acc, t) => acc + Number(t.net_pnl), 0);
-
-  const beforeTotalPnl = trades.reduce((acc, t) => acc + Number(t.net_pnl), 0);
-  const afterTotalPnl = beforeTotalPnl + lossAvoided - profitSacrificed;
-
-  let actual = startingCapital;
-  let simulated = startingCapital;
-  const dualCurve: DualEquityPoint[] = trades.map((t, i) => {
-    actual += Number(t.net_pnl);
-    const isSkip = i < skippedCount;
-    if (!isSkip) simulated += Number(t.net_pnl);
-    return {
-      timestamp: t.exit_time,
-      trade_id: t.id,
-      actual_equity: actual,
-      simulated_equity: simulated,
-      is_skipped: isSkip,
-    };
-  });
-
-  return {
-    rule_type: rule.rule_type || "COOL_OFF_AFTER_LOSS",
-    overall_before: {
-      total_trades: total,
-      winning_trades: Math.floor(total * 0.5),
-      losing_trades: Math.ceil(total * 0.5),
-      breakeven_trades: 0,
-      win_rate: 50.0,
-      loss_rate: 50.0,
-      breakeven_rate: 0.0,
-      total_gross_pnl: beforeTotalPnl + total * 50,
-      total_charges: total * 50,
-      total_net_pnl: beforeTotalPnl,
-    },
-    overall_after: {
-      total_trades: total - skippedCount,
-      winning_trades: Math.floor((total - skippedCount) * 0.58),
-      losing_trades: Math.ceil((total - skippedCount) * 0.42),
-      breakeven_trades: 0,
-      win_rate: 58.0,
-      loss_rate: 42.0,
-      breakeven_rate: 0.0,
-      total_gross_pnl: afterTotalPnl + (total - skippedCount) * 50,
-      total_charges: (total - skippedCount) * 50,
-      total_net_pnl: afterTotalPnl,
-    },
-    delta: {
-      pnl_delta_inr: afterTotalPnl - beforeTotalPnl,
-      pnl_percentage_change: 14.5,
-      trades_delta: -skippedCount,
-      win_rate_delta: 8.0,
-      profit_factor_delta: 0.35,
-      max_drawdown_delta_inr: -8500.0,
-      expectancy_delta_inr: 450.0,
-    },
-    train_metrics: {
-      before: {
-        total_trades: Math.floor(total * 0.7),
-        winning_trades: 12,
-        losing_trades: 13,
-        breakeven_trades: 0,
-        win_rate: 48.0,
-        loss_rate: 52.0,
-        breakeven_rate: 0,
-        total_gross_pnl: 10000,
-        total_charges: 1200,
-        total_net_pnl: 8800,
-      },
-      after: {
-        total_trades: Math.floor(total * 0.7) - 3,
-        winning_trades: 12,
-        losing_trades: 10,
-        breakeven_trades: 0,
-        win_rate: 54.5,
-        loss_rate: 45.5,
-        breakeven_rate: 0,
-        total_gross_pnl: 14500,
-        total_charges: 1050,
-        total_net_pnl: 13450,
-      },
-      delta: {
-        pnl_delta_inr: 4650,
-        pnl_percentage_change: 52.8,
-        trades_delta: -3,
-        win_rate_delta: 6.5,
-        profit_factor_delta: 0.4,
-        max_drawdown_delta_inr: -4000,
-        expectancy_delta_inr: 320,
-      },
-    },
-    test_metrics: {
-      before: {
-        total_trades: Math.ceil(total * 0.3),
-        winning_trades: 6,
-        losing_trades: 5,
-        breakeven_trades: 0,
-        win_rate: 54.5,
-        loss_rate: 45.5,
-        breakeven_rate: 0,
-        total_gross_pnl: 4500,
-        total_charges: 550,
-        total_net_pnl: 3950,
-      },
-      after: {
-        total_trades: Math.ceil(total * 0.3) - 1,
-        winning_trades: 6,
-        losing_trades: 4,
-        breakeven_trades: 0,
-        win_rate: 60.0,
-        loss_rate: 40.0,
-        breakeven_rate: 0,
-        total_gross_pnl: 5800,
-        total_charges: 500,
-        total_net_pnl: 5300,
-      },
-      delta: {
-        pnl_delta_inr: 1350,
-        pnl_percentage_change: 34.2,
-        trades_delta: -1,
-        win_rate_delta: 5.5,
-        profit_factor_delta: 0.3,
-        max_drawdown_delta_inr: -2500,
-        expectancy_delta_inr: 280,
-      },
-    },
-    is_overfit: false,
-    overfit_reason: null,
-    small_sample_warning: total < 30,
-    small_sample_reason: total < 30 ? "Dataset has fewer than 30 total trades." : null,
-    skipped_summary: {
-      total_skipped: skippedCount,
-      losing_trades_avoided_count: skippedTrades.filter((t) => Number(t.net_pnl) < 0).length,
-      loss_avoided_inr: lossAvoided,
-      winning_trades_sacrificed_count: skippedTrades.filter((t) => Number(t.net_pnl) > 0).length,
-      profit_sacrificed_inr: profitSacrificed,
-      net_savings_inr: lossAvoided - profitSacrificed,
-    },
-    skipped_trades: skippedTrades,
-    dual_equity_curve: dualCurve,
-  };
 }

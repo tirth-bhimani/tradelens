@@ -370,6 +370,40 @@ describe("Rule Lab Frontend Interactive Components (Task 22)", () => {
       expect(res.dual_equity_curve.length).toBeGreaterThan(0);
     });
 
+    it("runReplayApi accurately respects rule parameters instead of a default 15% skip", async () => {
+      // 1. With a permissive rule (e.g. 100 max daily trades), 0 trades should be skipped (old mock skipped 15%)
+      const resPermissive = await runReplayApi({
+        rule_type: "MAX_DAILY_TRADES_LIMIT",
+        max_trades: 100,
+      });
+      expect(resPermissive.skipped_summary.total_skipped).toBe(0);
+      expect(resPermissive.overall_after.total_trades).toBe(resPermissive.overall_before.total_trades);
+
+      // 2. With a strict rule (e.g. 1 max trade per day), only 1 trade per day is kept
+      const resStrict = await runReplayApi({
+        rule_type: "MAX_DAILY_TRADES_LIMIT",
+        max_trades: 1,
+      });
+      expect(resStrict.skipped_summary.total_skipped).toBeGreaterThan(0);
+      expect(resStrict.skipped_trades[0].reason).toContain("maximum session cap of 1");
+    });
+
+    it("runReplayApi evaluates cooldown after loss based on exact minute threshold", async () => {
+      // With a 1-minute cooldown, almost no trades in SAMPLE_REPLAY_TRADES (which are ~15-40 min apart) should be skipped
+      const resShort = await runReplayApi({
+        rule_type: "COOL_OFF_AFTER_LOSS",
+        cooldown_minutes: 1,
+      });
+
+      // With a 180-minute cooldown, many subsequent trades should be skipped
+      const resLong = await runReplayApi({
+        rule_type: "COOL_OFF_AFTER_LOSS",
+        cooldown_minutes: 180,
+      });
+
+      expect(resLong.skipped_summary.total_skipped).toBeGreaterThan(resShort.skipped_summary.total_skipped);
+    });
+
     it("translateRuleApi parses natural language cooldowns offline", async () => {
       const res = await translateRuleApi("Pause trading for 20 minutes after losing money");
       expect(res.success).toBe(true);
