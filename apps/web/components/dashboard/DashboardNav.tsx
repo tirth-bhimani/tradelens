@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   FileText,
+  Database,
 } from "lucide-react";
 
 interface SubNavItem {
@@ -125,6 +126,13 @@ const NAV_GROUPS: NavGroup[] = [
         description: "Audit connected mentors and revoke trading data access",
         icon: ShieldAlert,
         badge: "Revoke",
+      },
+      {
+        href: "/settings/data",
+        label: "Data & Privacy (DPDP)",
+        description: "Export data archive, manage imports & delete account",
+        icon: Database,
+        badge: "DPDP",
       },
     ],
   },

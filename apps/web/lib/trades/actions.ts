@@ -158,11 +158,24 @@ export async function deleteImport(importId: string): Promise<{
       return { success: false, error: "Not authenticated" };
     }
 
-    // 1. Remove from storage bucket
+    // 1. Remove associated paired trades for this import batch
+    await supabase
+      .from("trades")
+      .delete()
+      .eq("import_id", importId)
+      .eq("user_id", user.id);
+
+    // 2. Invalidate computed stats snapshots for the user
+    await supabase
+      .from("stats_snapshots")
+      .delete()
+      .eq("user_id", user.id);
+
+    // 3. Remove raw file from storage bucket
     const storagePath = `${user.id}/${importId}.csv`;
     await supabase.storage.from("trade-imports").remove([storagePath]);
 
-    // 2. Remove from database (cascades raw_fills and unpairs trades)
+    // 4. Remove from imports table (foreign key cascades raw_fills)
     const { error: dbError } = await supabase
       .from("imports")
       .delete()
@@ -174,7 +187,10 @@ export async function deleteImport(importId: string): Promise<{
     }
 
     revalidatePath("/imports");
+    revalidatePath("/trades");
     revalidatePath("/dashboard");
+    revalidatePath("/reports");
+    revalidatePath("/reconciliation");
     return { success: true, error: null };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to delete import";

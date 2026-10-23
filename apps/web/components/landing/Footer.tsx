@@ -40,12 +40,12 @@ export function Footer() {
 
           {/* Security & Access */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Security</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Security &amp; Legal</h4>
             <ul className="space-y-2 text-xs">
               <li><span className="text-slate-700 dark:text-slate-300">PostgreSQL Row-Level Security</span></li>
-              <li><span className="text-slate-700 dark:text-slate-300">Zero AI Hallucination Math</span></li>
-              <li><span className="text-slate-700 dark:text-slate-300">No Broker Login Credentials Needed</span></li>
-              <li><span className="text-slate-700 dark:text-slate-300">Local or Supabase Cloud Storage</span></li>
+              <li><span className="text-slate-700 dark:text-slate-300">Formula Injection (CWE-1236) Defense</span></li>
+              <li><Link href="/privacy" className="hover:text-[#387ed1] text-slate-700 dark:text-slate-300 transition">DPDP Act 2023 Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-[#387ed1] text-slate-700 dark:text-slate-300 transition">Terms of Service &amp; Disclaimers</Link></li>
             </ul>
           </div>
         </div>
@@ -56,9 +56,14 @@ export function Footer() {
             <strong>Regulatory Disclaimer:</strong> TradeLens is an educational behavioral analytics and rule backtesting platform. TradeLens does not provide buy/sell recommendations, portfolio management, or tips. Not registered as an investment adviser with SEBI.
           </p>
 
-          <p className="text-[11px] whitespace-nowrap">
-            © {new Date().getFullYear()} TradeLens. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-[11px] whitespace-nowrap">
+            <div className="flex items-center space-x-3">
+              <Link href="/privacy" className="hover:text-[#387ed1] transition">Privacy</Link>
+              <span>•</span>
+              <Link href="/terms" className="hover:text-[#387ed1] transition">Terms</Link>
+            </div>
+            <span>© {new Date().getFullYear()} TradeLens. All rights reserved.</span>
+          </div>
         </div>
       </div>
     </footer>

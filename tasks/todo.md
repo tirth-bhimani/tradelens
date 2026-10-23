@@ -805,15 +805,15 @@
 **Description:** Implement user data control and compliance features satisfying Indian DPDP Act 2023 basics: full trade data export as CSV, deletion of individual imports, and hard deletion of entire account with all associated database rows and stored files.
 
 **Acceptance criteria:**
-- [ ] 'Export My Data' generates a downloadable ZIP containing clean CSVs of all raw fills and trades
-- [ ] 'Delete Import' cascades removal of raw fills, trades, and computed snapshots for that batch
-- [ ] 'Delete Account' permanently scrubs user profile, files, trades, and rules across all tables
-- [ ] Privacy Policy and Terms of Service pages render with financial educational disclaimers
+- [x] 'Export My Data' generates a downloadable ZIP containing clean CSVs of all raw fills and trades
+- [x] 'Delete Import' cascades removal of raw fills, trades, and computed snapshots for that batch
+- [x] 'Delete Account' permanently scrubs user profile, files, trades, and rules across all tables
+- [x] Privacy Policy and Terms of Service pages render with financial educational disclaimers
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_data_deletion.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Create test account, upload trades, execute Delete Account, and verify all records purged from database
+- [x] Tests pass: `pytest services/analytics/tests/test_data_deletion.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Create test account, upload trades, execute Delete Account, and verify all records purged from database
 
 **Dependencies:** Task 6
 
