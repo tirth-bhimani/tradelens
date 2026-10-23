@@ -19,8 +19,8 @@ export const metadata = {
 
 export default async function TiltAutopsyPage() {
   const { trades } = await getUserTradesAction();
-  // Compute cascades from detected trades (falls back to sample dataset if empty)
-  const overview = detectTiltCascades(trades);
+  // Compute cascades strictly from user trades (never show fake sample cascades to authenticated users)
+  const overview = detectTiltCascades(trades, { fallbackToSample: false });
 
   return (
     <div className="space-y-6">
@@ -72,8 +72,33 @@ export default async function TiltAutopsyPage() {
         </p>
       </div>
 
-      {/* Main Interactive Autopsy Container */}
-      <TiltAutopsyView overview={overview} />
+      {/* Main Interactive Autopsy Container or Clean Empty State */}
+      {overview.cascades.length === 0 ? (
+        <div className="card-luminous p-10 text-center space-y-4 border border-dashed border-slate-300 dark:border-white/[0.12] rounded-[8px] bg-slate-50/50 dark:bg-white/[0.01]">
+          <div className="w-12 h-12 rounded-[6px] bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 border border-emerald-200 dark:border-emerald-800/40 mx-auto flex items-center justify-center">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div className="max-w-md mx-auto space-y-1.5">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              Zero Tilt Cascades Detected
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+              No revenge spirals, rapid-fire re-entry compressions, or oversized lot creep found. Upload your broker tradebook to audit your execution discipline.
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link
+              href="/imports"
+              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Import Tradebook</span>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <TiltAutopsyView overview={overview} />
+      )}
     </div>
   );
 }

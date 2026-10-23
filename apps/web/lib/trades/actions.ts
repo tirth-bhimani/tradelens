@@ -29,7 +29,7 @@ export async function getUserTradesAction(): Promise<{
     }
 
     if (!user) {
-      return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+      return { trades: [], isFromDb: false, error: null };
     }
 
     const { data, error } = await supabase
@@ -38,48 +38,14 @@ export async function getUserTradesAction(): Promise<{
       .eq("user_id", user.id)
       .order("entry_time", { ascending: false });
 
-    let tradeRows = data;
-
-    // Automatic background provisioning: If user is authenticated but has 0 trades in DB,
-    // automatically initialize their ledger with the 9 baseline round-trip trades
-    if (user && (!tradeRows || tradeRows.length === 0)) {
-      try {
-        const toSeed = DEFAULT_TRADE_LOG.map((t) => ({
-          id: crypto.randomUUID(),
-          user_id: user.id,
-          symbol: t.symbol,
-          segment: t.segment === "FNO" ? "OPTIONS" : "EQUITY_INTRADAY",
-          instrument_type: t.segment === "FNO" ? "CE" : "EQ",
-          entry_time: t.entryTime.length <= 19 ? `${t.entryTime}+05:30` : t.entryTime,
-          exit_time: t.exitTime.length <= 19 ? `${t.exitTime}+05:30` : t.exitTime,
-          trade_duration_seconds: 3600,
-          is_intraday: true,
-          is_short: false,
-          quantity: t.quantity,
-          entry_price: t.entryPrice,
-          exit_price: t.exitPrice,
-          gross_pnl: t.grossPnl,
-          charges: t.charges,
-          net_pnl: t.netPnl,
-          tags: t.tags || [],
-          notes: t.notes || null,
-        }));
-        await supabase.from("trades").insert(toSeed);
-        const freshRes = await supabase
-          .from("trades")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("entry_time", { ascending: false });
-        if (freshRes.data && freshRes.data.length > 0) {
-          tradeRows = freshRes.data;
-        }
-      } catch {
-        // Fallback gracefully to memory default
-      }
+    if (error) {
+      return { trades: [], isFromDb: false, error: error.message };
     }
 
-    if (!tradeRows || tradeRows.length === 0) {
-      return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+    const tradeRows = data || [];
+
+    if (tradeRows.length === 0) {
+      return { trades: [], isFromDb: true, error: null };
     }
 
     const trades: RoundTripTradeView[] = tradeRows.map((t: any) => ({

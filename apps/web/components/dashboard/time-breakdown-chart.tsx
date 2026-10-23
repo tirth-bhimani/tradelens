@@ -22,7 +22,7 @@ export interface TimeBreakdownChartProps {
 export type BreakdownTab = "hourly" | "weekday";
 
 export function TimeBreakdownChart({
-  trades = DEFAULT_TRADE_LOG,
+  trades = [],
   className = "",
 }: TimeBreakdownChartProps) {
   const [activeTab, setActiveTab] = useState<BreakdownTab>("hourly");

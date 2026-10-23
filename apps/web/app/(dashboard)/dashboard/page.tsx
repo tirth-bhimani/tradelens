@@ -131,42 +131,53 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Core Performance Metrics (Task 11 & Task 13) */}
-      <PerformanceMetricsGrid metrics={metrics} startingCapital={capital} />
-
-      {/* Interactive Equity Curve & Drawdown Visualizer (Task 14) */}
-      <ChartContainer data={chartData} />
-
-      {/* Behavioral Leaks & Execution Discipline (Task 12) */}
-      <BehavioralLeaksCard data={leaksData} />
-
-      {/* Rulebook Discipline & Adherence Scorecard (Task 23) */}
-      <AdherenceScorecard report={adherenceReport} />
-
-      {/* Empty State / Upload Callout: Only display if trader has 0 trades */}
-      {!hasTrades && (
-        <div className="p-8 md:p-10 card-luminous border-dashed border-slate-300 dark:border-white/[0.12] bg-slate-50/50 dark:bg-[#070b14] hover:border-[#2b7fff]/50 dark:hover:border-[#2b7fff]/50 text-center space-y-4 transition-all">
-          <div className="w-10 h-10 rounded-[6px] bg-white dark:bg-white/[0.06] text-[#2b7fff] border border-slate-200 dark:border-white/[0.1] mx-auto flex items-center justify-center shadow-sm">
-            <UploadCloud className="w-5 h-5" />
+      {/* Conditional: Main Analytics Dashboard or Fresh Isolated Account Welcome */}
+      {!hasTrades ? (
+        <div className="card-luminous p-8 md:p-10 text-center space-y-5 border border-dashed border-slate-300 dark:border-white/[0.12] rounded-[8px] bg-slate-50/50 dark:bg-[#070b14]">
+          <div className="w-14 h-14 rounded-[8px] bg-blue-50 dark:bg-blue-950/40 text-[#2b7fff] border border-blue-200 dark:border-blue-900/60 mx-auto flex items-center justify-center shadow-sm">
+            <UploadCloud className="w-7 h-7" />
           </div>
 
-          <div className="max-w-md mx-auto space-y-1">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">Your Tradebook is Empty</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Upload your tradebook CSV to compute FIFO round-trip trades, identify behavioral leak patterns, and start backtesting rules.
+          <div className="max-w-lg mx-auto space-y-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              Welcome to TradeLens! Your Dashboard is Clean &amp; Ready
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
+              Your trading account is isolated, private, and pristine. You have not uploaded any tradebook files yet. Import your broker tradebook (CSV from Zerodha, Groww, AngelOne, or Dhan) to compute FIFO round-trips, identify behavioral leak patterns, and start backtesting rules.
             </p>
           </div>
 
-          <div className="pt-1">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/imports"
-              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
+              className="kiro-btn-cta !h-10 !px-5 text-xs font-bold inline-flex items-center space-x-2 shadow-[0_0_20px_-3px_rgba(43,127,255,0.4)]"
             >
+              <UploadCloud className="w-4 h-4" />
               <span>Upload Broker Tradebook</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+            </Link>
+            <Link
+              href="/rule-lab"
+              className="kiro-btn-outline !h-10 !px-5 text-xs font-semibold inline-flex items-center space-x-2"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Explore Rule Lab</span>
             </Link>
           </div>
         </div>
+      ) : (
+        <>
+          {/* Core Performance Metrics (Task 11 & Task 13) */}
+          <PerformanceMetricsGrid metrics={metrics} startingCapital={capital} />
+
+          {/* Interactive Equity Curve & Drawdown Visualizer (Task 14) */}
+          <ChartContainer data={chartData} />
+
+          {/* Behavioral Leaks & Execution Discipline (Task 12) */}
+          <BehavioralLeaksCard data={leaksData} />
+
+          {/* Rulebook Discipline & Adherence Scorecard (Task 23) */}
+          <AdherenceScorecard report={adherenceReport} />
+        </>
       )}
     </div>
   );

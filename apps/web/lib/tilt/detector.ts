@@ -9,6 +9,7 @@ export interface DetectorOptions {
   maxReentryGapMinutes?: number; // threshold to trigger velocity compression (default 20 mins)
   minTriggerLossInr?: number;     // minimum loss to count as a trigger (default 1500)
   sizeInflationThreshold?: number; // lot size increase ratio (default 1.25)
+  fallbackToSample?: boolean;     // whether to fall back to sample cascades when dataset is empty (default true for testing)
 }
 
 /**
@@ -23,10 +24,13 @@ export function detectTiltCascades(
   const maxGap = options.maxReentryGapMinutes ?? 20;
   const minLoss = options.minTriggerLossInr ?? 1500;
   const sizeThreshold = options.sizeInflationThreshold ?? 1.25;
+  const allowSampleFallback = options.fallbackToSample ?? true;
 
-  if (!rawTrades || rawTrades.length < 3) {
-    // Provide realistic pre-calculated sample cascades for demonstration and testing
-    return buildOverviewFromCascades(SAMPLE_TILT_CASCADES);
+  if (!rawTrades || rawTrades.length < 2) {
+    if (allowSampleFallback && (!rawTrades || rawTrades.length === 0)) {
+      return buildOverviewFromCascades(SAMPLE_TILT_CASCADES);
+    }
+    return buildOverviewFromCascades([]);
   }
 
   // Parse and sort trades chronologically
@@ -170,10 +174,6 @@ export function detectTiltCascades(
       }
     }
     i++;
-  }
-
-  if (detectedCascades.length === 0) {
-    return buildOverviewFromCascades(SAMPLE_TILT_CASCADES);
   }
 
   return buildOverviewFromCascades(detectedCascades);

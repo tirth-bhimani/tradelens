@@ -22,7 +22,7 @@ export async function getUserRules(): Promise<{
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return { rules: memoryRulesStore, error: null };
+      return { rules: [], error: null };
     }
 
     const { data, error } = await supabase
@@ -31,37 +31,12 @@ export async function getUserRules(): Promise<{
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    let rulesData = data;
-
-    // Automatic background provisioning: If user is authenticated but has 0 rules in DB,
-    // automatically initialize their personal rulebook with the 4 core rules
-    if (user && (!rulesData || rulesData.length === 0)) {
-      try {
-        const toSeed = DEFAULT_SAMPLE_RULES.map((r) => ({
-          id: crypto.randomUUID(),
-          user_id: user.id,
-          rule_type: r.rule_type,
-          rule_payload: r.rule_payload,
-          natural_language_text: r.natural_language_text,
-          is_active: r.is_active,
-        }));
-        await supabase.from("rules").insert(toSeed);
-        const fresh = await supabase
-          .from("rules")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-        if (fresh.data && fresh.data.length > 0) {
-          rulesData = fresh.data;
-        }
-      } catch {
-        // Fallback to memory
-      }
+    if (error) {
+      return { rules: [], error: error.message };
     }
 
-    if (!rulesData || rulesData.length === 0) {
-      return { rules: memoryRulesStore, error: null };
-    }
+    const rulesData = data || [];
+    return { rules: rulesData, error: null };
 
     return { rules: rulesData as SavedRule[], error: null };
   } catch {

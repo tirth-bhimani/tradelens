@@ -107,7 +107,7 @@ function RuleLabContent() {
         </div>
       </div>
 
-      {/* Mandatory Institutional Disclaimer Banner */}
+      {/* Institutional Disclaimer Banner */}
       <div
         data-testid="disclaimer-banner"
         className="p-3.5 rounded-[5px] border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 text-xs flex items-start space-x-2.5"
@@ -117,6 +117,16 @@ function RuleLabContent() {
           <strong>Institutional Disclaimer:</strong> Replay backtesting is a counter-factual mathematical approximation based on past trade fills. Live market order queue priorities, bid-ask slippage, and real-time execution adherence may differ from simulated outcomes.
         </p>
       </div>
+
+      {/* Dataset Notice Banner: Clarifies benchmark sample when account has 0 trades */}
+      {(!userTrades || userTrades.length < 5) && (
+        <div className="p-3.5 rounded-[5px] border border-blue-200/80 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 text-xs flex items-center space-x-2.5">
+          <Info className="w-4 h-4 shrink-0 text-[#2b7fff]" />
+          <span>
+            <strong>Benchmark Dataset:</strong> You have not imported past broker executions yet. Rule Lab is running candidate simulations against a benchmark dataset of 36 standard intraday trades. Upload your broker tradebook in Imports to replay against your own trading history.
+          </span>
+        </div>
+      )}
 
       {/* Error Banner */}
       {simulationError && (

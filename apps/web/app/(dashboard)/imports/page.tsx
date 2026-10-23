@@ -35,10 +35,12 @@ export default async function ImportsPage() {
       {/* Reactive Imports Manager (Upload + Live History Table) */}
       <ImportsManager initialImports={imports} importsError={importsError} />
 
-      {/* Post-Import Execution Adherence Scorecard (Task 23) */}
-      <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-        <AdherenceScorecard report={adherenceReport} />
-      </div>
+      {/* Post-Import Execution Adherence Scorecard: Only display if user has imported trades */}
+      {trades && trades.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <AdherenceScorecard report={adherenceReport} />
+        </div>
+      )}
     </div>
   );
 }

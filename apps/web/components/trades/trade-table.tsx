@@ -45,7 +45,7 @@ import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 export { DEFAULT_TRADE_LOG };
 
 export function TradeTable({
-  trades = DEFAULT_TRADE_LOG,
+  trades = [],
   violations = [],
   selectedDate,
   onClearDateFilter,
@@ -53,6 +53,10 @@ export function TradeTable({
   className = "",
 }: TradeTableProps) {
   const [tradeList, setTradeList] = useState<RoundTripTradeView[]>(trades);
+
+  React.useEffect(() => {
+    setTradeList(trades);
+  }, [trades]);
   const [searchQuery, setSearchQuery] = useState("");
   const [outcome, setOutcome] = useState<OutcomeFilter>("ALL");
   const [segment, setSegment] = useState("ALL");

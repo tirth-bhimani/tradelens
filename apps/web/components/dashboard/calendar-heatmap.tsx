@@ -22,13 +22,13 @@ export interface CalendarHeatmapProps {
 }
 
 export function CalendarHeatmap({
-  trades = DEFAULT_TRADE_LOG,
+  trades = [],
   selectedDate,
   onSelectDate,
   className = "",
 }: CalendarHeatmapProps) {
-  // Determine default year/month from latest trade in dataset, or March 2024
-  const latestDate = trades[0]?.exitTime ? new Date(trades[0].exitTime) : new Date(2024, 2, 1);
+  // Determine default year/month from latest trade in dataset, or current date
+  const latestDate = trades[0]?.exitTime ? new Date(trades[0].exitTime) : new Date();
   const [currentYear, setCurrentYear] = useState(latestDate.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(latestDate.getMonth() + 1); // 1-indexed
 
