@@ -41,9 +41,6 @@ export interface TradeTableProps {
   className?: string;
 }
 
-import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
-export { DEFAULT_TRADE_LOG };
-
 export function TradeTable({
   trades = [],
   violations = [],

@@ -47,7 +47,7 @@ export const DEFAULT_CHART_DATA: ChartPoint[] = [
 ];
 
 export function ChartContainer({
-  data = DEFAULT_CHART_DATA,
+  data = [],
   isLoading = false,
   defaultTimeframe = "ALL",
 }: ChartContainerProps) {

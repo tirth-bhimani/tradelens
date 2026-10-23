@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { ImportRecord, IngestionSummary, RowIssue } from "./types";
 import type { RoundTripTradeView, PsychologicalTag } from "./trade-filters";
-import { DEFAULT_TRADE_LOG } from "./trade-defaults";
 
 export type { ImportRecord, IngestionSummary, RowIssue };
 
@@ -32,10 +31,23 @@ export async function getUserTradesAction(): Promise<{
       return { trades: [], isFromDb: false, error: null };
     }
 
+    // Auto-purge any legacy mock-seeded trades that were inserted into the database without an import_id
+    try {
+      await supabase
+        .from("trades")
+        .delete()
+        .eq("user_id", user.id)
+        .is("import_id", null);
+    } catch {
+      // Best-effort cleanup
+    }
+
+    // Strictly query real trades originating from an actual broker tradebook import
     const { data, error } = await supabase
       .from("trades")
       .select("*")
       .eq("user_id", user.id)
+      .not("import_id", "is", null)
       .order("entry_time", { ascending: false });
 
     if (error) {
@@ -69,7 +81,7 @@ export async function getUserTradesAction(): Promise<{
 
     return { trades, isFromDb: true, error: null };
   } catch {
-    return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+    return { trades: [], isFromDb: false, error: null };
   }
 }
 
@@ -385,5 +397,30 @@ export async function processImportBatch(
     console.error("processImportBatch exception:", err);
     const message = err instanceof Error ? err.message : "Failed to process import batch";
     return { error: message };
+  }
+}
+
+/**
+ * Resets the authenticated user's trade journal by purging all trades, fills, and imports.
+ */
+export async function resetAllTradesAction(): Promise<{ success: boolean; error?: string | null }> {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    await supabase.from("trades").delete().eq("user_id", user.id);
+    await supabase.from("raw_fills").delete().eq("user_id", user.id);
+    await supabase.from("imports").delete().eq("user_id", user.id);
+
+    revalidatePath("/", "layout");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || "Failed to reset trades" };
   }
 }

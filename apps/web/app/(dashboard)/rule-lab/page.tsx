@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { RuleBuilder } from "@/components/rule-lab/rule-builder";
 import { BacktestResultView } from "@/components/rule-lab/backtest-result-view";
-import { ReplayResult, runReplayApi, SAMPLE_REPLAY_TRADES, RuleReplayTrade } from "@/lib/rules/types";
+import { ReplayResult, runReplayApi, RuleReplayTrade } from "@/lib/rules/types";
 import { getUserTradesAction } from "@/lib/trades/actions";
 
 function RuleLabContent() {
@@ -62,8 +62,14 @@ function RuleLabContent() {
     setIsLoading(true);
     setSimulationError(null);
     try {
-      const tradesToReplay = userTrades && userTrades.length >= 5 ? userTrades : SAMPLE_REPLAY_TRADES;
-      const res = await runReplayApi(rule, tradesToReplay, 100000);
+      if (!userTrades || userTrades.length === 0) {
+        setSimulationError(
+          "No tradebook data found. Please import your broker tradebook before executing rule backtest simulations."
+        );
+        setIsLoading(false);
+        return;
+      }
+      const res = await runReplayApi(rule, userTrades, 100000);
       setReplayResult(res);
     } catch (err: any) {
       setSimulationError(err.message || "Failed to execute backtest simulation.");
@@ -118,12 +124,30 @@ function RuleLabContent() {
         </p>
       </div>
 
-      {/* Dataset Notice Banner: Clarifies benchmark sample when account has 0 trades */}
-      {(!userTrades || userTrades.length < 5) && (
+      {/* Tradebook Requirement / Small Sample Notice */}
+      {(!userTrades || userTrades.length === 0) && (
+        <div className="p-4 rounded-[6px] border border-amber-200/80 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center space-x-2.5">
+            <Info className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Tradebook Required:</strong> You have not imported any trade records yet. Import your broker tradebook to backtest rules against your personal trading execution history.
+            </span>
+          </div>
+          <Link
+            href="/imports"
+            className="shrink-0 kiro-btn-cta !h-7 !px-3 text-[11px] font-bold inline-flex items-center space-x-1 shadow-sm"
+          >
+            <UploadCloud className="w-3 h-3" />
+            <span>Import Now</span>
+          </Link>
+        </div>
+      )}
+
+      {userTrades && userTrades.length > 0 && userTrades.length < 5 && (
         <div className="p-3.5 rounded-[5px] border border-blue-200/80 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 text-xs flex items-center space-x-2.5">
           <Info className="w-4 h-4 shrink-0 text-[#2b7fff]" />
           <span>
-            <strong>Benchmark Dataset:</strong> You have not imported past broker executions yet. Rule Lab is running candidate simulations against a benchmark dataset of 36 standard intraday trades. Upload your broker tradebook in Imports to replay against your own trading history.
+            <strong>Small Sample Notice:</strong> You have {userTrades.length} trades imported. Backtest simulations will run against your real trades, but statistical significance improves with &gt; 20 trades.
           </span>
         </div>
       )}

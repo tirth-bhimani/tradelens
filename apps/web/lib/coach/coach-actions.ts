@@ -59,8 +59,12 @@ export async function getCoachRosterAction(): Promise<{
       .eq("coach_id", user.id)
       .order("granted_at", { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      return { roster: memoryRosterStore, error: null };
+    if (error) {
+      return { roster: [], error: error.message };
+    }
+
+    if (!data || data.length === 0) {
+      return { roster: [], error: null };
     }
 
     const formattedRoster: StudentRosterItem[] = data.map((item: any) => ({
@@ -739,8 +743,12 @@ export async function getTraderCoachesAction(): Promise<{
       .eq("trader_id", user.id)
       .order("granted_at", { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      return { coaches: memoryCoachesStore, error: null };
+    if (error) {
+      return { coaches: [], error: error.message };
+    }
+
+    if (!data || data.length === 0) {
+      return { coaches: [], error: null };
     }
 
     const formatted: CoachAccessRecord[] = data.map((item: any) => ({

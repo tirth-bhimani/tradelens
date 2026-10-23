@@ -210,7 +210,6 @@ REVOKE EXECUTE ON FUNCTION public.delete_user_account() FROM public;
 GRANT EXECUTE ON FUNCTION public.delete_user_account() TO authenticated;
 
 -- ------------------------------------------------------------------------------
--- 5. Cleanup Third Account (bhimanitirth@gmail.com)
+-- 5. Purge Any Unimported Default / Mock Trades
 -- ------------------------------------------------------------------------------
-DELETE FROM public.profiles WHERE email = 'bhimanitirth@gmail.com';
-DELETE FROM auth.users WHERE email = 'bhimanitirth@gmail.com';
+DELETE FROM public.trades WHERE import_id IS NULL;

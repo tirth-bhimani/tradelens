@@ -43,26 +43,28 @@ export interface SummaryMetricsGridProps {
   defaultCompact?: boolean;
 }
 
-export const DEFAULT_SUMMARY_METRICS: SummaryMetricsData = {
-  totalTrades: 24,
-  winningTrades: 16,
-  losingTrades: 8,
-  winRate: 66.67,
-  totalNetPnl: 48520.5,
-  totalCharges: 1479.5,
-  profitFactor: 2.85,
+export const EMPTY_SUMMARY_METRICS: SummaryMetricsData = {
+  totalTrades: 0,
+  winningTrades: 0,
+  losingTrades: 0,
+  winRate: 0,
+  totalNetPnl: 0,
+  totalCharges: 0,
+  profitFactor: 0,
   isInfiniteProfitFactor: false,
-  expectancyInr: 2021.69,
-  maxDrawdownInr: 8400.0,
-  maxDrawdownPct: 4.2,
-  maxConsecutiveWins: 6,
-  maxConsecutiveLosses: 2,
-  grossProfit: 74500,
-  grossLoss: 24500,
+  expectancyInr: 0,
+  maxDrawdownInr: 0,
+  maxDrawdownPct: 0,
+  maxConsecutiveWins: 0,
+  maxConsecutiveLosses: 0,
+  grossProfit: 0,
+  grossLoss: 0,
 };
 
+export const DEFAULT_SUMMARY_METRICS: SummaryMetricsData = EMPTY_SUMMARY_METRICS;
+
 export function SummaryMetricsGrid({
-  metrics = DEFAULT_SUMMARY_METRICS,
+  metrics = EMPTY_SUMMARY_METRICS,
   startingCapital = 0,
   isLoading = false,
   defaultCompact = false,

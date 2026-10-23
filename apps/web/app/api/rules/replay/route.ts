@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { simulateRuleReplay } from "@/lib/rules/replay-engine";
-import { SAMPLE_REPLAY_TRADES } from "@/lib/rules/types";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const rule = body?.rule;
-    const trades = body?.trades && body.trades.length > 0 ? body.trades : SAMPLE_REPLAY_TRADES;
+    const trades = body?.trades;
     const startingCapital = body?.starting_capital ? Number(body.starting_capital) : 100000;
 
     if (!rule) {
       return NextResponse.json(
         { error: "Rule definition is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!trades || !Array.isArray(trades) || trades.length === 0) {
+      return NextResponse.json(
+        { error: "No tradebook data provided. Please import your trades before running backtest simulations." },
         { status: 400 }
       );
     }

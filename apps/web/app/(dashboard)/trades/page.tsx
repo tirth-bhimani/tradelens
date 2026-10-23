@@ -6,7 +6,6 @@ import { UploadCloud } from "lucide-react";
 import { CalendarHeatmap } from "@/components/dashboard/calendar-heatmap";
 import { TimeBreakdownChart } from "@/components/dashboard/time-breakdown-chart";
 import { TradeTable } from "@/components/trades/trade-table";
-import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
 import { getUserRules } from "@/lib/rules/rulebook-actions";
 import type { SavedRule } from "@/lib/rules/adherence-types";

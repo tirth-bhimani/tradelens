@@ -6,7 +6,7 @@ import type { SavedRule, SaveRuleInput } from "./adherence-types";
 import { DEFAULT_SAMPLE_RULES } from "./rulebook-defaults";
 
 // In-memory fallback cache for development/offline testing
-let memoryRulesStore: SavedRule[] = [...DEFAULT_SAMPLE_RULES];
+let memoryRulesStore: SavedRule[] = [];
 
 /**
  * Retrieves all saved rules for the authenticated user, falling back to default rules if offline.
@@ -36,8 +36,6 @@ export async function getUserRules(): Promise<{
     }
 
     const rulesData = data || [];
-    return { rules: rulesData, error: null };
-
     return { rules: rulesData as SavedRule[], error: null };
   } catch {
     return { rules: memoryRulesStore, error: null };
