@@ -9,6 +9,7 @@ import {
   Beaker,
 } from "lucide-react";
 import { detectTiltCascades } from "@/lib/tilt/detector";
+import { getUserTradesAction } from "@/lib/trades/actions";
 import { TiltAutopsyView } from "@/components/tilt/tilt-autopsy-view";
 
 export const metadata = {
@@ -16,9 +17,10 @@ export const metadata = {
   description: "Forensic post-mortem analysis of revenge trading spirals and emotional velocity compression.",
 };
 
-export default function TiltAutopsyPage() {
+export default async function TiltAutopsyPage() {
+  const { trades } = await getUserTradesAction();
   // Compute cascades from detected trades (falls back to sample dataset if empty)
-  const overview = detectTiltCascades([]);
+  const overview = detectTiltCascades(trades);
 
   return (
     <div className="space-y-6">

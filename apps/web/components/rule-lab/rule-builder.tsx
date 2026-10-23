@@ -492,6 +492,35 @@ export function RuleBuilder({
                   </div>
                 </div>
               )}
+
+              {selectedRuleType === "COMPOSITE_RULE" && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <span>Configured Composite Guardrails</span>
+                    <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 font-mono text-[10px]">
+                      {(rulePayload.subrules || []).length} Guardrails Active
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {(rulePayload.subrules || []).map((sub: any, sIdx: number) => (
+                      <div
+                        key={sIdx}
+                        className="p-3 rounded border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.02] space-y-1"
+                      >
+                        <div className="text-xs font-mono font-bold text-[#2b7fff]">
+                          {sub.rule_type}
+                        </div>
+                        <div className="text-[11px] text-slate-600 dark:text-slate-400 font-mono">
+                          {Object.entries(sub)
+                            .filter(([k]) => k !== "rule_type")
+                            .map(([k, v]) => `${k}: ${v}`)
+                            .join(" • ")}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

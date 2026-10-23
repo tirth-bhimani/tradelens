@@ -38,7 +38,8 @@ class AIClient:
         self.gemini_api_key = gemini_api_key or settings.gemini_api_key
         self.groq_api_key = groq_api_key or settings.groq_api_key
         self.anthropic_api_key = anthropic_api_key or settings.anthropic_api_key
-        self.provider = provider or settings.ai_provider
+        self.gemini_model = getattr(settings, "gemini_model", "gemini-3-flash-preview")
+        self.provider = settings.ai_provider if (provider is None or provider == "auto") else provider
         self.timeout = timeout_seconds
 
     async def generate_insights(self, request: InsightRequest) -> InsightReport:
@@ -73,7 +74,8 @@ class AIClient:
         if resolved == "anthropic":
             return "ANTHROPIC_CLAUDE_3.5_SONNET"
         if resolved == "gemini":
-            return "GEMINI_1.5_FLASH"
+            name = self.gemini_model.upper().replace("-", "_")
+            return name if name.startswith("GEMINI_") else f"GEMINI_{name}"
         if resolved == "groq":
             return "GROQ_LLAMA_3.3_70B"
         return "FREE_DETERMINISTIC"
@@ -103,7 +105,7 @@ class AIClient:
             return str(data["content"][0]["text"])
 
         if active == "gemini" and self.gemini_api_key:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.gemini_api_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.gemini_model}:generateContent?key={self.gemini_api_key}"
             payload = {
                 "contents": [{"role": "user", "parts": [{"text": f"{system_instruction}\n\n{prompt}"}]}],
                 "generationConfig": {"temperature": 0.2, "response_mime_type": "application/json"},
@@ -194,9 +196,9 @@ class AIClient:
         return InsightReport.model_validate(parsed_json)
 
     async def _call_gemini(self, request: InsightRequest) -> InsightReport:
-        """Calls Google Gemini 1.5 Flash via REST API with native JSON schema enforcement."""
+        """Calls Google Gemini Flash via REST API with native JSON schema enforcement."""
         url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+            f"https://generativelanguage.googleapis.com/v1beta/models/{self.gemini_model}:generateContent"
             f"?key={self.gemini_api_key}"
         )
 
@@ -222,7 +224,8 @@ class AIClient:
 
         text_content = data["candidates"][0]["content"]["parts"][0]["text"]
         parsed_json = self._clean_and_parse_json(text_content)
-        parsed_json["provider_used"] = "GEMINI_1.5_FLASH"
+        name = self.gemini_model.upper().replace("-", "_")
+        parsed_json["provider_used"] = name if name.startswith("GEMINI_") else f"GEMINI_{name}"
         return InsightReport.model_validate(parsed_json)
 
     async def _call_groq(self, request: InsightRequest) -> InsightReport:

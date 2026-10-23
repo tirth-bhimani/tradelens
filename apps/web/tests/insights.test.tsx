@@ -131,4 +131,36 @@ describe("AI Behavioral Insights Pipeline & Frontend Components", () => {
       expect(html).toContain("DISCLAIMER: This diagnostic audit is strictly educational");
     });
   });
+
+  describe("Dynamic Insights Action & Dashboard Metrics Engine", () => {
+    it("dynamically computes dashboard metrics from trades", async () => {
+      const { computeDashboardMetrics, computeEquityChartPoints, computeBehavioralLeaks } = await import(
+        "../lib/trades/dashboard-metrics"
+      );
+      const { DEFAULT_TRADE_LOG } = await import("../lib/trades/trade-defaults");
+
+      const metrics = computeDashboardMetrics(DEFAULT_TRADE_LOG, 100000);
+      expect(metrics.totalTrades).toBe(DEFAULT_TRADE_LOG.length);
+      expect(metrics.winRate).toBeGreaterThan(0);
+      expect(metrics.expectancyInr).toBeDefined();
+
+      const chartPoints = computeEquityChartPoints(DEFAULT_TRADE_LOG);
+      expect(chartPoints.length).toBe(DEFAULT_TRADE_LOG.length);
+      expect(chartPoints[0].cumulativePnl).toBeDefined();
+
+      const leaks = computeBehavioralLeaks(DEFAULT_TRADE_LOG);
+      expect(leaks.disciplineScore).toBeGreaterThanOrEqual(0);
+      expect(leaks.disciplineScore).toBeLessThanOrEqual(100);
+      expect(leaks.topLeak.title).toBeDefined();
+    });
+
+    it("generates structured AI insights report via getAiInsightsAction", async () => {
+      const { getAiInsightsAction } = await import("../lib/insights/actions");
+      const res = await getAiInsightsAction();
+      expect(res.report).toBeDefined();
+      expect(res.report.overall_summary).toBeDefined();
+      expect(res.report.discipline_score).toBeGreaterThan(0);
+      expect(res.totalTradesAnalyzed).toBeGreaterThanOrEqual(0);
+    });
+  });
 });

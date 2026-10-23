@@ -5,7 +5,7 @@ import { UploadCloud } from "lucide-react";
 import { AdherenceScorecard } from "@/components/rules/adherence-scorecard";
 import { getUserRules } from "@/lib/rules/rulebook-actions";
 import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
-import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
+import { getUserTradesAction } from "@/lib/trades/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,8 @@ export default async function ImportsPage() {
   const { user } = await getCurrentProfile();
   const { imports, error: importsError } = await getRecentImports();
   const { rules } = await getUserRules();
-  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, rules);
+  const { trades } = await getUserTradesAction();
+  const adherenceReport = evaluateClientAdherence(trades, rules);
 
   return (
     <div className="space-y-8">

@@ -112,6 +112,28 @@ export const CATALOG_RULE_DEFINITIONS: CatalogRuleDefinition[] = [
       affected_indices: ["NIFTY"],
     },
   },
+  {
+    type: "COMPOSITE_RULE",
+    title: "Multi-Guardrail Composite Strategy",
+    category: "Pacing & Tilt",
+    description: "Combines multiple behavioral guardrails into an integrated risk policy (e.g. Cooldown Pause + Session Trade Limit).",
+    defaultPayload: {
+      rule_type: "COMPOSITE_RULE",
+      logic_operator: "AND",
+      subrules: [
+        {
+          rule_type: "COOL_OFF_AFTER_LOSS",
+          cooldown_minutes: 15,
+          max_consecutive_losses: 1,
+        },
+        {
+          rule_type: "MAX_DAILY_TRADES_LIMIT",
+          max_trades: 5,
+          action: "HALT_FOR_DAY",
+        },
+      ],
+    },
+  },
 ];
 
 // Performance & Replay Result Contracts
@@ -187,12 +209,15 @@ export interface ReplayResult {
   dual_equity_curve: DualEquityPoint[];
 }
 
+export type RuleReplayTrade = Record<string, any>;
+
 export interface TranslateRuleResponse {
   success: boolean;
   rule: any | null;
   explanation: string;
   is_supported: boolean;
   unsupported_reason: string | null;
+  engine_used?: string;
 }
 
 // Sample dataset of 36 realistic historical trades for immediate out-of-the-box backtesting
@@ -377,11 +402,9 @@ export async function translateRuleApi(
   prompt: string,
   startingCapital?: number
 ): Promise<TranslateRuleResponse> {
-  const analyticsUrl =
-    process.env.NEXT_PUBLIC_ANALYTICS_SERVICE_URL || "http://localhost:8000";
-
   try {
-    const res = await fetch(`${analyticsUrl}/api/v1/rules/translate`, {
+    // Call the unified Next.js API route (which uses Gemini AI on server)
+    const res = await fetch("/api/rules/translate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -390,40 +413,16 @@ export async function translateRuleApi(
       }),
     });
 
-    if (!res.ok) {
-      throw new Error(`Translation error: ${res.statusText}`);
+    if (res.ok) {
+      return await res.json();
     }
-
-    return await res.json();
-  } catch (err: any) {
-    // Fallback deterministic extractor for offline testing
-    const text = prompt.toLowerCase();
-    if (text.includes("cool") || text.includes("pause") || text.includes("wait")) {
-      return {
-        success: true,
-        rule: { rule_type: "COOL_OFF_AFTER_LOSS", cooldown_minutes: 20 },
-        explanation: "Enforces a mandatory 20-minute pause after losing trades.",
-        is_supported: true,
-        unsupported_reason: null,
-      };
-    }
-    if (text.includes("consecutive") || text.includes("in a row") || text.includes("streak")) {
-      return {
-        success: true,
-        rule: { rule_type: "MAX_CONSECUTIVE_LOSSES", consecutive_losses: 3, action: "HALT_FOR_DAY" },
-        explanation: "Circuit breaker halts trading for the remainder of the session after 3 consecutive losses.",
-        is_supported: true,
-        unsupported_reason: null,
-      };
-    }
-    return {
-      success: true,
-      rule: { rule_type: "MAX_DAILY_TRADES_LIMIT", max_trades: 5, action: "HALT_FOR_DAY" },
-      explanation: "Restricts daily activity to a maximum of 5 trades per session.",
-      is_supported: true,
-      unsupported_reason: null,
-    };
+  } catch {
+    // Server route unreachable or offline test environment
   }
+
+  // Fallback to high-fidelity deterministic parser
+  const { parseRuleDeterministic } = await import("./ai-translator");
+  return parseRuleDeterministic(prompt, startingCapital);
 }
 
 /**

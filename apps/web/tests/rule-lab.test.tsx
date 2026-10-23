@@ -186,7 +186,7 @@ describe("Rule Lab Frontend Interactive Components (Task 22)", () => {
 
   describe("Rule Catalog Definitions", () => {
     it("contains all 9 approved V1 canonical rules", () => {
-      expect(CATALOG_RULE_DEFINITIONS.length).toBe(8); // Atomic 8 catalog rules defined in UI
+      expect(CATALOG_RULE_DEFINITIONS.length).toBe(9); // 8 atomic rules + COMPOSITE_RULE
       const types = CATALOG_RULE_DEFINITIONS.map((r) => r.type);
       expect(types).toContain("COOL_OFF_AFTER_LOSS");
       expect(types).toContain("MAX_CONSECUTIVE_LOSSES");
@@ -196,6 +196,7 @@ describe("Rule Lab Frontend Interactive Components (Task 22)", () => {
       expect(types).toContain("MAX_POSITION_SIZE");
       expect(types).toContain("SKIP_INSTRUMENT_TYPE");
       expect(types).toContain("NO_TRADING_ON_EXPIRY_DAY");
+      expect(types).toContain("COMPOSITE_RULE");
     });
   });
 
@@ -374,6 +375,23 @@ describe("Rule Lab Frontend Interactive Components (Task 22)", () => {
       expect(res.success).toBe(true);
       expect(res.rule?.rule_type).toBe("COOL_OFF_AFTER_LOSS");
       expect(res.rule?.cooldown_minutes).toBe(20);
+    });
+
+    it("translateRuleApi parses user composite rules with exact numbers (60 mins, 10 trades)", async () => {
+      const res = await translateRuleApi("Don't let me trade for 60 minutes after losing money, and cap me at 10 trades per day");
+      expect(res.success).toBe(true);
+      expect(res.rule?.rule_type).toBe("COMPOSITE_RULE");
+      expect(res.rule?.subrules).toHaveLength(2);
+      expect(res.rule?.subrules[0].cooldown_minutes).toBe(60);
+      expect(res.rule?.subrules[1].max_trades).toBe(10);
+      expect(res.explanation).toContain("60-minute pause");
+      expect(res.explanation).toContain("10 trades");
+    });
+
+    it("translateRuleApi rejects discretionary technical indicators", async () => {
+      const res = await translateRuleApi("Buy when RSI crosses above 30");
+      expect(res.is_supported).toBe(false);
+      expect(res.unsupported_reason).toContain("Technical analysis");
     });
   });
 });

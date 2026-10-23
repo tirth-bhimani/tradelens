@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { RuleBuilder } from "@/components/rule-lab/rule-builder";
 import { BacktestResultView } from "@/components/rule-lab/backtest-result-view";
-import { ReplayResult, runReplayApi, SAMPLE_REPLAY_TRADES } from "@/lib/rules/types";
+import { ReplayResult, runReplayApi, SAMPLE_REPLAY_TRADES, RuleReplayTrade } from "@/lib/rules/types";
+import { getUserTradesAction } from "@/lib/trades/actions";
 
 function RuleLabContent() {
   const searchParams = useSearchParams();
@@ -30,12 +31,39 @@ function RuleLabContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [replayResult, setReplayResult] = useState<ReplayResult | null>(null);
   const [simulationError, setSimulationError] = useState<string | null>(null);
+  const [userTrades, setUserTrades] = useState<RuleReplayTrade[] | null>(null);
+
+  useEffect(() => {
+    getUserTradesAction().then((res) => {
+      if (res.trades && res.trades.length > 0) {
+        const replayMapped: RuleReplayTrade[] = res.trades.map((t) => ({
+          id: t.id,
+          symbol: t.symbol,
+          segment: t.segment === "FNO" ? "OPTIONS" : "EQUITY_INTRADAY",
+          instrument_type: t.segment === "FNO" ? "CE" : "EQ",
+          is_short: false,
+          is_intraday: true,
+          entry_time: t.entryTime,
+          exit_time: t.exitTime,
+          trade_duration_seconds: 1800,
+          quantity: t.quantity,
+          entry_price: t.entryPrice,
+          exit_price: t.exitPrice,
+          gross_pnl: t.grossPnl,
+          charges: t.charges,
+          net_pnl: t.netPnl,
+        }));
+        setUserTrades(replayMapped);
+      }
+    });
+  }, []);
 
   const handleRunReplay = async (rule: any) => {
     setIsLoading(true);
     setSimulationError(null);
     try {
-      const res = await runReplayApi(rule, SAMPLE_REPLAY_TRADES, 100000);
+      const tradesToReplay = userTrades && userTrades.length >= 5 ? userTrades : SAMPLE_REPLAY_TRADES;
+      const res = await runReplayApi(rule, tradesToReplay, 100000);
       setReplayResult(res);
     } catch (err: any) {
       setSimulationError(err.message || "Failed to execute backtest simulation.");

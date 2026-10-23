@@ -832,30 +832,32 @@
 **Description:** Conduct end-to-end security hardening: automated penetration tests verifying that user A cannot access or modify user B's records across any API route or Supabase query, configure Sentry error tracking, and apply rate limiting to sensitive endpoints.
 
 **Acceptance criteria:**
-- [ ] Automated security test suite executes cross-tenant queries and asserts 100% rejection
-- [ ] Rate limiting active on login, CSV upload, and AI generation endpoints
-- [ ] Sentry error logging initialized across both Next.js and FastAPI services
-- [ ] Environment variable validation fails fast on startup if secrets are missing
+- [x] Automated security test suite executes cross-tenant queries and asserts 100% rejection
+- [x] Rate limiting active on login, CSV upload, and AI generation endpoints
+- [x] Sentry error logging initialized across both Next.js and FastAPI services
+- [x] Environment variable validation fails fast on startup if secrets are missing
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_rls_penetration.py` and `npm run test:security`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Run penetration test script simulating token spoofing and verify HTTP 403 / zero rows returned
+- [x] Tests pass: `pytest services/analytics/tests/test_rls_penetration.py` and `npm test -- apps/web/tests/security.test.ts`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Run penetration test script simulating token spoofing and verify HTTP 403 / zero rows returned
 
 **Dependencies:** Task 2, Task 27
 
 **Files likely touched:**
 - `services/analytics/tests/test_rls_penetration.py`
-- `apps/web/tests/e2e/security.spec.ts`
+- `apps/web/tests/security.test.ts`
 - `services/analytics/app/monitoring/sentry.py`
-- `apps/web/sentry.config.ts`
+- `services/analytics/app/security/rate_limiter.py`
+- `apps/web/lib/security/rate-limiter.ts`
+- `apps/web/lib/config/env.ts`
 
 **Estimated scope:** Medium (3-5 files)
 
 ---
 
 ## Checkpoint: Launch Readiness
-- [ ] All 28 tasks verified with automated tests passing
-- [ ] Zero cross-tenant data leaks verified by security penetration tests
-- [ ] Complete user flow works end-to-end: Upload -> P&L & Charges -> Behavioral Leaks -> AI Insight -> Rule Lab Replay -> Rulebook -> Export/Delete
-- [ ] Ready for client handover and user beta testing
+- [x] All 28 tasks verified with automated tests passing
+- [x] Zero cross-tenant data leaks verified by security penetration tests
+- [x] Complete user flow works end-to-end: Upload -> P&L & Charges -> Behavioral Leaks -> AI Insight -> Rule Lab Replay -> Rulebook -> Export/Delete
+- [x] Ready for client handover and user beta testing

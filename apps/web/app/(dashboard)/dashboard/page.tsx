@@ -8,7 +8,12 @@ import { BehavioralLeaksCard } from "@/components/dashboard/behavioral-leaks-car
 import { AdherenceScorecard } from "@/components/rules/adherence-scorecard";
 import { getUserRules } from "@/lib/rules/rulebook-actions";
 import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
-import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
+import { getUserTradesAction } from "@/lib/trades/actions";
+import {
+  computeDashboardMetrics,
+  computeEquityChartPoints,
+  computeBehavioralLeaks,
+} from "@/lib/trades/dashboard-metrics";
 
 export default async function DashboardPage() {
   const { user, profile } = await getCurrentProfile();
@@ -19,7 +24,13 @@ export default async function DashboardPage() {
   const segments = profile?.trading_segments || ["EQUITY", "FNO"];
 
   const { rules } = await getUserRules();
-  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, rules);
+  const { trades } = await getUserTradesAction();
+
+  const hasTrades = trades && trades.length > 0;
+  const metrics = computeDashboardMetrics(trades, capital);
+  const chartData = computeEquityChartPoints(trades);
+  const leaksData = computeBehavioralLeaks(trades);
+  const adherenceReport = evaluateClientAdherence(trades, rules);
 
   return (
     <div className="space-y-6">
@@ -35,13 +46,13 @@ export default async function DashboardPage() {
           <div className="max-w-2xl space-y-2">
             <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[5px] bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 text-xs font-medium font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>TERMINAL ACTIVE • READY FOR INGESTION</span>
+              <span>TERMINAL ACTIVE • {hasTrades ? "INGESTION SYNCED" : "READY FOR INGESTION"}</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Welcome back, {displayName}
             </h1>
             <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-              Upload your tradebook to uncover behavioral leaks (overtrading, revenge entries, holding losers) and test rule guardrails on your historical trades.
+              Track execution discipline, diagnose behavioral leaks (overtrading, revenge entries, holding losers), and backtest rule guardrails against your actual historical trades.
             </p>
           </div>
 
@@ -121,43 +132,42 @@ export default async function DashboardPage() {
       </div>
 
       {/* Core Performance Metrics (Task 11 & Task 13) */}
-      <PerformanceMetricsGrid startingCapital={capital} />
+      <PerformanceMetricsGrid metrics={metrics} startingCapital={capital} />
 
       {/* Interactive Equity Curve & Drawdown Visualizer (Task 14) */}
-      <ChartContainer />
+      <ChartContainer data={chartData} />
 
       {/* Behavioral Leaks & Execution Discipline (Task 12) */}
-      <BehavioralLeaksCard />
+      <BehavioralLeaksCard data={leaksData} />
 
       {/* Rulebook Discipline & Adherence Scorecard (Task 23) */}
       <AdherenceScorecard report={adherenceReport} />
 
+      {/* Empty State / Upload Callout: Only display if trader has 0 trades */}
+      {!hasTrades && (
+        <div className="p-8 md:p-10 card-luminous border-dashed border-slate-300 dark:border-white/[0.12] bg-slate-50/50 dark:bg-[#070b14] hover:border-[#2b7fff]/50 dark:hover:border-[#2b7fff]/50 text-center space-y-4 transition-all">
+          <div className="w-10 h-10 rounded-[6px] bg-white dark:bg-white/[0.06] text-[#2b7fff] border border-slate-200 dark:border-white/[0.1] mx-auto flex items-center justify-center shadow-sm">
+            <UploadCloud className="w-5 h-5" />
+          </div>
 
+          <div className="max-w-md mx-auto space-y-1">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Your Tradebook is Empty</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Upload your tradebook CSV to compute FIFO round-trip trades, identify behavioral leak patterns, and start backtesting rules.
+            </p>
+          </div>
 
-      {/* Empty State / Upload Callout (Theme-adaptive styling) */}
-      <div className="p-8 md:p-10 card-luminous border-dashed border-slate-300 dark:border-white/[0.12] bg-slate-50/50 dark:bg-[#070b14] hover:border-[#2b7fff]/50 dark:hover:border-[#2b7fff]/50 text-center space-y-4 transition-all">
-        <div className="w-10 h-10 rounded-[6px] bg-white dark:bg-white/[0.06] text-[#2b7fff] border border-slate-200 dark:border-white/[0.1] mx-auto flex items-center justify-center shadow-sm">
-          <UploadCloud className="w-5 h-5" />
+          <div className="pt-1">
+            <Link
+              href="/imports"
+              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
+            >
+              <span>Upload Broker Tradebook</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+            </Link>
+          </div>
         </div>
-
-        <div className="max-w-md mx-auto space-y-1">
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">Your Tradebook is Empty</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            Upload your tradebook CSV to compute FIFO round-trip trades, identify behavioral leak patterns, and start backtesting rules.
-          </p>
-        </div>
-
-        <div className="pt-1">
-          <Link
-            href="/imports"
-            className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
-          >
-            <span>Upload Broker Tradebook</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-          </Link>
-        </div>
-      </div>
+      )}
     </div>
-
   );
 }

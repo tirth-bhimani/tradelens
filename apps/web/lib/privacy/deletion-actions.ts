@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export interface ActionResponse {
@@ -33,45 +34,70 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
 
     const userId = user.id;
 
+    // Use privileged admin client if service role key is configured, else fallback to standard client
+    let adminClient: any = null;
+    try {
+      if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        adminClient = createAdminClient();
+      }
+    } catch {
+      // In offline / unit testing environment
+    }
+    const db = adminClient || supabase;
+
     // 1. Purge all stored files from 'trade-imports' bucket
     try {
-      const { data: fileList } = await supabase.storage
+      const { data: fileList } = await db.storage
         .from("trade-imports")
         .list(userId);
 
       if (fileList && fileList.length > 0) {
-        const paths = fileList.map((f) => `${userId}/${f.name}`);
-        await supabase.storage.from("trade-imports").remove(paths);
+        const paths = fileList.map((f: any) => `${userId}/${f.name}`);
+        await db.storage.from("trade-imports").remove(paths);
       }
     } catch {
       // Storage directory may be empty; continue with relational purge
     }
 
-    // 2. Cascade delete dependent user records in deterministic order
-    await supabase.from("rule_runs").delete().eq("user_id", userId);
-    await supabase.from("rules").delete().eq("user_id", userId);
-    await supabase.from("stats_snapshots").delete().eq("user_id", userId);
-    await supabase.from("insights").delete().eq("user_id", userId);
-    await supabase.from("weekly_reports").delete().eq("user_id", userId);
-    await supabase.from("reports").delete().eq("user_id", userId);
-    await supabase.from("trades").delete().eq("user_id", userId);
-    await supabase.from("raw_fills").delete().eq("user_id", userId);
-    await supabase.from("imports").delete().eq("user_id", userId);
-    await supabase.from("coach_invitations").delete().eq("coach_id", userId);
-    await supabase.from("coach_access").delete().or(`trader_id.eq.${userId},coach_id.eq.${userId}`);
-    await supabase.from("organization_memberships").delete().eq("user_id", userId);
-    await supabase.from("ai_usage").delete().eq("user_id", userId);
+    // 2. Cascade delete dependent user records across all operational tables
+    await db.from("rule_runs").delete().eq("user_id", userId);
+    await db.from("rules").delete().eq("user_id", userId);
+    await db.from("stats_snapshots").delete().eq("user_id", userId);
+    await db.from("insights").delete().eq("user_id", userId);
+    await db.from("weekly_reports").delete().eq("user_id", userId);
+    await db.from("reports").delete().eq("user_id", userId);
+    await db.from("trades").delete().eq("user_id", userId);
+    await db.from("raw_fills").delete().eq("user_id", userId);
+    await db.from("imports").delete().eq("user_id", userId);
+    await db.from("coach_invitations").delete().eq("coach_id", userId);
+    await db.from("coach_notes").delete().or(`trader_id.eq.${userId},coach_id.eq.${userId}`);
+    await db.from("coach_access").delete().or(`trader_id.eq.${userId},coach_id.eq.${userId}`);
+    await db.from("organization_memberships").delete().eq("user_id", userId);
+    await db.from("ai_usage").delete().eq("user_id", userId);
+    await db.from("audit_log").delete().eq("user_id", userId);
 
     // 3. Delete base user profile
-    await supabase.from("profiles").delete().eq("id", userId);
+    await db.from("profiles").delete().eq("id", userId);
 
-    // 4. Invalidate and sign out current auth session
+    // 4. Permanently erase user identity from Supabase Auth (auth.users)
+    if (adminClient?.auth?.admin?.deleteUser) {
+      try {
+        const { error: adminErr } = await adminClient.auth.admin.deleteUser(userId);
+        if (adminErr) {
+          console.warn("Notice: admin.deleteUser returned:", adminErr.message);
+        }
+      } catch (err) {
+        console.warn("Notice: admin.deleteUser call error:", err);
+      }
+    }
+
+    // 5. Invalidate and sign out current auth session cookies
     await supabase.auth.signOut();
 
     try {
       revalidatePath("/", "layout");
     } catch {
-      // Safe fallback when running in non-server action test context
+      // Safe fallback when running outside server action context
     }
     return { success: true, error: null };
   } catch (err) {

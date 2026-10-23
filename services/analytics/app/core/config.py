@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     """Application runtime settings loaded from environment variables."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", "../.env", "../../.env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -38,6 +38,7 @@ class Settings(BaseSettings):
 
     # AI Configuration (Free Cloud Providers, Anthropic Claude & Deterministic Engine)
     gemini_api_key: str | None = None
+    gemini_model: str = "gemini-3-flash-preview"
     groq_api_key: str | None = None
     anthropic_api_key: str | None = None
     ai_provider: str = "auto"  # "auto", "anthropic", "gemini", "groq", or "deterministic"
@@ -46,6 +47,24 @@ class Settings(BaseSettings):
     resend_api_key: str | None = None
     email_from: str = "TradeLens Reports <reports@tradelens.app>"
     cron_secret: str = "tradelens-cron-secret-dev"
+
+    # Monitoring & Telemetry (Sentry)
+    sentry_dsn: str | None = None
+    sentry_traces_sample_rate: float = 0.1
+
+    def validate_environment(self) -> list[str]:
+        """Audits runtime configuration and returns any critical warnings or errors."""
+        warnings: list[str] = []
+
+        if self.environment == "production":
+            if not self.database_url or "localhost" in self.database_url:
+                warnings.append("Production database_url should not point to localhost.")
+            if not self.cron_secret or self.cron_secret == "tradelens-cron-secret-dev":
+                warnings.append("Default cron_secret in production must be rotated.")
+            if not self.sentry_dsn:
+                warnings.append("Sentry DSN recommended for production error tracking.")
+
+        return warnings
 
 
 settings = Settings()

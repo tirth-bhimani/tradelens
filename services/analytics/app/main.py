@@ -2,11 +2,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.monitoring.sentry import monitor
 from app.routers import ai_insights, behavior, health, metrics, reconciliation, reports, rules, upload
 
 
 def create_app() -> FastAPI:
     """Application factory for TradeLens Analytics Service."""
+    # Initialize error telemetry & monitoring
+    monitor.init(
+        dsn=settings.sentry_dsn,
+        environment=settings.environment,
+        sample_rate=settings.sentry_traces_sample_rate,
+    )
+
     app = FastAPI(
         title="TradeLens Analytics Service",
         description="Deterministic P&L, behavioral leak metrics, and rule replay engine",

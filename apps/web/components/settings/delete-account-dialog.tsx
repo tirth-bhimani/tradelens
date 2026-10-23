@@ -26,8 +26,15 @@ export function DeleteAccountDialog() {
         throw new Error(res.error || "Failed to delete account");
       }
 
-      // Hard redirect to home landing page
-      window.location.href = "/";
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch {
+        // Safe fallback
+      }
+
+      // Hard redirect to login page with deletion confirmation
+      window.location.href = "/login?deleted=true";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Account deletion failed");
       setIsDeleting(false);

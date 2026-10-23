@@ -1,10 +1,17 @@
 import React from "react";
 import Link from "next/link";
-import { Activity, Beaker, BookOpen } from "lucide-react";
+import { Activity, Beaker, BookOpen, UploadCloud, ArrowRight } from "lucide-react";
 import { InsightsSection } from "@/components/insights/insights-section";
-import { DEFAULT_INSIGHT_REPORT } from "@/lib/insights/types";
+import { getAiInsightsAction } from "@/lib/insights/actions";
 
-export default function InsightsPage() {
+export const metadata = {
+  title: "AI Behavioral Execution Audit | TradeLens",
+  description: "Objective diagnostic analysis of capital leaks, revenge trading spirals, and rule recommendations powered by AI.",
+};
+
+export default async function InsightsPage() {
+  const { report, totalTradesAnalyzed, hasRealTrades } = await getAiInsightsAction();
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
@@ -18,7 +25,7 @@ export default function InsightsPage() {
           <div className="space-y-1.5">
             <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[5px] bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 text-xs font-mono font-medium">
               <Activity className="w-3.5 h-3.5 text-[#2b7fff]" />
-              <span>EXECUTION DIAGNOSTICS • QUANTITATIVE AUDIT</span>
+              <span>AI EXECUTION DIAGNOSTICS • QUANTITATIVE AUDIT</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Behavioral Execution Audit
@@ -47,8 +54,33 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      {/* Main Insights Section */}
-      <InsightsSection report={DEFAULT_INSIGHT_REPORT} totalTradesAnalyzed={24} />
+      {/* Main Insights Section or Zero Trades Onboarding */}
+      {!hasRealTrades || totalTradesAnalyzed === 0 ? (
+        <div className="p-8 md:p-10 card-luminous border-dashed border-slate-300 dark:border-white/[0.12] bg-slate-50/50 dark:bg-[#070b14] hover:border-[#2b7fff]/50 text-center space-y-4 transition-all">
+          <div className="w-10 h-10 rounded-[6px] bg-white dark:bg-white/[0.06] text-[#2b7fff] border border-slate-200 dark:border-white/[0.1] mx-auto flex items-center justify-center shadow-sm">
+            <UploadCloud className="w-5 h-5" />
+          </div>
+
+          <div className="max-w-md mx-auto space-y-1">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">No Ingested Trades to Audit</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Upload your broker tradebook CSV to trigger automated behavioral diagnostics, identify capital leaks (revenge trading, overtrading), and receive tailored AI rule recommendations.
+            </p>
+          </div>
+
+          <div className="pt-1">
+            <Link
+              href="/imports"
+              className="kiro-btn-cta !h-9 !px-4 text-xs font-bold inline-flex items-center space-x-1.5 shadow-[0_0_15px_-3px_rgba(43,127,255,0.4)]"
+            >
+              <span>Upload Tradebook</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <InsightsSection report={report} totalTradesAnalyzed={totalTradesAnalyzed} />
+      )}
     </div>
   );
 }
