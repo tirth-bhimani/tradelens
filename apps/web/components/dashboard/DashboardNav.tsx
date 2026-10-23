@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Menu,
   X,
+  FileText,
 } from "lucide-react";
 
 interface SubNavItem {
@@ -78,6 +79,12 @@ const NAV_GROUPS: NavGroup[] = [
         description: "Statistically grounded behavioral diagnostic engine",
         icon: BrainCircuit,
         badge: "AI",
+      },
+      {
+        href: "/reports",
+        label: "Weekly Reports",
+        description: "Comprehensive performance audit & printable weekly PDF",
+        icon: FileText,
       },
     ],
   },

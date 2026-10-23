@@ -31,12 +31,39 @@ export async function getUserRules(): Promise<{
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      // If no DB rows yet, provide sample rules
+    let rulesData = data;
+
+    // Automatic background provisioning: If user is authenticated but has 0 rules in DB,
+    // automatically initialize their personal rulebook with the 4 core rules
+    if (user && (!rulesData || rulesData.length === 0)) {
+      try {
+        const toSeed = DEFAULT_SAMPLE_RULES.map((r) => ({
+          id: crypto.randomUUID(),
+          user_id: user.id,
+          rule_type: r.rule_type,
+          rule_payload: r.rule_payload,
+          natural_language_text: r.natural_language_text,
+          is_active: r.is_active,
+        }));
+        await supabase.from("rules").insert(toSeed);
+        const fresh = await supabase
+          .from("rules")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
+        if (fresh.data && fresh.data.length > 0) {
+          rulesData = fresh.data;
+        }
+      } catch {
+        // Fallback to memory
+      }
+    }
+
+    if (!rulesData || rulesData.length === 0) {
       return { rules: memoryRulesStore, error: null };
     }
 
-    return { rules: data as SavedRule[], error: null };
+    return { rules: rulesData as SavedRule[], error: null };
   } catch {
     return { rules: memoryRulesStore, error: null };
   }
@@ -52,7 +79,7 @@ export async function saveRuleAction(input: SaveRuleInput): Promise<{
 }> {
   try {
     const newRule: SavedRule = {
-      id: `rule-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: crypto.randomUUID(),
       rule_type: input.rule_type,
       rule_payload: input.rule_payload,
       natural_language_text: input.natural_language_text || `Rule: ${input.rule_type}`,

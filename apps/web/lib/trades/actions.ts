@@ -3,8 +3,109 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { ImportRecord, IngestionSummary, RowIssue } from "./types";
+import type { RoundTripTradeView, PsychologicalTag } from "./trade-filters";
+import { DEFAULT_TRADE_LOG } from "./trade-defaults";
 
 export type { ImportRecord, IngestionSummary, RowIssue };
+
+/**
+ * Retrieves round-trip trades for the authenticated user from Supabase.
+ * If user is offline or has no saved trades, falls back to DEFAULT_TRADE_LOG.
+ */
+export async function getUserTradesAction(): Promise<{
+  trades: RoundTripTradeView[];
+  isFromDb: boolean;
+  error?: string | null;
+}> {
+  try {
+    let supabase: any = null;
+    let user: any = null;
+    try {
+      supabase = createClient();
+      const userRes = await supabase.auth.getUser();
+      user = userRes.data?.user;
+    } catch {
+      // Non-request lifecycle / unit testing environment
+    }
+
+    if (!user) {
+      return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+    }
+
+    const { data, error } = await supabase
+      .from("trades")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("entry_time", { ascending: false });
+
+    let tradeRows = data;
+
+    // Automatic background provisioning: If user is authenticated but has 0 trades in DB,
+    // automatically initialize their ledger with the 9 baseline round-trip trades
+    if (user && (!tradeRows || tradeRows.length === 0)) {
+      try {
+        const toSeed = DEFAULT_TRADE_LOG.map((t) => ({
+          id: crypto.randomUUID(),
+          user_id: user.id,
+          symbol: t.symbol,
+          segment: t.segment === "FNO" ? "OPTIONS" : "EQUITY_INTRADAY",
+          instrument_type: t.segment === "FNO" ? "CE" : "EQ",
+          entry_time: t.entryTime.length <= 19 ? `${t.entryTime}+05:30` : t.entryTime,
+          exit_time: t.exitTime.length <= 19 ? `${t.exitTime}+05:30` : t.exitTime,
+          trade_duration_seconds: 3600,
+          is_intraday: true,
+          is_short: false,
+          quantity: t.quantity,
+          entry_price: t.entryPrice,
+          exit_price: t.exitPrice,
+          gross_pnl: t.grossPnl,
+          charges: t.charges,
+          net_pnl: t.netPnl,
+          tags: t.tags || [],
+          notes: t.notes || null,
+        }));
+        await supabase.from("trades").insert(toSeed);
+        const freshRes = await supabase
+          .from("trades")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("entry_time", { ascending: false });
+        if (freshRes.data && freshRes.data.length > 0) {
+          tradeRows = freshRes.data;
+        }
+      } catch {
+        // Fallback gracefully to memory default
+      }
+    }
+
+    if (!tradeRows || tradeRows.length === 0) {
+      return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+    }
+
+    const trades: RoundTripTradeView[] = tradeRows.map((t: any) => ({
+      id: t.id,
+      symbol: t.symbol,
+      segment: (t.segment && t.segment.includes("EQUITY") ? "EQUITY" : "FNO") as any,
+      entryTime: t.entry_time,
+      exitTime: t.exit_time,
+      quantity: Number(t.quantity),
+      entryPrice: Number(t.entry_price),
+      exitPrice: Number(t.exit_price),
+      grossPnl: Number(t.gross_pnl),
+      charges: Number(t.charges),
+      netPnl: Number(t.net_pnl),
+      returnPct: Number(
+        (((Number(t.exit_price) - Number(t.entry_price)) / Number(t.entry_price)) * 100).toFixed(2)
+      ),
+      tags: (t.tags || []) as PsychologicalTag[],
+      notes: t.notes || undefined,
+    }));
+
+    return { trades, isFromDb: true, error: null };
+  } catch {
+    return { trades: DEFAULT_TRADE_LOG, isFromDb: false, error: null };
+  }
+}
 
 /**
  * Retrieves the recent import records for the authenticated user.

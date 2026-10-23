@@ -889,3 +889,39 @@ body {
     box-shadow: 0 0 0 3px rgba(43, 127, 255, 0.25);
   }
 }
+
+/* Print Stylesheet for High-Fidelity PDF Export */
+@media print {
+  @page {
+    margin: 12mm;
+    size: A4 portrait;
+  }
+  body, html {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  header, nav, aside, .print\:hidden {
+    display: none !important;
+  }
+  .printable-report {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+  .print-simple-report {
+    display: block !important;
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+  }
+  .print-simple-report table {
+    border-collapse: collapse !important;
+  }
+  .break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
+

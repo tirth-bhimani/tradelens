@@ -108,7 +108,7 @@ export function MarketTicker() {
   const marqueeList = [...indices, ...indices];
 
   return (
-    <div className="w-full bg-slate-50/95 dark:bg-[#0d1322]/95 border-b border-slate-200/80 dark:border-slate-800 overflow-hidden py-1.5 select-none relative z-20 transition-colors duration-200">
+    <div className="w-full bg-slate-50/95 dark:bg-[#0d1322]/95 border-b border-slate-200/80 dark:border-slate-800 overflow-hidden py-1.5 select-none relative z-20 transition-colors duration-200 mt-16 sm:mt-[64px]">
       <div className="max-w-7xl mx-auto flex items-center">
         {/* Pinned NSE Live Beacon with Real-time pulse indicator */}
         <div className="flex items-center space-x-2 shrink-0 px-4 py-0.5 bg-slate-50 dark:bg-[#0d1322] border-r border-slate-200/80 dark:border-slate-800 z-20 shadow-[2px_0_6px_rgba(0,0,0,0.02)]">

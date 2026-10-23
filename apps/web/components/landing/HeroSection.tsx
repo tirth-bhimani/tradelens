@@ -27,7 +27,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-24 bg-white dark:bg-[#050814] transition-colors duration-200">
+    <section className="relative overflow-hidden pt-12 pb-16 sm:pt-14 md:pt-16 md:pb-24 bg-white dark:bg-[#050814] transition-colors duration-200">
       {/* Background Soft Mesh Ambient */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] bg-gradient-to-tr from-blue-200/25 dark:from-blue-900/25 via-sky-100/20 dark:via-sky-950/15 to-transparent rounded-[30px] blur-3xl pointer-events-none -z-10" />
 

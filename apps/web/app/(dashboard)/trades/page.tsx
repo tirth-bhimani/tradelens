@@ -1,18 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { UploadCloud, ArrowLeft, BookOpen } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { CalendarHeatmap } from "@/components/dashboard/calendar-heatmap";
 import { TimeBreakdownChart } from "@/components/dashboard/time-breakdown-chart";
 import { TradeTable } from "@/components/trades/trade-table";
 import { DEFAULT_TRADE_LOG } from "@/lib/trades/trade-defaults";
 import { evaluateClientAdherence } from "@/lib/rules/adherence-evaluator";
 import { DEFAULT_SAMPLE_RULES } from "@/lib/rules/rulebook-defaults";
+import { getUserTradesAction } from "@/lib/trades/actions";
+import type { RoundTripTradeView } from "@/lib/trades/trade-filters";
 
 export default function TradesPage() {
   const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
-  const adherenceReport = evaluateClientAdherence(DEFAULT_TRADE_LOG, DEFAULT_SAMPLE_RULES);
+  const [trades, setTrades] = useState<RoundTripTradeView[]>(DEFAULT_TRADE_LOG);
+
+  useEffect(() => {
+    getUserTradesAction().then((res) => {
+      if (res.trades && res.trades.length > 0) {
+        setTrades(res.trades);
+      }
+    });
+  }, []);
+
+  const adherenceReport = evaluateClientAdherence(trades, DEFAULT_SAMPLE_RULES);
 
   return (
     <div className="space-y-6">
@@ -30,7 +42,7 @@ export default function TradesPage() {
               <span>FIFO MATCHED TRADES LEDGER</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-              Trade Journal & Log
+              Trade Journal &amp; Log
             </h1>
             <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 max-w-xl">
               Inspect round-trip trades, analyze execution timing breakdowns, and tag psychological behaviors (FOMO, Revenge, Planned).
@@ -52,16 +64,16 @@ export default function TradesPage() {
       {/* Top Diagnostics Row: Calendar Heatmap + Timing Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <CalendarHeatmap
-          trades={DEFAULT_TRADE_LOG}
+          trades={trades}
           selectedDate={selectedDate}
           onSelectDate={(d) => setSelectedDate(d || undefined)}
         />
-        <TimeBreakdownChart trades={DEFAULT_TRADE_LOG} />
+        <TimeBreakdownChart trades={trades} />
       </div>
 
       {/* Main Trade Table Ledger (Filtered by Date if day was clicked) */}
       <TradeTable
-        trades={DEFAULT_TRADE_LOG}
+        trades={trades}
         violations={adherenceReport.violations}
         selectedDate={selectedDate}
         onClearDateFilter={() => setSelectedDate(undefined)}

@@ -42,5 +42,10 @@ class Settings(BaseSettings):
     anthropic_api_key: str | None = None
     ai_provider: str = "auto"  # "auto", "anthropic", "gemini", "groq", or "deterministic"
 
+    # Transactional Email (Resend) & Scheduled Reports
+    resend_api_key: str | None = None
+    email_from: str = "TradeLens Reports <reports@tradelens.app>"
+    cron_secret: str = "tradelens-cron-secret-dev"
+
 
 settings = Settings()

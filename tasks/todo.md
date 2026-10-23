@@ -778,15 +778,15 @@
 **Description:** Implement scheduled weekly summary report generation and delivery via transactional email (Resend) and in-app viewing: weekly net P&L, best/worst trading day, rule adherence rate, biggest behavioral leak, and one actionable focus item for next week.
 
 **Acceptance criteria:**
-- [ ] Scheduled background worker computes weekly summary for active users every Sunday
-- [ ] In-app report viewer displays printable/PDF-exportable weekly summary
-- [ ] Email template renders responsive HTML email sent via Resend API
-- [ ] User can enable/disable weekly email delivery in Notification Preferences
+- [x] Scheduled background worker computes weekly summary for active users every Sunday
+- [x] In-app report viewer displays printable/PDF-exportable weekly summary
+- [x] Email template renders responsive HTML email sent via Resend API
+- [x] User can enable/disable weekly email delivery in Notification Preferences
 
 **Verification:**
-- [ ] Tests pass: `pytest services/analytics/tests/test_weekly_report.py`
-- [ ] Build succeeds: `npm run build --prefix apps/web`
-- [ ] Manual check: Trigger test report generation and verify email preview and in-app card
+- [x] Tests pass: `pytest services/analytics/tests/test_weekly_report.py`
+- [x] Build succeeds: `npm run build --prefix apps/web`
+- [x] Manual check: Trigger test report generation and verify email preview and in-app card
 
 **Dependencies:** Task 12
 
