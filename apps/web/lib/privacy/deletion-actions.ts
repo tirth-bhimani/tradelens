@@ -34,10 +34,37 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
 
     const userId = user.id;
 
-    // Use privileged admin client if service role key is configured, else fallback to standard client
+    // 1. Try atomic PostgreSQL RPC delete_user_account() if installed (runs with SECURITY DEFINER)
+    try {
+      if (typeof supabase.rpc === "function") {
+        const { error: rpcErr } = await supabase.rpc("delete_user_account");
+        if (!rpcErr) {
+          // Storage file cleanup
+          try {
+            const { data: fileList } = await supabase.storage.from("trade-imports").list(userId);
+            if (fileList && fileList.length > 0) {
+              const paths = fileList.map((f: any) => `${userId}/${f.name}`);
+              await supabase.storage.from("trade-imports").remove(paths);
+            }
+          } catch {
+            // Storage bucket may already be empty
+          }
+
+          await supabase.auth.signOut();
+          try {
+            revalidatePath("/", "layout");
+          } catch {}
+          return { success: true, error: null };
+        }
+      }
+    } catch {
+      // RPC not yet configured in database; proceed to fallback cascade below
+    }
+
+    // 2. Use privileged admin client if real service role key is configured
     let adminClient: any = null;
     try {
-      if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY.trim() !== "") {
         adminClient = createAdminClient();
       }
     } catch {
@@ -45,7 +72,7 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
     }
     const db = adminClient || supabase;
 
-    // 1. Purge all stored files from 'trade-imports' bucket
+    // 3. Purge all stored files from 'trade-imports' bucket
     try {
       const { data: fileList } = await db.storage
         .from("trade-imports")
@@ -59,7 +86,7 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
       // Storage directory may be empty; continue with relational purge
     }
 
-    // 2. Cascade delete dependent user records across all operational tables
+    // 4. Cascade delete dependent user records across all operational tables
     await db.from("rule_runs").delete().eq("user_id", userId);
     await db.from("rules").delete().eq("user_id", userId);
     await db.from("stats_snapshots").delete().eq("user_id", userId);
@@ -76,10 +103,22 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
     await db.from("ai_usage").delete().eq("user_id", userId);
     await db.from("audit_log").delete().eq("user_id", userId);
 
-    // 3. Delete base user profile
-    await db.from("profiles").delete().eq("id", userId);
+    // 5. Delete base user profile
+    let profileDeleted = false;
+    if (adminClient) {
+      const { error: adminProfileErr } = await adminClient.from("profiles").delete().eq("id", userId);
+      if (!adminProfileErr) profileDeleted = true;
+    }
+    if (!profileDeleted) {
+      const { error: userProfileErr } = await supabase.from("profiles").delete().eq("id", userId);
+      if (userProfileErr) {
+        throw new Error(
+          `Could not delete profile: ${userProfileErr.message}. Run the delete_user_account SQL migration in Supabase SQL editor.`
+        );
+      }
+    }
 
-    // 4. Permanently erase user identity from Supabase Auth (auth.users)
+    // 6. Permanently erase user identity from Supabase Auth (auth.users)
     if (adminClient?.auth?.admin?.deleteUser) {
       try {
         const { error: adminErr } = await adminClient.auth.admin.deleteUser(userId);
@@ -91,7 +130,7 @@ export async function deleteAccountAction(confirmationPhrase: string): Promise<A
       }
     }
 
-    // 5. Invalidate and sign out current auth session cookies
+    // 7. Invalidate and sign out current auth session cookies
     await supabase.auth.signOut();
 
     try {
